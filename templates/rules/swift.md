@@ -3,16 +3,25 @@ paths:
   - "**/*.swift"
 ---
 
-# Swift work — invoke the gates
+<!-- Loads on every .swift read so the gates stay in context after compaction.
+     Keep this short — it costs tokens on every Swift file read. -->
 
-This rule loads whenever Claude reads a `.swift` file, so the Swift workflow is
-in context even mid-session, after compaction, or when AGENTS.md scrolled off.
+# Swift work
 
-When touching any Swift file:
-- Invoke **`swift-dev`** (master router) — it loads the right guides: `swiftui-pro`
-  for any view, `swiftui-design-principles` for native-feeling UI / WidgetKit,
-  `swift-testing-pro` for tests, `swift-concurrency-pro` for async, etc.
-- Apply **`ponytail`**: smallest correct change, no rewriting working code.
-- Bugs → `superpowers:systematic-debugging` + `swift-dev`→ios-debugger-agent.
+**Before writing or editing Swift, route through `swift-dev`** — don't code from
+memory. It loads the guide that matches the change:
 
-Full gate table and the rest of the workflow live in `AGENTS.md`.
+| Change touches | Guide swift-dev loads |
+|---|---|
+| any SwiftUI view | `swiftui-pro` |
+| native look / polish / WidgetKit | `swiftui-design-principles` |
+| tests | `swift-testing-pro` — Swift Testing (`@Test`/`#expect`), not XCTest |
+| async / actors / `@MainActor` | `swift-concurrency-pro` |
+| SwiftData (`@Model`, `ModelContext`, `@Query`) | `swiftdata-pro` |
+| build / run / debug on a simulator | `ios-debugger-agent` |
+
+While coding, hold **`ponytail`**: smallest correct diff, reuse what exists, no
+speculative abstractions. A bug or unexpected behavior goes through
+**`superpowers:systematic-debugging`** before any fix.
+
+Full workflow and the rest of the gates → `AGENTS.md`.
