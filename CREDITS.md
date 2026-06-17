@@ -14,18 +14,27 @@ MIT except where noted; the bundled `.zip` includes each plugin's `LICENSE`.
 
 ## Inside `swift-dev`
 
-| Sub-skill | Author | License |
-|---|---|---|
-| `swiftui-pro` | Paul Hudson | MIT (v1.1) |
-| `swiftdata-pro` | Paul Hudson | MIT (v1.0) |
-| `swift-testing-pro` | Paul Hudson | MIT (v1.0) |
-| `swift-concurrency-pro` | Paul Hudson | MIT (v1.0) |
-| `ios-accessibility` | derived from Daniel Devesa Derksen-Staats — *Developing Accessible iOS Apps* (Apress) & #365DaysIOSAccessibility; sample code MIT | MIT © 2025 |
-| `figma-to-swiftui`, `swiftui-ui-patterns`, `swiftui-view-refactor`, `swiftui-performance-audit`, `ios-debugger-agent` | Lucas Oliveira | MIT © 2026 |
+All sub-skills come from **twostraws/swift-agent-skills** — a curated
+collection of open-source Swift agent skills maintained by **Paul Hudson**,
+licensed **MIT**. https://github.com/twostraws/swift-agent-skills
+Original skill authors (where identified within the collection):
+
+| Sub-skill | Original author / source |
+|---|---|
+| `swiftui-pro` | Paul Hudson |
+| `swiftdata-pro` | Paul Hudson |
+| `swift-testing-pro` | Paul Hudson |
+| `swift-concurrency-pro` | Paul Hudson |
+| `swiftui-ui-patterns` | twostraws/swift-agent-skills |
+| `swiftui-performance-audit` | twostraws/swift-agent-skills |
+| `ios-debugger-agent` | twostraws/swift-agent-skills |
+| `figma-to-swiftui` | daetojemax — https://github.com/daetojemax/figma-to-swiftui-skill |
+| `swiftui-view-refactor` | rewritten from Thomas Ricouard (Dimillian) — "SwiftUI in 2025: Forget MVVM" |
+| `ios-accessibility` | Daniel Devesa Derksen-Staats — *Developing Accessible iOS Apps* (Apress) & #365DaysIOSAccessibility |
 
 `swift-testing-pro` / `swift-concurrency-pro` reference Apple's Swift Testing &
-Swift Concurrency (swift.org, Apache-2.0 w/ Runtime Library Exception). Paul
-Hudson's guide text is MIT; the underlying Apple APIs are documented, not copied.
+Swift Concurrency (swift.org, Apache-2.0 w/ Runtime Library Exception); the
+guide text is MIT, the underlying Apple APIs are documented, not copied.
 
 ## Built into Claude Code (not bundled)
 `/code-review` and `fewer-permission-prompts` ship with the Claude Code CLI.
