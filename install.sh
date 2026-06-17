@@ -17,12 +17,33 @@ for f in AGENTS.md Context.md Memory.md; do
   fi
 done
 
-# 2. Reinforcement hook.
+# 2. CLAUDE.md — the file Claude Code actually auto-loads. Make it import AGENTS.md.
+if [ ! -e "$TARGET/CLAUDE.md" ]; then
+  cp "$KIT/templates/CLAUDE.md" "$TARGET/CLAUDE.md"
+  echo "added CLAUDE.md (imports @AGENTS.md)"
+elif grep -q '@AGENTS.md' "$TARGET/CLAUDE.md"; then
+  echo "skip  CLAUDE.md (already imports @AGENTS.md)"
+else
+  # existing CLAUDE.md without the import: prepend it so the gates load.
+  printf '@AGENTS.md\n\n%s' "$(cat "$TARGET/CLAUDE.md")" > "$TARGET/CLAUDE.md"
+  echo "patched CLAUDE.md (prepended @AGENTS.md import)"
+fi
+
+# 3. Path-scoped rule: load the Swift gate whenever a .swift file is read.
+mkdir -p "$TARGET/.claude/rules"
+if [ -e "$TARGET/.claude/rules/swift.md" ]; then
+  echo "skip  .claude/rules/swift.md (already exists)"
+else
+  cp "$KIT/templates/rules/swift.md" "$TARGET/.claude/rules/swift.md"
+  echo "added .claude/rules/swift.md (paths: **/*.swift)"
+fi
+
+# 4. Reinforcement hook.
 mkdir -p "$TARGET/.claude/hooks"
 cp "$KIT/hook/agentic-kit-inject.sh" "$TARGET/.claude/hooks/"
 chmod +x "$TARGET/.claude/hooks/agentic-kit-inject.sh"
 
-# 3. Wire the SessionStart hook into .claude/settings.json (idempotent).
+# 5. Wire the SessionStart hook into .claude/settings.json (idempotent).
 SETTINGS="$TARGET/.claude/settings.json"
 CMD='bash "$CLAUDE_PROJECT_DIR/.claude/hooks/agentic-kit-inject.sh"'
 [ -f "$SETTINGS" ] || echo '{}' > "$SETTINGS"
@@ -40,8 +61,10 @@ else
   echo "  $CMD"
 fi
 
-# 4. Self-check: the install is only done if every artifact landed.
-for f in AGENTS.md Context.md Memory.md .claude/hooks/agentic-kit-inject.sh; do
+# 6. Self-check: the install is only done if every artifact landed.
+for f in AGENTS.md Context.md Memory.md CLAUDE.md \
+         .claude/rules/swift.md .claude/hooks/agentic-kit-inject.sh; do
   [ -e "$TARGET/$f" ] || { echo "FAIL: missing $TARGET/$f" >&2; exit 1; }
 done
+grep -q '@AGENTS.md' "$TARGET/CLAUDE.md" || { echo "FAIL: CLAUDE.md does not import @AGENTS.md" >&2; exit 1; }
 echo "ok — agentic-kit installed in $TARGET (fill in the {{...}} placeholders)"

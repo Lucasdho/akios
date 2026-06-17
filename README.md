@@ -1,13 +1,16 @@
 # agentic-kit
 
 A meta-system you plug into any repo to make agentic coding more efficient.
-It drops three context files at the repo root and a SessionStart hook that
-re-injects the default skill gates every session (it reminds, it does not enforce).
+It drops a `CLAUDE.md` that imports the operating manual, context files, a
+path-scoped Swift rule, and a SessionStart hook that reminds the agent of the
+default gates each session.
 
 ```
-AGENTS.md   entry point, auto-loaded — the loop, skill gates, and routing
-Context.md  stack, commands, architecture, conventions
-Memory.md   durable decisions across sessions
+CLAUDE.md          @AGENTS.md import — the file Claude Code actually auto-loads
+AGENTS.md          entry point — the loop, skill gates, and routing
+Context.md         stack, commands, architecture, conventions
+Memory.md          durable decisions across sessions
+.claude/rules/swift.md   loads the Swift gate whenever a .swift file is read
 ```
 
 ## When to use it
@@ -20,19 +23,19 @@ Memory.md   durable decisions across sessions
 
 ## How it's invoked
 You don't "run" the kit — it shapes the agent's behavior passively:
-1. **At session start**, the SessionStart hook re-states the default gates, and
-   the always-on skills (`ponytail`, `superpowers`) self-activate.
-2. **The agent reads `AGENTS.md`** to orient: the loop, the gate table, routing.
-3. **Skills trigger themselves** by description when a task matches (`swift-dev`
-   on Swift files, `oss-first` before hand-writing, etc.) — or you invoke one
-   explicitly with `/skill-name`.
-4. **`Memory.md` / `Context.md`** carry project facts and decisions across
-   sessions so you don't re-explain them.
+1. **At session start**, Claude Code loads `CLAUDE.md`, which imports `@AGENTS.md`
+   in full (and re-injects it after `/compact`); the SessionStart hook re-states
+   the gates; the always-on skills (`ponytail`, `superpowers`) self-activate.
+2. **`AGENTS.md` orients** the agent: the loop, the gate table, routing.
+3. **`.claude/rules/swift.md` fires per file**: whenever Claude reads a `.swift`
+   file, the Swift gate (invoke `swift-dev`, `ponytail`) loads — even mid-session.
+4. **Skills trigger themselves** by description, or you invoke one with `/skill-name`.
+5. **`Memory.md` / `Context.md`** carry project facts and decisions across sessions.
 
-> Heads-up: Claude Code auto-loads `CLAUDE.md`, not `AGENTS.md`. To guarantee the
-> gates load every session, add a `CLAUDE.md` that imports it — `@AGENTS.md` —
-> or symlink `ln -s AGENTS.md CLAUDE.md`. Without that, only the hook reminder
-> reaches Claude Code.
+> Why `CLAUDE.md`: Claude Code auto-loads `CLAUDE.md`, not `AGENTS.md`. `install.sh`
+> creates a `CLAUDE.md` that imports `@AGENTS.md` for you (or prepends the import
+> to an existing one), so the gates reach Claude Code by default — not just the
+> hook reminder.
 
 ## Install with a Claude Code agent (recommended)
 Don't follow steps by hand — paste this prompt into Claude Code from inside the
@@ -49,9 +52,10 @@ Install the agentic-kit into this repo for me.
    ~/.claude/skills/ and prints the marketplace commands for the two plugins
    (ponytail, superpowers) — run those /plugin commands so I have every skill.
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
-   It copies AGENTS.md, Context.md, Memory.md to the repo root and wires the
-   SessionStart reinforcement hook into .claude/settings.json. It is idempotent
-   and never overwrites existing files.
+   It drops CLAUDE.md (importing @AGENTS.md), AGENTS.md, Context.md, Memory.md,
+   the .claude/rules/swift.md path-scoped rule, and wires the SessionStart hook
+   into .claude/settings.json. Idempotent; it never overwrites existing files
+   (an existing CLAUDE.md just gets the @AGENTS.md import prepended).
 4. Read the codebase and fill in every {{...}} placeholder in Context.md and
    AGENTS.md — stack, build/test/lint/run commands, architecture, conventions,
    and any project-specific skill gates. Leave no {{...}} behind.
