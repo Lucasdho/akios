@@ -11,7 +11,7 @@ mkdir -p "$DEST"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 unzip -q "$KIT/skills-bundle.zip" -d "$TMP"
 
-for s in swift-dev swiftui-design-skill; do
+for s in swift-dev; do
   if [ -e "$DEST/$s" ]; then
     echo "skip      $s (already in ~/.claude/skills)"
   else
@@ -21,7 +21,7 @@ for s in swift-dev swiftui-design-skill; do
 done
 
 # check
-for s in swift-dev swiftui-design-skill; do
+for s in swift-dev; do
   [ -f "$DEST/$s/SKILL.md" ] || { echo "FAIL: $s has no SKILL.md" >&2; exit 1; }
 done
 

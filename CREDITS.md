@@ -8,7 +8,6 @@ MIT except where noted; the bundled `.zip` includes each plugin's `LICENSE`.
 | Skill | Author | License | Source |
 |---|---|---|---|
 | `swift-dev` | Lucas Oliveira | MIT © 2026 | see `LICENSE` |
-| `swiftui-design-skill` | wholiver | MIT (v1.0.0) | SKILL.md frontmatter |
 | `ponytail` (plugin) | Dietrich Gebert | MIT © 2026 | https://github.com/DietrichGebert/ponytail |
 | `superpowers` (plugin) | Jesse Vincent (obra) | MIT © 2025 | https://github.com/obra/superpowers |
 

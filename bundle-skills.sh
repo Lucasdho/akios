@@ -17,7 +17,6 @@ add() {
 }
 
 add swift-dev            "$CC/skills/swift-dev"
-add swiftui-design-skill "$CC/skills/swiftui-design-skill"
 add ponytail             "$CC/plugins/cache/ponytail"
 add superpowers          "$CC/plugins/cache/superpowers-marketplace/superpowers"
 

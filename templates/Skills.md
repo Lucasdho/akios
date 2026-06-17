@@ -24,7 +24,8 @@ These three are big router skills — they redirect to the right internal skills
 
 ## Creating Views (SwiftUI)
 - **ALWAYS build native** — native components first, no reinvented UI.
-- `swiftui-design-skill` allied with the skills above (ponytail + swift-dev).
+- `swift-dev` → **swiftui-design-principles** (baseline for any view) drives the
+  native look-and-feel: spacing, typography, semantic colors, sizing, WidgetKit.
 
 ## Writing tests
 - `swift-dev` → **swift-testing-pro** (its Swift Testing guide).
