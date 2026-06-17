@@ -10,6 +10,30 @@ Context.md  stack, commands, architecture, conventions
 Memory.md   durable decisions across sessions
 ```
 
+## When to use it
+- **Use it in:** Swift / iOS / iPadOS / macOS repos you build with an agent.
+  The gates are Swift-specific (swift-dev, SwiftUI design, Swift Testing).
+- **Don't use it in:** non-Swift projects — the routing won't fit. Fork the
+  structure (AGENTS.md + hook + your own gate table) instead.
+- **One repo, one install.** It's per-project: each repo gets its own
+  `AGENTS.md` / `Context.md` / `Memory.md` and its own SessionStart hook.
+
+## How it's invoked
+You don't "run" the kit — it shapes the agent's behavior passively:
+1. **At session start**, the SessionStart hook re-states the default gates, and
+   the always-on skills (`ponytail`, `superpowers`) self-activate.
+2. **The agent reads `AGENTS.md`** to orient: the loop, the gate table, routing.
+3. **Skills trigger themselves** by description when a task matches (`swift-dev`
+   on Swift files, `oss-first` before hand-writing, etc.) — or you invoke one
+   explicitly with `/skill-name`.
+4. **`Memory.md` / `Context.md`** carry project facts and decisions across
+   sessions so you don't re-explain them.
+
+> Heads-up: Claude Code auto-loads `CLAUDE.md`, not `AGENTS.md`. To guarantee the
+> gates load every session, add a `CLAUDE.md` that imports it — `@AGENTS.md` —
+> or symlink `ln -s AGENTS.md CLAUDE.md`. Without that, only the hook reminder
+> reaches Claude Code.
+
 ## Install with a Claude Code agent (recommended)
 Don't follow steps by hand — paste this prompt into Claude Code from inside the
 repo you want to set up, and let the agent do it:

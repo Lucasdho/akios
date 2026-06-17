@@ -17,6 +17,18 @@ Big router skills, active every task — they redirect to the right internal gui
 - `ponytail` — efficiency: no over-building, no rewriting what already works.
 - `swift-dev` — master router for all Swift/iOS work; loads the right guides.
 
+## How to execute (orchestration)
+For *how* the work runs — not what to build — consult **`superpowers` first**.
+It owns the execution playbook: context optimization, when and how to spawn
+subagents, parallelizing fan-out work, writing and executing plans, and
+subagent-driven development. Reach for it before improvising an approach to:
+- splitting a task across parallel agents → `superpowers:dispatching-parallel-agents`
+- driving a multi-step build through subagents → `superpowers:subagent-driven-development`
+- turning a plan into reviewed execution → `superpowers:writing-plans` / `executing-plans`
+
+Note: a spawned subagent starts cold — it does NOT inherit these gates. When you
+dispatch one for gated work, restate the relevant gate in its prompt.
+
 ## Skill gates
 The SessionStart hook re-states these every session, but it only reminds — it
 does not enforce. Treat them as the default workflow; skip one only with reason.
