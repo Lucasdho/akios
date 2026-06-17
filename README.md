@@ -21,7 +21,7 @@ Install the agentic-kit into this repo for me.
      git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
    If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update.
 2. Install the required skills: ~/iOS-agentic-kit/install-skills.sh
-   It copies the plain skills (swift-dev) into
+   It copies the plain skills (swift-dev, idea-to-spec, oss-first) into
    ~/.claude/skills/ and prints the marketplace commands for the two plugins
    (ponytail, superpowers) — run those /plugin commands so I have every skill.
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
@@ -51,7 +51,7 @@ Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 ### Skills the kit needs
 | Skill | Type | How it installs |
 |---|---|---|
-| `swift-dev` | plain skill | copied to `~/.claude/skills/` by `install-skills.sh` |
+| `swift-dev`, `idea-to-spec`, `oss-first` | plain skill | copied to `~/.claude/skills/` by `install-skills.sh` |
 | `ponytail`, `superpowers` | plugin | `/plugin marketplace add` + `/plugin install` (printed by the script) |
 | `/code-review`, `fewer-permission-prompts` | built-in | ship with the Claude Code CLI |
 

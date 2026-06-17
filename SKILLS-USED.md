@@ -6,6 +6,8 @@
 | Skill | Source on disk | Role in the kit |
 |---|---|---|
 | `swift-dev` | `~/.claude/skills/swift-dev` | Master router for all Swift/iOS work (native design via swiftui-design-principles) |
+| `idea-to-spec` | `~/.claude/skills/idea-to-spec` | Idea → versioned specs in `specs/`, domain registered in CLAUDE.md |
+| `oss-first` | `~/.claude/skills/oss-first` | Force open-source/tooling search before hand-writing complex code |
 | `ponytail` (plugin) | `~/.claude/plugins/cache/ponytail` | Laziness/efficiency, anti over-build |
 | `superpowers` (plugin) | `~/.claude/plugins/cache/.../superpowers` | brainstorming, systematic-debugging, TDD, verification |
 

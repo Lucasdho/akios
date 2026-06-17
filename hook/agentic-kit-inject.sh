@@ -4,7 +4,9 @@
 cat <<'EOF'
 [agentic-kit · Swift/iOS] Always on: superpowers · ponytail · swift-dev.
 Default gates (reminder, not enforced — skip only with reason):
+- Idea -> spec           -> idea-to-spec (write to specs/, register domain in CLAUDE.md)
 - Before ANY code        -> plan mode OR superpowers:brainstorming
+- Before hand-writing    -> oss-first (is there a mature tool/lib first?)
 - Bug / failure / flake  -> superpowers:systematic-debugging + swift-dev->ios-debugger-agent
 - Implementing code      -> ponytail (no over-build/rewrite) + swift-dev writing standards + fewer-permission-prompts
 - Creating SwiftUI Views -> native first + swift-dev->swiftui-design-principles (with ponytail)

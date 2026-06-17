@@ -13,7 +13,7 @@ SD="$TMP/skills/swift-dev"
 fail=0
 
 # 1. Top-level skills present.
-for s in swift-dev ponytail superpowers; do
+for s in swift-dev idea-to-spec oss-first ponytail superpowers; do
   [ -d "$TMP/skills/$s" ] || { echo "FAIL: top-level skill missing: $s"; fail=1; }
 done
 

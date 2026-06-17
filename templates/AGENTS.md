@@ -23,7 +23,9 @@ does not enforce. Treat them as the default workflow; skip one only with reason.
 
 | Trigger | Skill | When |
 |---|---|---|
+| Designing a system / turning an idea into a spec | `idea-to-spec` → write specs to `specs/` (see below) | before building |
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
+| About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
 | Bug, crash, flake, regression | `superpowers:systematic-debugging` + `swift-dev`→ios-debugger-agent | before any fix |
 | Implementing code | `ponytail` + `swift-dev` writing standards + `fewer-permission-prompts` | while coding |
 | Creating / polishing SwiftUI Views | native first + `swift-dev`→swiftui-design-principles (with ponytail) | before the view |
@@ -34,6 +36,15 @@ does not enforce. Treat them as the default workflow; skip one only with reason.
 ios-debugger-agent · swift-concurrency-pro · swift-testing-pro · swiftdata-pro ·
 swiftui-design-principles · swiftui-performance-audit · swiftui-pro ·
 swiftui-ui-patterns · swiftui-view-refactor) — you don't invoke those directly.
+
+## Specs (idea-to-spec)
+When `idea-to-spec` produces specs:
+- Store versioned specs in a `specs/` folder at the repo root — one file per domain.
+- Keep an **orchestration doc** that registers every spec and the domain it owns,
+  so specs don't overlap and the next session knows what already exists. Use the
+  project `CLAUDE.md` for this (a `## Specs` section: spec file → domain → status),
+  or `specs/INDEX.md` if you prefer to keep it out of `CLAUDE.md`.
+- Before designing something new, read that orchestration doc first.
 
 ## Project-specific gates
 {{e.g. "always /security-review when touching Keychain / auth / networking"}}
