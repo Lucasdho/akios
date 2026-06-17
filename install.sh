@@ -4,6 +4,7 @@
 set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
+VERSION="$(cat "$KIT/VERSION" 2>/dev/null || echo unknown)"
 
 # Args: [--here] /path/to/repo. By default the kit installs at the git repo root
 # (where Claude Code loads CLAUDE.md from); --here installs at the exact path.
@@ -23,7 +24,7 @@ if [ "$HERE" -eq 0 ]; then
 fi
 
 # 1. Context files — never clobber an existing one.
-for f in AGENTS.md Context.md Memory.md; do
+for f in AGENTS.md Context.md; do
   if [ -e "$TARGET/$f" ]; then
     echo "skip  $f (already exists)"
   else
@@ -76,8 +77,12 @@ else
   echo "  $CMD"
 fi
 
-# 6. Self-check: the install is only done if every artifact landed.
-for f in AGENTS.md Context.md Memory.md CLAUDE.md \
+# 6. Stamp the installed version (check-update.sh compares against the kit VERSION).
+echo "$VERSION" > "$TARGET/.claude/.agentic-kit-version"
+echo "stamped version $VERSION"
+
+# 7. Self-check: the install is only done if every artifact landed.
+for f in AGENTS.md Context.md CLAUDE.md .claude/.agentic-kit-version \
          .claude/rules/swift.md .claude/hooks/agentic-kit-inject.sh; do
   [ -e "$TARGET/$f" ] || { echo "FAIL: missing $TARGET/$f" >&2; exit 1; }
 done

@@ -7,10 +7,12 @@ the skill gates live below, not in a separate file.
 
 ## The loop (every code task)
 1. **Orient** → `Context.md` — stack, commands, architecture, conventions.
-2. **Recall** → `Memory.md` — decisions already made. Don't relitigate them.
+2. **Recall** → your native auto-memory (`MEMORY.md`, loaded automatically) for
+   decisions already made. Don't relitigate them.
 3. **Route** → the gate table below — which skill fits this task type.
 4. **Work** → the smallest change that is correct.
-5. **Record** → append new durable decisions to `Memory.md`.
+5. **Record** → save durable decisions to auto-memory (Claude writes it itself;
+   tell it "remember that …" for anything that should survive the session).
 
 ## Always on (Swift / iOS)
 Big router skills, active every task — they redirect to the right internal guides:

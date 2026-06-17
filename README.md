@@ -9,9 +9,11 @@ default gates each session.
 CLAUDE.md          @AGENTS.md import — the file Claude Code actually auto-loads
 AGENTS.md          entry point — the loop, skill gates, and routing
 Context.md         stack, commands, architecture, conventions
-Memory.md          durable decisions across sessions
 .claude/rules/swift.md   loads the Swift gate whenever a .swift file is read
 ```
+Durable decisions are NOT a repo file — they live in Claude Code's native
+auto-memory (`~/.claude/projects/<project>/memory/MEMORY.md`), which is written
+automatically and survives compaction.
 
 ## When to use it
 - **Use it in:** Swift / iOS / iPadOS / macOS repos you build with an agent.
@@ -19,7 +21,7 @@ Memory.md          durable decisions across sessions
 - **Don't use it in:** non-Swift projects — the routing won't fit. Fork the
   structure (AGENTS.md + hook + your own gate table) instead.
 - **One repo, one install.** It's per-project: each repo gets its own
-  `AGENTS.md` / `Context.md` / `Memory.md` and its own SessionStart hook.
+  `AGENTS.md` / `Context.md` and its own SessionStart hook.
 
 ## How it's invoked
 You don't "run" the kit — it shapes the agent's behavior passively:
@@ -30,7 +32,7 @@ You don't "run" the kit — it shapes the agent's behavior passively:
 3. **`.claude/rules/swift.md` fires per file**: whenever Claude reads a `.swift`
    file, the Swift gate (invoke `swift-dev`, `ponytail`) loads — even mid-session.
 4. **Skills trigger themselves** by description, or you invoke one with `/skill-name`.
-5. **`Memory.md` / `Context.md`** carry project facts and decisions across sessions.
+5. **`Context.md`** carries project facts; **native auto-memory** carries decisions.
 
 > Why `CLAUDE.md`: Claude Code auto-loads `CLAUDE.md`, not `AGENTS.md`. `install.sh`
 > creates a `CLAUDE.md` that imports `@AGENTS.md` for you (or prepends the import
@@ -57,7 +59,7 @@ Install the agentic-kit into this repo for me.
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
    Installs at the git repo root by default; pass `--here <path>` to install in an
    exact subfolder (e.g. the app dir when it sits below .git). It drops CLAUDE.md
-   (importing @AGENTS.md), AGENTS.md, Context.md, Memory.md, .claude/rules/swift.md,
+   (importing @AGENTS.md), AGENTS.md, Context.md, .claude/rules/swift.md,
    and wires the SessionStart hook. Idempotent; never overwrites existing files.
 
    BEFORE running it, ASK me three things (these shape what gets written, and a
@@ -103,6 +105,24 @@ Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 | `/code-review`, `fewer-permission-prompts` | built-in | ship with the Claude Code CLI |
 
 Credits & licenses for all of the above → [CREDITS.md](CREDITS.md).
+
+## Staying up to date
+The kit is versioned (`VERSION`). `install.sh` stamps the installed version into
+`.claude/.agentic-kit-version` in each repo. To check whether a repo's install is
+current — and whether your kit clone is behind GitHub:
+
+```sh
+~/iOS-agentic-kit/check-update.sh /path/to/your/repo   # or run with no arg in the repo
+```
+It reports two things and exits non-zero if either is stale:
+- **kit:** whether your `~/iOS-agentic-kit` clone is behind its remote (→ `git pull`).
+- **project:** whether the repo's stamped version matches the kit (→ re-run `install.sh`).
+
+A repo installed before versioning shows "no kit install / installed before
+versioning" — just re-run `install.sh` to update and stamp it.
+
+> Maintainer: bump `VERSION` whenever you change templates, the hook, the rule,
+> or install logic, so downstream `check-update.sh` flags the staleness.
 
 ## Updating bundled skills
 `skills-bundle.zip` is a snapshot — it does **not** track upstream. The bundled

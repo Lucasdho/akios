@@ -12,5 +12,6 @@ Default gates (reminder, not enforced — skip only with reason):
 - Creating SwiftUI Views -> native first + swift-dev->swiftui-design-principles (with ponytail)
 - Writing tests          -> swift-dev -> swift-testing-pro
 - Before "done"          -> subagents: superpowers:verification-before-completion + /code-review
-Read AGENTS.md -> Context.md -> Memory.md if not already loaded.
+Read AGENTS.md -> Context.md if not already loaded. Durable decisions live in
+Claude Code's native auto-memory (MEMORY.md), not a file in the repo.
 EOF
