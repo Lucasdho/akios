@@ -9,5 +9,5 @@ cat <<'EOF'
 - Creating SwiftUI Views -> native first + swift-dev->swiftui-design-principles (with ponytail)
 - Writing tests          -> swift-dev -> swift-testing-pro
 - Before "done"          -> subagents: superpowers:verification-before-completion + /code-review
-Read AGENTS.md -> Context.md -> Memory.md -> Skills.md if not already loaded.
+Read AGENTS.md -> Context.md -> Memory.md if not already loaded.
 EOF

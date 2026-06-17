@@ -8,7 +8,7 @@ TARGET="${1:?usage: install.sh /path/to/repo}"
 [ -d "$TARGET" ] || { echo "not a directory: $TARGET" >&2; exit 1; }
 
 # 1. Context files — never clobber an existing one.
-for f in AGENTS.md Context.md Memory.md Skills.md; do
+for f in AGENTS.md Context.md Memory.md; do
   if [ -e "$TARGET/$f" ]; then
     echo "skip  $f (already exists)"
   else
@@ -41,7 +41,7 @@ else
 fi
 
 # 4. Self-check: the install is only done if every artifact landed.
-for f in AGENTS.md Context.md Memory.md Skills.md .claude/hooks/agentic-kit-inject.sh; do
+for f in AGENTS.md Context.md Memory.md .claude/hooks/agentic-kit-inject.sh; do
   [ -e "$TARGET/$f" ] || { echo "FAIL: missing $TARGET/$f" >&2; exit 1; }
 done
 echo "ok — agentic-kit installed in $TARGET (fill in the {{...}} placeholders)"

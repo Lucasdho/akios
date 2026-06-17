@@ -5,10 +5,9 @@ It drops four context files at the repo root and a SessionStart hook that
 re-injects the mandatory skill gates every session.
 
 ```
-AGENTS.md   entry point, auto-loaded by the agent — the loop + skill gates
+AGENTS.md   entry point, auto-loaded — the loop, skill gates, and routing
 Context.md  stack, commands, architecture, conventions
 Memory.md   durable decisions across sessions
-Skills.md   which skills are mandatory per task type
 ```
 
 ## Install with a Claude Code agent (recommended)
@@ -26,12 +25,12 @@ Install the agentic-kit into this repo for me.
    ~/.claude/skills/ and prints the marketplace commands for the two plugins
    (ponytail, superpowers) — run those /plugin commands so I have every skill.
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
-   It copies AGENTS.md, Context.md, Memory.md, Skills.md to the repo root and
-   wires the SessionStart reinforcement hook into .claude/settings.json. It is
-   idempotent and never overwrites existing files.
+   It copies AGENTS.md, Context.md, Memory.md to the repo root and wires the
+   SessionStart reinforcement hook into .claude/settings.json. It is idempotent
+   and never overwrites existing files.
 4. Read the codebase and fill in every {{...}} placeholder in Context.md and
-   Skills.md — stack, build/test/lint/run commands, architecture, conventions,
-   and any project-specific skill overrides. Leave no {{...}} behind.
+   AGENTS.md — stack, build/test/lint/run commands, architecture, conventions,
+   and any project-specific skill gates. Leave no {{...}} behind.
 5. Show me a summary of what changed and what you filled in.
 
 Do not commit anything unless I ask.
@@ -47,7 +46,7 @@ git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
 ~/iOS-agentic-kit/install.sh /path/to/your/repo
 ```
 `install.sh` is idempotent (never overwrites existing files, wires the hook once).
-Then fill in the `{{...}}` placeholders in `Context.md` / `Skills.md`.
+Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 
 ### Skills the kit needs
 | Skill | Type | How it installs |
