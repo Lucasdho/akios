@@ -4,8 +4,23 @@
 set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
-TARGET="${1:?usage: install.sh /path/to/repo}"
+
+# Args: [--here] /path/to/repo. By default the kit installs at the git repo root
+# (where Claude Code loads CLAUDE.md from); --here installs at the exact path.
+HERE=0; args=()
+for a in "$@"; do
+  case "$a" in --here) HERE=1 ;; *) args+=("$a") ;; esac
+done
+TARGET="${args[0]:?usage: install.sh [--here] /path/to/repo}"
 [ -d "$TARGET" ] || { echo "not a directory: $TARGET" >&2; exit 1; }
+
+if [ "$HERE" -eq 0 ]; then
+  GITROOT="$(git -C "$TARGET" rev-parse --show-toplevel 2>/dev/null || true)"
+  if [ -n "$GITROOT" ] && [ "$GITROOT" != "$(cd "$TARGET" && pwd)" ]; then
+    echo "note: installing at git root $GITROOT (pass --here to install in the given dir instead)"
+    TARGET="$GITROOT"
+  fi
+fi
 
 # 1. Context files — never clobber an existing one.
 for f in AGENTS.md Context.md Memory.md; do

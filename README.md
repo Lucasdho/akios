@@ -52,9 +52,11 @@ Install the agentic-kit into this repo for me.
    ~/.claude/skills/ and prints the marketplace commands for the two plugins
    (ponytail, superpowers) — run those /plugin commands so I have every skill.
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
-   It drops CLAUDE.md (importing @AGENTS.md), AGENTS.md, Context.md, Memory.md,
-   the .claude/rules/swift.md path-scoped rule, and wires the SessionStart hook
-   into .claude/settings.json. Idempotent; it never overwrites existing files
+   It installs at the git repo root by default (pass `--here` to install in the
+   exact dir, e.g. an app subfolder). It drops CLAUDE.md (importing @AGENTS.md),
+   AGENTS.md, Context.md, Memory.md, the .claude/rules/swift.md path-scoped rule,
+   and wires the SessionStart hook into .claude/settings.json. Idempotent; it
+   never overwrites existing files
    (an existing CLAUDE.md just gets the @AGENTS.md import prepended).
 4. Read the codebase and fill in every {{...}} placeholder in Context.md and
    AGENTS.md — stack, build/test/lint/run commands, architecture, conventions,
@@ -71,7 +73,8 @@ git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
 # 2. install the required skills into ~/.claude/skills/
 ~/iOS-agentic-kit/install-skills.sh
 # 3. plug the kit into your repo
-~/iOS-agentic-kit/install.sh /path/to/your/repo
+~/iOS-agentic-kit/install.sh /path/to/your/repo        # installs at the git root
+# ~/iOS-agentic-kit/install.sh --here /path/to/subdir  # or install in an exact subfolder
 ```
 `install.sh` is idempotent (never overwrites existing files, wires the hook once).
 Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
