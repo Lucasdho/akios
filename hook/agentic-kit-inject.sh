@@ -4,7 +4,7 @@
 cat <<'EOF'
 [agentic-kit · Swift/iOS] Always on: superpowers · ponytail · swift-dev. Gates:
 - Before ANY code        -> plan mode OR superpowers:brainstorming
-- Bug / failure / flake  -> superpowers:systematic-debugging or bug-hunt-swarm + swift-dev->ios-debugger-agent
+- Bug / failure / flake  -> superpowers:systematic-debugging + swift-dev->ios-debugger-agent
 - Implementing code      -> ponytail (no over-build/rewrite) + swift-dev writing standards + fewer-permission-prompts
 - Creating SwiftUI Views -> native first + swiftui-design-skill (with ponytail + swift-dev)
 - Writing tests          -> swift-dev -> swift-testing-pro

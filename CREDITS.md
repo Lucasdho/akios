@@ -13,7 +13,6 @@ includes each plugin's `LICENSE` file for that reason.
 | `swiftui-design-skill` | **wholiver** | MIT (v1.0.0) | SKILL.md frontmatter |
 | `ponytail` (plugin) | **Dietrich Gebert** | MIT © 2026 | https://github.com/DietrichGebert/ponytail |
 | `superpowers` (plugin) | **Jesse Vincent** (obra) | MIT © 2025 | https://github.com/obra/superpowers |
-| `bug-hunt-swarm` | Anthropic (anthropic-skills) | **unspecified** | local skill — see note |
 
 ## Inside `swift-dev` (your skill bundles these sub-guides)
 
@@ -37,6 +36,8 @@ includes each plugin's `LICENSE` file for that reason.
 - **MIT skills** (`swiftui-design-skill`, `ponytail`, `superpowers`, Paul Hudson
   guides, `ios-accessibility`) — OK to redistribute **with attribution + their
   LICENSE retained**. Keep this file and the bundled `LICENSE` files together.
-- **`bug-hunt-swarm`** — no license declared. **Do not publish it publicly** until
-  you confirm terms with Anthropic; safe to keep for personal/internal use.
-- **`swift-dev`** — yours; license it however you like (consider stating one).
+- **`swift-dev`** — yours; licensed MIT © 2026 Lucas Oliveira (see `LICENSE`).
+
+> For bug investigation this kit uses `superpowers:systematic-debugging` +
+> `swift-dev`→ios-debugger-agent. `bug-hunt-swarm` was intentionally left out
+> (undeclared license).

@@ -7,7 +7,6 @@
 |---|---|---|
 | `swift-dev` | `~/.claude/skills/swift-dev` | Master router for all Swift/iOS work |
 | `swiftui-design-skill` | `~/.agents/skills/swiftui-design-skill` | Native SwiftUI visual design |
-| `bug-hunt-swarm` | `~/.claude/skills/bug-hunt-swarm` | Multi-agent root-cause for hard bugs |
 | `ponytail` (plugin) | `~/.claude/plugins/cache/ponytail` | Laziness/efficiency, anti over-build |
 | `superpowers` (plugin) | `~/.claude/plugins/cache/.../superpowers` | brainstorming, systematic-debugging, TDD, verification |
 

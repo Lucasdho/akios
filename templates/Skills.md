@@ -13,7 +13,7 @@ These three are big router skills — they redirect to the right internal skills
 - Enter **plan mode** OR `superpowers:brainstorming`. No code before one of these.
 
 ## Bug / failure / flake / regression
-- `superpowers:systematic-debugging` OR `bug-hunt-swarm` (hairy / unknown cause)
+- `superpowers:systematic-debugging` — structured root-cause before any fix.
 - `swift-dev` → **ios-debugger-agent** for the iOS-specific diagnosis.
 
 ## Implementation (writing/editing code)

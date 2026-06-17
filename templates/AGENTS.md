@@ -19,7 +19,7 @@ Do not skip. If a gate applies, invoke the skill BEFORE writing code.
 | Trigger | Skill | When |
 |---|---|---|
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
-| Bug, crash, flake, regression | `superpowers:systematic-debugging` / `bug-hunt-swarm` + `swift-dev`→ios-debugger-agent | before any fix |
+| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `swift-dev`→ios-debugger-agent | before any fix |
 | Implementing code | `ponytail` + `swift-dev` writing standards + `fewer-permission-prompts` | while coding |
 | Creating SwiftUI Views | native first + `swiftui-design-skill` (with ponytail + swift-dev) | before the view |
 | Writing tests | `swift-dev` → swift-testing-pro | with the code |
