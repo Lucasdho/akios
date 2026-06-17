@@ -1,5 +1,7 @@
 # Skills used by this kit
 
+> Author credits & license terms for every skill → [CREDITS.md](CREDITS.md).
+
 ## Bundled (in `skills/` and `skills-bundle.zip`)
 | Skill | Source on disk | Role in the kit |
 |---|---|---|
