@@ -31,8 +31,8 @@ These three are big router skills — they redirect to the right internal skills
 
 ## swift-dev sub-skills (it auto-routes; named here for reference)
 figma-to-swiftui · ios-accessibility · ios-debugger-agent · swift-concurrency-pro
-· swift-testing-pro · swiftdata-pro · swiftui-performance-audit · swiftui-pro
-· swiftui-ui-patterns · swiftui-view-refactor
+· swift-testing-pro · swiftdata-pro · swiftui-design-principles
+· swiftui-performance-audit · swiftui-pro · swiftui-ui-patterns · swiftui-view-refactor
 
 ## Before finishing
 - May dispatch subagents to run:

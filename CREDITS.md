@@ -14,10 +14,10 @@ MIT except where noted; the bundled `.zip` includes each plugin's `LICENSE`.
 
 ## Inside `swift-dev`
 
-All sub-skills come from **twostraws/swift-agent-skills** — a curated
+Most sub-skills come from **twostraws/swift-agent-skills** — a curated
 collection of open-source Swift agent skills maintained by **Paul Hudson**,
-licensed **MIT**. https://github.com/twostraws/swift-agent-skills
-Original skill authors (where identified within the collection):
+licensed **MIT** (https://github.com/twostraws/swift-agent-skills) — except
+where a different source is listed below. Original skill authors:
 
 | Sub-skill | Original author / source |
 |---|---|
@@ -31,6 +31,7 @@ Original skill authors (where identified within the collection):
 | `figma-to-swiftui` | daetojemax — https://github.com/daetojemax/figma-to-swiftui-skill |
 | `swiftui-view-refactor` | rewritten from Thomas Ricouard (Dimillian) — "SwiftUI in 2025: Forget MVVM" |
 | `ios-accessibility` | Daniel Devesa Derksen-Staats — *Developing Accessible iOS Apps* (Apress) & #365DaysIOSAccessibility |
+| `swiftui-design-principles` | arjitj2 — https://github.com/arjitj2/swiftui-design-principles (MIT © 2026 arjitj2) |
 
 `swift-testing-pro` / `swift-concurrency-pro` reference Apple's Swift Testing &
 Swift Concurrency (swift.org, Apache-2.0 w/ Runtime Library Exception); the
