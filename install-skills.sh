@@ -11,25 +11,39 @@ mkdir -p "$DEST"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 unzip -q "$KIT/skills-bundle.zip" -d "$TMP"
 
+# Fallback source per plain skill, in case it's missing from the bundle.
+fallback() {
+  case "$1" in
+    swift-dev|idea-to-spec|oss-first)
+      echo "npx skills add Lucasdho/iOS-agentic-kit --skill $1  (or re-clone the kit and re-run)" ;;
+    *) echo "(no known source)" ;;
+  esac
+}
+
 for s in swift-dev idea-to-spec oss-first; do
   if [ -e "$DEST/$s" ]; then
     echo "skip      $s (already in ~/.claude/skills)"
-  else
+  elif [ -d "$TMP/skills/$s" ]; then
     cp -R "$TMP/skills/$s" "$DEST/$s"
     echo "installed $s -> ~/.claude/skills/$s"
+  else
+    echo "MISSING   $s — not in the bundle. Install it with:"
+    echo "          $(fallback "$s")"
   fi
 done
 
 # check
 for s in swift-dev idea-to-spec oss-first; do
-  [ -f "$DEST/$s/SKILL.md" ] || { echo "FAIL: $s has no SKILL.md" >&2; exit 1; }
+  [ -f "$DEST/$s/SKILL.md" ] || {
+    echo "FAIL: $s is not installed. Get it with: $(fallback "$s")" >&2; exit 1; }
 done
 
 cat <<'EOF'
 
-Plugins — install via marketplaces inside Claude Code (registers hooks/commands):
+Plugins (ponytail, superpowers) — if NOT already installed, add them via their
+marketplaces inside Claude Code (this registers their hooks/commands):
   /plugin marketplace add DietrichGebert/ponytail   ->  /plugin install ponytail
   /plugin marketplace add obra/superpowers          ->  /plugin install superpowers
 
-ok — plain skills installed; install the two plugins above.
+ok — plain skills handled; if any plugin above is missing, run its commands.
 EOF

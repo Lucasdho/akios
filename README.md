@@ -49,18 +49,34 @@ Install the agentic-kit into this repo for me.
    If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update.
 2. Install the required skills: ~/iOS-agentic-kit/install-skills.sh
    It copies the plain skills (swift-dev, idea-to-spec, oss-first) into
-   ~/.claude/skills/ and prints the marketplace commands for the two plugins
-   (ponytail, superpowers) — run those /plugin commands so I have every skill.
+   ~/.claude/skills/. Then verify the two plugins (ponytail, superpowers) are
+   actually available. If either is missing, give me the exact command to add it
+   and STOP until I confirm — do not continue without every skill:
+     /plugin marketplace add DietrichGebert/ponytail  &&  /plugin install ponytail
+     /plugin marketplace add obra/superpowers         &&  /plugin install superpowers
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
-   It installs at the git repo root by default (pass `--here` to install in the
-   exact dir, e.g. an app subfolder). It drops CLAUDE.md (importing @AGENTS.md),
-   AGENTS.md, Context.md, Memory.md, the .claude/rules/swift.md path-scoped rule,
-   and wires the SessionStart hook into .claude/settings.json. Idempotent; it
-   never overwrites existing files
-   (an existing CLAUDE.md just gets the @AGENTS.md import prepended).
-4. Read the codebase and fill in every {{...}} placeholder in Context.md and
-   AGENTS.md — stack, build/test/lint/run commands, architecture, conventions,
-   and any project-specific skill gates. Leave no {{...}} behind.
+   Installs at the git repo root by default; pass `--here <path>` to install in an
+   exact subfolder (e.g. the app dir when it sits below .git). It drops CLAUDE.md
+   (importing @AGENTS.md), AGENTS.md, Context.md, Memory.md, .claude/rules/swift.md,
+   and wires the SessionStart hook. Idempotent; never overwrites existing files.
+
+   BEFORE running it, ASK me three things (these shape what gets written, and a
+   blind scan both wastes tokens and gets them wrong):
+   a. **Folders** — which directories are the real source, and which to ignore
+      (Pods, build output, generated, fixtures, vendored code). Don't read the
+      ignored ones. If I don't answer, scan only obvious source dirs and skip the
+      usual noise.
+   b. **Architecture** — TCA, MVVM+C, MVVM, VIPER, MVC, or Vanilla? Or none yet?
+      If I don't answer, infer from the code as cheaply as you can and default to
+      proposing **MVVM** — state it as a suggestion, not a fact.
+   c. **Target** — device family (iPhone / iPad / universal) and minimum OS.
+      Confirm with me; read these from the APP target only. In an Xcode project the
+      `*Tests`/`*UITests` targets carry Xcode's default deployment target and
+      universal device family — never read the app's min OS or device family from
+      a test target.
+4. Read the codebase (respecting 3a) and fill in every {{...}} placeholder in
+   Context.md and AGENTS.md — stack, build/test/lint/run commands, architecture
+   (from 3b), target (from 3c), conventions, project-specific gates. No {{...}} left.
 5. Show me a summary of what changed and what you filled in.
 
 Do not commit anything unless I ask.
