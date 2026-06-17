@@ -1,8 +1,9 @@
 # AGENTS.md — Agentic Operating Manual
 
-Auto-loaded every session (Claude Code, Codex, etc. read AGENTS.md). This is the
-single source of truth for how to work here — the skill gates live below, not in
-a separate file.
+Loaded every session via the project `CLAUDE.md`, which imports `@AGENTS.md`
+(Claude Code reads CLAUDE.md, not this file directly; Codex and other agents read
+AGENTS.md directly). This is the single source of truth for how to work here —
+the skill gates live below, not in a separate file.
 
 ## The loop (every code task)
 1. **Orient** → `Context.md` — stack, commands, architecture, conventions.
