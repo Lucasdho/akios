@@ -1,8 +1,8 @@
 # agentic-kit
 
 A meta-system you plug into any repo to make agentic coding more efficient.
-It drops four context files at the repo root and a SessionStart hook that
-re-injects the mandatory skill gates every session.
+It drops three context files at the repo root and a SessionStart hook that
+re-injects the default skill gates every session (it reminds, it does not enforce).
 
 ```
 AGENTS.md   entry point, auto-loaded — the loop, skill gates, and routing
