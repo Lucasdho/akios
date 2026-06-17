@@ -1,9 +1,11 @@
 @AGENTS.md
+@Context.md
 
 <!--
-  Claude Code auto-loads THIS file, not AGENTS.md. The @AGENTS.md import above
-  pulls the operating manual (loop, gates, routing) into context every session
-  and re-injects it after /compact. Add Claude-specific notes below the import.
+  Claude Code auto-loads THIS file, not AGENTS.md. The imports above pull the
+  operating manual (loop, gates, routing) AND the project Context into context
+  every session. A project-root CLAUDE.md is also re-injected after /compact
+  (a CLAUDE.md in a subdirectory is not). Add Claude-specific notes below.
 -->
 
 ## Specs

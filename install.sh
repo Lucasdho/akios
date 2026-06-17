@@ -33,16 +33,22 @@ for f in AGENTS.md Context.md; do
   fi
 done
 
-# 2. CLAUDE.md — the file Claude Code actually auto-loads. Make it import AGENTS.md.
+# 2. CLAUDE.md — the file Claude Code actually auto-loads. Make it import the
+#    operating manual (@AGENTS.md) and the project context (@Context.md).
 if [ ! -e "$TARGET/CLAUDE.md" ]; then
   cp "$KIT/templates/CLAUDE.md" "$TARGET/CLAUDE.md"
-  echo "added CLAUDE.md (imports @AGENTS.md)"
-elif grep -q '@AGENTS.md' "$TARGET/CLAUDE.md"; then
-  echo "skip  CLAUDE.md (already imports @AGENTS.md)"
+  echo "added CLAUDE.md (imports @AGENTS.md, @Context.md)"
 else
-  # existing CLAUDE.md without the import: prepend it so the gates load.
-  printf '@AGENTS.md\n\n%s' "$(cat "$TARGET/CLAUDE.md")" > "$TARGET/CLAUDE.md"
-  echo "patched CLAUDE.md (prepended @AGENTS.md import)"
+  # ensure each import exists; prepend whichever is missing (Context first so
+  # AGENTS ends up on top). Handles upgrades from a CLAUDE.md that only had AGENTS.
+  for imp in '@Context.md' '@AGENTS.md'; do
+    if grep -qF "$imp" "$TARGET/CLAUDE.md"; then
+      echo "skip  CLAUDE.md (already imports $imp)"
+    else
+      printf '%s\n%s' "$imp" "$(cat "$TARGET/CLAUDE.md")" > "$TARGET/CLAUDE.md"
+      echo "patched CLAUDE.md (prepended $imp import)"
+    fi
+  done
 fi
 
 # 3. Path-scoped rule: load the Swift gate whenever a .swift file is read.
@@ -86,5 +92,7 @@ for f in AGENTS.md Context.md CLAUDE.md .claude/.agentic-kit-version \
          .claude/rules/swift.md .claude/hooks/agentic-kit-inject.sh; do
   [ -e "$TARGET/$f" ] || { echo "FAIL: missing $TARGET/$f" >&2; exit 1; }
 done
-grep -q '@AGENTS.md' "$TARGET/CLAUDE.md" || { echo "FAIL: CLAUDE.md does not import @AGENTS.md" >&2; exit 1; }
+for imp in '@AGENTS.md' '@Context.md'; do
+  grep -qF "$imp" "$TARGET/CLAUDE.md" || { echo "FAIL: CLAUDE.md does not import $imp" >&2; exit 1; }
+done
 echo "ok — agentic-kit installed in $TARGET (fill in the {{...}} placeholders)"

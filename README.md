@@ -26,18 +26,21 @@ automatically and survives compaction.
 ## How it's invoked
 You don't "run" the kit — it shapes the agent's behavior passively:
 1. **At session start**, Claude Code loads `CLAUDE.md`, which imports `@AGENTS.md`
-   in full (and re-injects it after `/compact`); the SessionStart hook re-states
-   the gates; the always-on skills (`ponytail`, `superpowers`) self-activate.
+   and `@Context.md` in full; the SessionStart hook re-states the gates; the
+   always-on skills (`ponytail`, `superpowers`) self-activate via their own hooks.
+   A **project-root** `CLAUDE.md` is also re-injected after `/compact` (a CLAUDE.md
+   in a subdirectory is not — another reason install defaults to the git root).
 2. **`AGENTS.md` orients** the agent: the loop, the gate table, routing.
 3. **`.claude/rules/swift.md` fires per file**: whenever Claude reads a `.swift`
    file, the Swift gate (invoke `swift-dev`, `ponytail`) loads — even mid-session.
 4. **Skills trigger themselves** by description, or you invoke one with `/skill-name`.
-5. **`Context.md`** carries project facts; **native auto-memory** carries decisions.
+5. **`Context.md`** (project facts) rides into context via the `@Context.md` import;
+   **native auto-memory** (`MEMORY.md`) carries durable decisions.
 
 > Why `CLAUDE.md`: Claude Code auto-loads `CLAUDE.md`, not `AGENTS.md`. `install.sh`
-> creates a `CLAUDE.md` that imports `@AGENTS.md` for you (or prepends the import
-> to an existing one), so the gates reach Claude Code by default — not just the
-> hook reminder.
+> creates a `CLAUDE.md` that imports `@AGENTS.md` + `@Context.md` for you (or
+> prepends any missing import to an existing one), so the gates and project context
+> reach Claude Code by default — not just the hook reminder.
 
 ## Install with a Claude Code agent (recommended)
 Don't follow steps by hand — paste this prompt into Claude Code from inside the

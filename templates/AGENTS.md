@@ -6,7 +6,8 @@ AGENTS.md directly). This is the single source of truth for how to work here —
 the skill gates live below, not in a separate file.
 
 ## The loop (every code task)
-1. **Orient** → `Context.md` — stack, commands, architecture, conventions.
+1. **Orient** → `Context.md` — stack, commands, architecture, conventions
+   (auto-loaded for you via the `@Context.md` import in `CLAUDE.md`).
 2. **Recall** → your native auto-memory (`MEMORY.md`, loaded automatically) for
    decisions already made. Don't relitigate them.
 3. **Route** → the gate table below — which skill fits this task type.
