@@ -11,7 +11,30 @@ Memory.md   durable decisions across sessions
 Skills.md   which skills are mandatory per task type
 ```
 
-## Install into a repo
+## Install with a Claude Code agent (recommended)
+Don't follow steps by hand — paste this prompt into Claude Code from inside the
+repo you want to set up, and let the agent do it:
+
+```text
+Install the agentic-kit into this repo for me.
+
+1. Locate the kit at ~/agentic-kit (if missing, tell me and stop).
+2. Run: ~/agentic-kit/install.sh "$(pwd)"
+   It copies AGENTS.md, Context.md, Memory.md, Skills.md to the repo root and
+   wires the SessionStart reinforcement hook into .claude/settings.json. It is
+   idempotent and never overwrites existing files.
+3. Read the codebase and fill in every {{...}} placeholder in Context.md and
+   Skills.md — stack, build/test/lint/run commands, architecture, conventions,
+   and any project-specific skill overrides. Leave no {{...}} behind.
+4. Confirm the bundled skills are available (swift-dev, swiftui-design-skill,
+   ponytail, superpowers). If any is missing, point me to skills-bundle.zip in
+   the kit and tell me how to install it.
+5. Show me a summary of what changed and what you filled in.
+
+Do not commit anything unless I ask.
+```
+
+## Install manually
 ```sh
 ~/agentic-kit/install.sh /path/to/your/repo
 ```
