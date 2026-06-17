@@ -57,6 +57,26 @@ Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 
 Credits & licenses for all of the above → [CREDITS.md](CREDITS.md).
 
+## Updating bundled skills
+`skills-bundle.zip` is a snapshot — it does **not** track upstream. The bundled
+third-party skills will drift from their sources over time. To refresh:
+
+```sh
+# plugins — update via their marketplaces in Claude Code, then they live in ~/.claude
+/plugin update ponytail
+/plugin update superpowers
+
+# swift-dev sub-skills from twostraws/swift-agent-skills (per-skill, as needed)
+npx skills add twostraws/swift-agent-skills --skill <name>
+
+# standalone sub-skills
+npx skills add arjitj2/swiftui-design-principles
+npx skills add daetojemax/figma-to-swiftui-skill
+```
+Then re-snapshot: `./bundle-skills.sh && ./test-kit.sh`, and bump the date +
+versions in [CREDITS.md](CREDITS.md). The snapshot date and pinned versions are
+recorded there.
+
 ## Why a hook and not just docs
 `AGENTS.md` is auto-loaded, but the per-task gates are easy to drift past
 mid-session. The SessionStart hook re-states them in context every start —

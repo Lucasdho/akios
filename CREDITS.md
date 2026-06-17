@@ -38,3 +38,18 @@ guide text is MIT, the underlying Apple APIs are documented, not copied.
 
 ## Built into Claude Code (not bundled)
 `/code-review` and `fewer-permission-prompts` ship with the Claude Code CLI.
+
+## Bundle snapshot & drift
+`skills-bundle.zip` is a **snapshot** taken **2026-06-17** — it does not
+auto-update. Pinned versions at snapshot time:
+
+| Source | Version / ref |
+|---|---|
+| ponytail | 4.7.0 |
+| superpowers | 5.1.0 |
+| swiftui-design-principles | 1.1.1 |
+| twostraws/swift-agent-skills (swift-dev sub-skills) | snapshot 2026-06-17 |
+| daetojemax/figma-to-swiftui-skill | snapshot 2026-06-17 |
+
+To refresh, see "Updating bundled skills" in [README.md](README.md), then
+re-run `./bundle-skills.sh` and `./test-kit.sh`, and update this date.
