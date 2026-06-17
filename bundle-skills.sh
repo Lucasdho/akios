@@ -21,5 +21,6 @@ add swiftui-design-skill "$CC/skills/swiftui-design-skill"
 add ponytail             "$CC/plugins/cache/ponytail"
 add superpowers          "$CC/plugins/cache/superpowers-marketplace/superpowers"
 
-( cd "$KIT" && zip -rq skills-bundle.zip skills )
+# rm first: zip updates an existing archive, leaving stale entries otherwise
+( cd "$KIT" && rm -f skills-bundle.zip && zip -rq skills-bundle.zip skills )
 echo "ok -> $KIT/skills-bundle.zip ($(du -sh "$KIT/skills-bundle.zip" | cut -f1))"
