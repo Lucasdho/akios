@@ -18,8 +18,10 @@ repo you want to set up, and let the agent do it:
 ```text
 Install the agentic-kit into this repo for me.
 
-1. Locate the kit at ~/agentic-kit (if missing, tell me and stop).
-2. Run: ~/agentic-kit/install.sh "$(pwd)"
+1. Get the kit. Clone it to ~/iOS-agentic-kit if it isn't there yet:
+     git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
+   If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update.
+2. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
    It copies AGENTS.md, Context.md, Memory.md, Skills.md to the repo root and
    wires the SessionStart reinforcement hook into .claude/settings.json. It is
    idempotent and never overwrites existing files.
@@ -27,8 +29,8 @@ Install the agentic-kit into this repo for me.
    Skills.md — stack, build/test/lint/run commands, architecture, conventions,
    and any project-specific skill overrides. Leave no {{...}} behind.
 4. Confirm the bundled skills are available (swift-dev, swiftui-design-skill,
-   ponytail, superpowers). If any is missing, point me to skills-bundle.zip in
-   the kit and tell me how to install it.
+   ponytail, superpowers). If any is missing, unzip ~/iOS-agentic-kit/
+   skills-bundle.zip and tell me where its skills should be installed.
 5. Show me a summary of what changed and what you filled in.
 
 Do not commit anything unless I ask.
@@ -36,7 +38,10 @@ Do not commit anything unless I ask.
 
 ## Install manually
 ```sh
-~/agentic-kit/install.sh /path/to/your/repo
+# 1. get the kit
+git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
+# 2. plug it into your repo
+~/iOS-agentic-kit/install.sh /path/to/your/repo
 ```
 Idempotent: never overwrites existing files, wires the hook once.
 Then fill in the `{{...}}` placeholders in `Context.md` / `Skills.md`.
