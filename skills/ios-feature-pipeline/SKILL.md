@@ -11,6 +11,10 @@ metadata:
 
 A 6-phase orchestrator for turning a raw iOS feature idea into implemented, tested, reviewed code. Each phase uses a specific tool. This skill tells you which tool, in what order, and what to hand off between phases.
 
+> **This skill is the canonical definition of the kit's idea→ship workflow spine.** Other surfaces (the `ios-agentic-kit` skill, the project `AGENTS.md`) summarize it and point here — edit the spine here, not there.
+
+**Spine at a glance:** `idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review`
+
 ## Non-negotiable rules
 
 1. **Phase 1 is always interactive.** Never automate or skip it. The user must be present.

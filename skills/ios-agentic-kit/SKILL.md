@@ -18,6 +18,22 @@ the kit is, how it routes, and how to install it.
 > repo. This skill is authored there (`skills/ios-agentic-kit/`) and installed by
 > `install-skills.sh`. Edit it in the repo, not in `~/.claude/skills/`.
 
+**New / non-CLI user?** If someone seems new or asks how to start or set up the kit, point
+them to `START-HERE.md` (plain-language front door) and offer to run the guided setup for
+them — don't make them follow shell steps by hand.
+
+## The workflow (spine)
+
+The kit's job is to bind scattered skills into **one spec-driven flow** from idea to shipped code:
+
+```
+idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review
+```
+
+For any end-to-end feature, **start with `/ios-feature-pipeline`** — it's the canonical orchestrator
+that owns the full phase guide, the artifact handoffs, and the no-speckit degraded path. Everything
+below (install, per-step routing, references) is in service of running that spine.
+
 ## What it installs (per repo)
 
 | File | Role |
@@ -44,7 +60,11 @@ You don't "run" the kit — it shapes the agent's behavior passively:
    context blowup).
 4. **Skills trigger themselves** by description, or you invoke one with `/skill-name`.
 
-## The gate table (route every task)
+## Per-step routing (and off-spine tasks)
+
+Which skill fires at each step of the spine — and for one-off work that isn't a full feature. In an
+installed repo the project `AGENTS.md` carries the canonical copy of this table (auto-loaded every
+session); the copy here is the portable version for repos without the kit installed.
 
 | Trigger | Skill | When |
 |---|---|---|
@@ -69,23 +89,6 @@ on demand, so only the relevant domain loads during long plan/execute sessions.
 | `superpowers`, `axiom` | plugin (required) | `/plugin marketplace add` + `/plugin install` (printed by the script) |
 | `ponytail` | plugin (optional, recommended) | efficiency overlay — `/plugin install`; the kit works without it |
 | `/code-review`, `fewer-permission-prompts` | built-in | ship with the Claude Code CLI |
-
-## Full pipeline with speckit (optional)
-
-`ios-feature-pipeline` orchestrates the path from raw idea to running code. With speckit
-initialized (`.specify/` present):
-
-| Phase | Tool | Mode |
-|---|---|---|
-| 1 — Design | `/idea-to-spec` | Interactive — user present |
-| 2 — Clarify | `/speckit-clarify` | Automated |
-| 3 — Specify | `/speckit-specify` | Automated |
-| 4 — Plan | `/speckit-plan` | Automated — constitution enforces Axiom gates |
-| 5 — Tasks | `/speckit-tasks` | Automated |
-| 6 — Execute | `superpowers:subagent-driven-development` | Fresh subagents, Axiom domain skill per task |
-
-Invoke `/ios-feature-pipeline` for the full phase guide and the degraded path for projects
-without speckit.
 
 ## Installing the kit into a repo
 

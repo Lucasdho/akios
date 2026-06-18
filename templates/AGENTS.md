@@ -67,17 +67,17 @@ When `idea-to-spec` produces specs:
   or `specs/INDEX.md` if you prefer to keep it out of `CLAUDE.md`.
 - Before designing something new, read that orchestration doc first.
 
-## Speckit integration (optional, enhances idea-to-spec)
-When speckit is initialized in this repo (`.specify/` present), run the full
-structured pipeline after `idea-to-spec` produces a spec:
-- **`/speckit-clarify`** → resolves ambiguities
-- **`/speckit-specify`** → structured spec with acceptance scenarios
-- **`/speckit-plan`** → research + data model + constitution check (Axiom gates)
-- **`/speckit-tasks`** → trackable task list ready for execution
+## Full feature workflow (the spine)
+The end-to-end idea→ship spine is owned by **`ios-feature-pipeline`** — invoke it for any
+feature built from scratch. The spine at a glance:
 
-Then execute with `superpowers:subagent-driven-development`. Include the relevant
-Axiom domain skill in every subagent context block — subagents start cold.
-The `ios-feature-pipeline` skill documents all phases and subagent context rules.
+`idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review`
+
+When speckit is initialized (`.specify/` present) it runs the structured phases then executes
+via `superpowers:subagent-driven-development` (every subagent context block includes the relevant
+Axiom domain skill — subagents start cold). See the `ios-feature-pipeline` skill for the full
+phase guide, the artifact handoffs, and the no-speckit degraded path. Don't re-document the phases
+here — that skill is the single source of truth.
 
 ## Project-specific gates
 {{e.g. "always /security-review when touching Keychain / auth / networking"}}

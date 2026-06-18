@@ -1,5 +1,9 @@
 # iOS Agentic Kit
 
+> 👋 **New here, or not a command-line person?** Start with **[START-HERE.md](START-HERE.md)** —
+> it sets you up and builds your first feature by pasting one block and answering plain
+> questions. The rest of this README is the technical reference.
+
 A meta-system you plug into any Swift/iOS repo to make agentic coding more efficient.
 It drops a `CLAUDE.md` that imports the operating manual, context files, a
 path-scoped Swift rule, and a SessionStart hook that reminds the agent of the
@@ -69,58 +73,12 @@ cp ~/iOS-agentic-kit/templates/workflows/ios-feature-pipeline.yml \
 (Requires `npx speckit init` in the project first.)
 
 ## Install with a Claude Code agent (recommended)
-Don't follow steps by hand — paste this prompt into Claude Code from inside the
-repo you want to set up, and let the agent do it:
+Paste a single setup prompt into Claude Code from inside the repo you want to set up, and
+let the agent clone the kit, install the skills, check the plugins, run `install.sh`, and
+fill in the templates — asking you about folders, architecture, and target along the way.
 
-```text
-Install the agentic-kit into this repo for me.
-
-1. Get the kit. Clone it to ~/iOS-agentic-kit if it isn't there yet:
-     git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
-   If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update.
-2. Install the required skills: ~/iOS-agentic-kit/install-skills.sh
-   It copies the authored skills (idea-to-spec, oss-first, ios-feature-pipeline,
-   ios-agentic-kit) into ~/.claude/skills/, refreshing them from the repo. Then
-   verify the REQUIRED plugins (superpowers, axiom) are available. If either is
-   missing, give me the exact command and STOP until I confirm — don't continue
-   without them:
-     /plugin marketplace add obra/superpowers         &&  /plugin install superpowers
-     /plugin marketplace add CharlesWiltgen/Axiom     &&  /plugin install axiom
-   ponytail is OPTIONAL but recommended (efficiency overlay). Offer to install it,
-   but don't STOP if it's missing:
-     /plugin marketplace add DietrichGebert/ponytail  &&  /plugin install ponytail
-3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
-   Installs at the git repo root by default; pass `--here <path>` to install in an
-   exact subfolder (e.g. the app dir when it sits below .git). It drops CLAUDE.md
-   (importing @AGENTS.md), AGENTS.md, Context.md, .claude/rules/swift.md,
-   and wires the SessionStart hook. Idempotent; never overwrites existing files.
-
-   BEFORE running it, ASK me three things (these shape what gets written, and a
-   blind scan both wastes tokens and gets them wrong):
-   a. **Folders** — which directories are the real source, and which to ignore
-      (Pods, build output, generated, fixtures, vendored code). Don't read the
-      ignored ones. If I don't answer, scan only obvious source dirs and skip the
-      usual noise.
-   b. **Architecture** — TCA, MVVM+C, MVVM, VIPER, MVC, or Vanilla? Or none yet?
-      If I don't answer, infer from the code as cheaply as you can and default to
-      proposing **MVVM** — state it as a suggestion, not a fact.
-   c. **Target** — device family (iPhone / iPad / universal) and minimum OS.
-      Confirm with me; read these from the APP target only. In an Xcode project the
-      `*Tests`/`*UITests` targets carry Xcode's default deployment target and
-      universal device family — never read the app's min OS or device family from
-      a test target.
-4. [Optional — full pipeline] If this repo uses speckit (.specify/ exists):
-   Copy the pipeline workflow template:
-     cp ~/iOS-agentic-kit/templates/workflows/ios-feature-pipeline.yml \
-        "$(pwd)/.specify/workflows/"
-   If speckit isn't initialized yet, run `npx speckit init` first.
-5. Read the codebase (respecting 3a) and fill in every {{...}} placeholder in
-   Context.md and AGENTS.md — stack, build/test/lint/run commands, architecture
-   (from 3b), target (from 3c), conventions, project-specific gates. No {{...}} left.
-6. Show me a summary of what changed and what you filled in.
-
-Do not commit anything unless I ask.
-```
+The ready-to-paste block (plain-language framed) lives in **[START-HERE.md](START-HERE.md)
+§ 2** — single source for the agent install, so the novice path and this one don't drift.
 
 ## Install manually
 ```sh
