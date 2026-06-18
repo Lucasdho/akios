@@ -95,4 +95,9 @@ done
 for imp in '@AGENTS.md' '@Context.md'; do
   grep -qF "$imp" "$TARGET/CLAUDE.md" || { echo "FAIL: CLAUDE.md does not import $imp" >&2; exit 1; }
 done
+# Warn if the SessionStart hook was never wired (jq absent and user hasn't added it manually).
+if ! grep -q agentic-kit-inject "$TARGET/.claude/settings.json" 2>/dev/null; then
+  echo "WARNING: SessionStart hook not wired in .claude/settings.json — add it manually:" >&2
+  echo "  bash \"\$CLAUDE_PROJECT_DIR/.claude/hooks/agentic-kit-inject.sh\"" >&2
+fi
 echo "ok — agentic-kit installed in $TARGET (fill in the {{...}} placeholders)"
