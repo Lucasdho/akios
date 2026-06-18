@@ -6,6 +6,10 @@ Every closed block of the design becomes (or updates) one of these files. The fo
 
 `<project>-<block>-spec.md` — e.g. `founderlens-onboarding-spec.md`, `founderlens-devaudit-spec.md`. Vision documents that capture ambition before detailed design use `-vision` instead of `-spec`. Strategy/roadmap decisions: `-product-strategy`. Free-form idea capture: `-feature-ideas`.
 
+> **Swift/iOS projects (with `ios-feature-pipeline`):** prefer the simpler `specs/<feature>.md`
+> form (e.g. `specs/catalog.md`) — the pipeline expects files under `specs/` without a project
+> prefix. The `<project>-<block>-spec.md` form is correct for multi-project or non-iOS contexts.
+
 ## Header block
 
 ```markdown
