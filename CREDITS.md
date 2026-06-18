@@ -12,17 +12,20 @@ via their marketplaces. All skills are MIT except where noted.
 | `oss-first` | Lucas Oliveira | MIT © 2026 | see `LICENSE` |
 | `ios-feature-pipeline` | Lucas Oliveira | MIT © 2026 | see `LICENSE` |
 
-The `skills/ios-agentic-kit/references/` material (XcodeBuildMCP, sandbox levels,
-hooks, PRD workflow, project structure) is adapted from
+_Skill `version:` fields in frontmatter are an independent track from the kit's `VERSION` file
+— they reflect the skill's own revision history, not the kit release._
+
+The `skills/ios-agentic-kit/references/` docs (sandbox permission levels, hooks) were
+originally inspired by
 [keskinonur/claude-code-ios-dev-guide](https://github.com/keskinonur/claude-code-ios-dev-guide)
-(MIT) — each reference file carries the attribution header.
+(MIT); they have since been rewritten for this kit.
 
 ## Plugins the kit relies on (installed via marketplace, not bundled)
 
 | Plugin | Required? | Author | License | Source | Pinned ref |
 |---|---|---|---|---|---|
 | `superpowers` | required | Jesse Vincent (obra) | MIT © 2025 | https://github.com/obra/superpowers | 5.1.0 |
-| `axiom` | required | CharlesWiltgen | MIT | https://github.com/CharlesWiltgen/Axiom | v27 |
+| `axiom` | required | CharlesWiltgen | MIT | https://github.com/CharlesWiltgen/Axiom | v27 (verified 2026-06-18) |
 | `ponytail` | optional (recommended) | Dietrich Gebert | MIT © 2026 | https://github.com/DietrichGebert/ponytail | 4.7.0 |
 
 Install with `/plugin marketplace add … && /plugin install …` (commands printed by
