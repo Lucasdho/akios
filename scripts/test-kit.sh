@@ -3,7 +3,7 @@
 # well-formed. Catches a missing skill or template before it fails at runtime.
 set -euo pipefail
 
-KIT="$(cd "$(dirname "$0")" && pwd)"
+KIT="$(cd "$(dirname "$0")/.." && pwd)"
 fail=0
 
 # 1. Authored skills present with a name: frontmatter line.
@@ -21,7 +21,7 @@ done
 # 2. Install templates + hook present.
 for f in templates/AGENTS.md templates/Context.md templates/CLAUDE.md \
          templates/rules/swift.md templates/workflows/ios-feature-pipeline.yml \
-         hook/agentic-kit-inject.sh; do
+         scripts/hook/agentic-kit-inject.sh; do
   if [ -e "$KIT/$f" ]; then echo "ok   $f"
   else echo "FAIL: missing $f"; fail=1; fi
 done

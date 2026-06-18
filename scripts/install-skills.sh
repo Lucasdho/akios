@@ -6,7 +6,7 @@
 # their marketplaces so their hooks/commands register. Commands printed at the end.
 set -euo pipefail
 
-KIT="$(cd "$(dirname "$0")" && pwd)"
+KIT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$KIT/skills"
 DEST="$HOME/.claude/skills"
 mkdir -p "$DEST"

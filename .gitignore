@@ -1,3 +1,5 @@
 # Authored skills under skills/ are tracked (the repo is their source of truth).
 # Vendored third-party skills are not bundled here — install them via marketplace.
 .DS_Store
+
+.claude/

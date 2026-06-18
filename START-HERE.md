@@ -31,7 +31,7 @@ and explain choices in plain language.
 1. Get the kit. Clone it to ~/iOS-agentic-kit if it isn't there yet:
      git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
    If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update it.
-2. Install the helper skills: ~/iOS-agentic-kit/install-skills.sh
+2. Install the helper skills: ~/iOS-agentic-kit/scripts/install-skills.sh
    Then check the REQUIRED plugins (superpowers, axiom) are available. If either is
    missing, show me the exact command and STOP until I say go:
      /plugin marketplace add obra/superpowers      &&  /plugin install superpowers
@@ -45,7 +45,7 @@ and explain choices in plain language.
    b. How is the app organized? If I don't know, suggest MVVM and explain it in one line.
    c. Which devices and minimum iOS version does it target? Read this from the app
       itself, not the test targets, and confirm with me.
-4. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
+4. Run: ~/iOS-agentic-kit/scripts/install.sh "$(pwd)"
    This drops the kit's guide files into my project. It never overwrites files I already
    have.
 5. Now FILL IN every {{...}} blank in the files it created — Context.md, AGENTS.md, and

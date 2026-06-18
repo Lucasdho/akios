@@ -3,7 +3,7 @@
 # Usage: check-update.sh [project-dir]   (defaults to the current directory)
 set -euo pipefail
 
-KIT="$(cd "$(dirname "$0")" && pwd)"
+KIT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="$(cat "$KIT/VERSION" 2>/dev/null || echo unknown)"
 stale=0
 
@@ -33,7 +33,7 @@ done
 
 if [ -z "$STAMP" ]; then
   echo "project: no kit install found under $TARGET (or installed before versioning)"
-  echo "         run: $KIT/install.sh \"$TARGET\""
+  echo "         run: $KIT/scripts/install.sh \"$TARGET\""
   stale=1
 else
   installed="$(cat "$STAMP")"
@@ -41,7 +41,7 @@ else
     echo "project: up to date ($(dirname "$(dirname "$STAMP")") @ $installed)"
   else
     echo "project: OUTDATED (installed $installed, kit is $VERSION)"
-    echo "         re-run: $KIT/install.sh \"$(dirname "$(dirname "$STAMP")")\""
+    echo "         re-run: $KIT/scripts/install.sh \"$(dirname "$(dirname "$STAMP")")\""
     stale=1
   fi
 fi

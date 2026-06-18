@@ -85,10 +85,10 @@ The ready-to-paste block (plain-language framed) lives in **[START-HERE.md](STAR
 # 1. get the kit
 git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
 # 2. install the required skills into ~/.claude/skills/
-~/iOS-agentic-kit/install-skills.sh
+~/iOS-agentic-kit/scripts/install-skills.sh
 # 3. plug the kit into your repo
-~/iOS-agentic-kit/install.sh /path/to/your/repo        # installs at the git root
-# ~/iOS-agentic-kit/install.sh --here /path/to/subdir  # or install in an exact subfolder
+~/iOS-agentic-kit/scripts/install.sh /path/to/your/repo        # installs at the git root
+# ~/iOS-agentic-kit/scripts/install.sh --here /path/to/subdir  # or install in an exact subfolder
 ```
 `install.sh` is idempotent (never overwrites existing files, wires the hook once).
 Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
@@ -115,7 +115,7 @@ The kit is versioned (`VERSION`). `install.sh` stamps the installed version into
 current — and whether your kit clone is behind GitHub:
 
 ```sh
-~/iOS-agentic-kit/check-update.sh /path/to/your/repo   # or run with no arg in the repo
+~/iOS-agentic-kit/scripts/check-update.sh /path/to/your/repo   # or run with no arg in the repo
 ```
 It reports two things and exits non-zero if either is stale:
 - **kit:** whether your `~/iOS-agentic-kit` clone is behind its remote (→ `git pull`).
@@ -134,7 +134,7 @@ plugins are installed and updated through their marketplaces. To refresh:
 ```sh
 # authored skills (idea-to-spec, oss-first, ios-feature-pipeline, ios-agentic-kit)
 # pull the latest kit; install-skills.sh overwrites the installed copies
-git -C ~/iOS-agentic-kit pull && ~/iOS-agentic-kit/install-skills.sh
+git -C ~/iOS-agentic-kit pull && ~/iOS-agentic-kit/scripts/install-skills.sh
 
 # plugins — update via their marketplaces in Claude Code
 /plugin update ponytail

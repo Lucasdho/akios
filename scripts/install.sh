@@ -3,7 +3,7 @@
 # Usage: ./install.sh /path/to/repo
 set -euo pipefail
 
-KIT="$(cd "$(dirname "$0")" && pwd)"
+KIT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="$(cat "$KIT/VERSION" 2>/dev/null || echo unknown)"
 
 # Args: [--here] /path/to/repo. By default the kit installs at the git repo root
@@ -62,7 +62,7 @@ fi
 
 # 4. Reinforcement hook.
 mkdir -p "$TARGET/.claude/hooks"
-cp "$KIT/hook/agentic-kit-inject.sh" "$TARGET/.claude/hooks/"
+cp "$KIT/scripts/hook/agentic-kit-inject.sh" "$TARGET/.claude/hooks/"
 chmod +x "$TARGET/.claude/hooks/agentic-kit-inject.sh"
 
 # 5. Wire the SessionStart hook into .claude/settings.json (idempotent).
