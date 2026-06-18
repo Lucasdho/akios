@@ -1,6 +1,9 @@
-> Adapted from [keskinonur/claude-code-ios-dev-guide](https://github.com/keskinonur/claude-code-ios-dev-guide) (MIT).
-
 # Hooks for Swift Development
+
+The kit installs **one** hook: `agentic-kit-inject.sh` on `SessionStart`, which re-states the
+gates each session. This page is the mechanism if you want to add your own — none of the
+scripts below ship with the kit; they're opt-in examples (SwiftLint/format on save,
+secret-file protection).
 
 ## Hook Events
 
@@ -8,22 +11,19 @@
 |-------|---------|-----|
 | `PreToolUse` | Before tool (can block with exit 2) | Protect files, validate commands |
 | `PostToolUse` | After tool completes | Lint, format |
-| `SessionStart` | Session start/resume | Env setup |
+| `SessionStart` | Session start/resume | Env setup — the kit's own hook uses this |
 | `Stop` | Claude finishes responding | Summary, cleanup |
 | `SubagentStop` | Subagent task completes | Post-processing |
 | `PermissionRequest` | Permission dialog | Auto-approve/deny |
 
 ## settings.json Hook Config
 
+The kit's `SessionStart` entry is already wired by `install.sh`. To add your own, append to
+the relevant event array — e.g. lint Swift on save and block writes to secret files:
+
 ```json
 {
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start.sh" }]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -45,24 +45,9 @@
 - **PreToolUse**: exit `0` → continue, exit `2` → block + feedback to Claude
 - **PermissionRequest**: output JSON `{"decision":"approve","reason":"...","suppressOutput":true}`
 
-## Hook Scripts
+## Example Scripts (opt-in)
 
-### `.claude/hooks/session-start.sh`
-```bash
-#!/bin/bash
-PROJECT_NAME=$(basename "$(pwd)")
-SWIFT_VERSION=$(swift --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
-XCODE_VERSION=$(xcodebuild -version 2>/dev/null | head -1)
-
-echo "Starting $PROJECT_NAME — Swift $SWIFT_VERSION | $XCODE_VERSION" >&2
-
-if ! command -v swiftlint &>/dev/null; then echo "⚠️ SwiftLint not installed" >&2; fi
-if ! xcrun simctl list devices booted | grep -q "Booted"; then
-    echo "💡 No simulator running." >&2
-fi
-```
-
-### `.claude/hooks/post-swift-edit.sh`
+### `.claude/hooks/post-swift-edit.sh` (PostToolUse) — lint/format on save
 ```bash
 #!/bin/bash
 FILE=$(jq -r '.tool_input.file_path // empty')
@@ -76,7 +61,7 @@ if command -v swift-format &>/dev/null; then
 fi
 ```
 
-### `.claude/hooks/file-protection.sh` (PreToolUse)
+### `.claude/hooks/file-protection.sh` (PreToolUse) — block writes to sensitive files
 ```bash
 #!/bin/bash
 FILE=$(jq -r '.tool_input.file_path // empty' < /dev/stdin)
@@ -91,6 +76,7 @@ done
 exit 0
 ```
 
+Make them executable after adding:
 ```bash
 chmod +x .claude/hooks/*.sh
 ```
