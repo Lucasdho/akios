@@ -14,13 +14,13 @@ unzip -q "$KIT/skills-bundle.zip" -d "$TMP"
 # Fallback source per plain skill, in case it's missing from the bundle.
 fallback() {
   case "$1" in
-    swift-dev|idea-to-spec|oss-first)
+    idea-to-spec|oss-first|ios-feature-pipeline)
       echo "npx skills add Lucasdho/iOS-agentic-kit --skill $1  (or re-clone the kit and re-run)" ;;
     *) echo "(no known source)" ;;
   esac
 }
 
-for s in swift-dev idea-to-spec oss-first; do
+for s in idea-to-spec oss-first ios-feature-pipeline; do
   if [ -e "$DEST/$s" ]; then
     echo "skip      $s (already in ~/.claude/skills)"
   elif [ -d "$TMP/skills/$s" ]; then
@@ -33,17 +33,17 @@ for s in swift-dev idea-to-spec oss-first; do
 done
 
 # check
-for s in swift-dev idea-to-spec oss-first; do
+for s in idea-to-spec oss-first ios-feature-pipeline; do
   [ -f "$DEST/$s/SKILL.md" ] || {
     echo "FAIL: $s is not installed. Get it with: $(fallback "$s")" >&2; exit 1; }
 done
 
 cat <<'EOF'
 
-Plugins (ponytail, superpowers) — if NOT already installed, add them via their
-marketplaces inside Claude Code (this registers their hooks/commands):
+Plugins — if NOT already installed, add them via their marketplaces inside Claude Code:
   /plugin marketplace add DietrichGebert/ponytail   ->  /plugin install ponytail
   /plugin marketplace add obra/superpowers          ->  /plugin install superpowers
+  /plugin marketplace add CharlesWiltgen/Axiom      ->  /plugin install axiom
 
 ok — plain skills handled; if any plugin above is missing, run its commands.
 EOF

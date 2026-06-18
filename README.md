@@ -9,7 +9,7 @@ default gates each session.
 CLAUDE.md          @AGENTS.md import — the file Claude Code actually auto-loads
 AGENTS.md          entry point — the loop, skill gates, and routing
 Context.md         stack, commands, architecture, conventions
-.claude/rules/swift.md   loads the Swift gate whenever a .swift file is read
+.claude/rules/swift.md   loads the Axiom gate whenever a .swift file is read
 ```
 Durable decisions are NOT a repo file — they live in Claude Code's native
 auto-memory (`~/.claude/projects/<project>/memory/MEMORY.md`), which is written
@@ -17,7 +17,7 @@ automatically and survives compaction.
 
 ## When to use it
 - **Use it in:** Swift / iOS / iPadOS / macOS repos you build with an agent.
-  The gates are Swift-specific (swift-dev, SwiftUI design, Swift Testing).
+  The gates are Swift-specific (Axiom domain skills, SwiftUI design, Swift Testing).
 - **Don't use it in:** non-Swift projects — the routing won't fit. Fork the
   structure (AGENTS.md + hook + your own gate table) instead.
 - **One repo, one install.** It's per-project: each repo gets its own
@@ -32,7 +32,8 @@ You don't "run" the kit — it shapes the agent's behavior passively:
    in a subdirectory is not — another reason install defaults to the git root).
 2. **`AGENTS.md` orients** the agent: the loop, the gate table, routing.
 3. **`.claude/rules/swift.md` fires per file**: whenever Claude reads a `.swift`
-   file, the Swift gate (invoke `swift-dev`, `ponytail`) loads — even mid-session.
+   file, the Axiom gate loads — route to the domain hub, let it dispatch the right
+   sub-skill (progressive closure, no context blowup).
 4. **Skills trigger themselves** by description, or you invoke one with `/skill-name`.
 5. **`Context.md`** (project facts) rides into context via the `@Context.md` import;
    **native auto-memory** (`MEMORY.md`) carries durable decisions.
@@ -41,6 +42,30 @@ You don't "run" the kit — it shapes the agent's behavior passively:
 > creates a `CLAUDE.md` that imports `@AGENTS.md` + `@Context.md` for you (or
 > prepends any missing import to an existing one), so the gates and project context
 > reach Claude Code by default — not just the hook reminder.
+
+## Full pipeline with speckit (optional)
+
+The `ios-feature-pipeline` skill orchestrates the complete path from raw idea to
+running code. When speckit is initialized in the project, the pipeline is:
+
+| Phase | Tool | Mode |
+|---|---|---|
+| 1 — Design | `/idea-to-spec` | Interactive — user present, always |
+| 2 — Clarify | `/speckit-clarify` | Automated |
+| 3 — Specify | `/speckit-specify` | Automated |
+| 4 — Plan | `/speckit-plan` | Automated — constitution enforces Axiom gates |
+| 5 — Tasks | `/speckit-tasks` | Automated |
+| 6 — Execute | `superpowers:subagent-driven-development` | Fresh subagents, Axiom domain skill per task |
+
+Invoke `/ios-feature-pipeline` to get the full phase guide including subagent
+context rules and the degraded path for projects without speckit.
+
+To add the speckit workflow template to a project that has speckit initialized:
+```sh
+cp ~/iOS-agentic-kit/templates/workflows/ios-feature-pipeline.yml \
+   /path/to/your/repo/.specify/workflows/
+```
+(Requires `npx speckit init` in the project first.)
 
 ## Install with a Claude Code agent (recommended)
 Don't follow steps by hand — paste this prompt into Claude Code from inside the
@@ -53,12 +78,13 @@ Install the agentic-kit into this repo for me.
      git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
    If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update.
 2. Install the required skills: ~/iOS-agentic-kit/install-skills.sh
-   It copies the plain skills (swift-dev, idea-to-spec, oss-first) into
-   ~/.claude/skills/. Then verify the two plugins (ponytail, superpowers) are
-   actually available. If either is missing, give me the exact command to add it
-   and STOP until I confirm — do not continue without every skill:
+   It copies the plain skills (idea-to-spec, oss-first, ios-feature-pipeline) into
+   ~/.claude/skills/. Then verify the three plugins are actually available. If any
+   is missing, give me the exact command to add it and STOP until I confirm — do
+   not continue without every skill:
      /plugin marketplace add DietrichGebert/ponytail  &&  /plugin install ponytail
      /plugin marketplace add obra/superpowers         &&  /plugin install superpowers
+     /plugin marketplace add CharlesWiltgen/Axiom     &&  /plugin install axiom
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
    Installs at the git repo root by default; pass `--here <path>` to install in an
    exact subfolder (e.g. the app dir when it sits below .git). It drops CLAUDE.md
@@ -79,10 +105,15 @@ Install the agentic-kit into this repo for me.
       `*Tests`/`*UITests` targets carry Xcode's default deployment target and
       universal device family — never read the app's min OS or device family from
       a test target.
-4. Read the codebase (respecting 3a) and fill in every {{...}} placeholder in
+4. [Optional — full pipeline] If this repo uses speckit (.specify/ exists):
+   Copy the pipeline workflow template:
+     cp ~/iOS-agentic-kit/templates/workflows/ios-feature-pipeline.yml \
+        "$(pwd)/.specify/workflows/"
+   If speckit isn't initialized yet, run `npx speckit init` first.
+5. Read the codebase (respecting 3a) and fill in every {{...}} placeholder in
    Context.md and AGENTS.md — stack, build/test/lint/run commands, architecture
    (from 3b), target (from 3c), conventions, project-specific gates. No {{...}} left.
-5. Show me a summary of what changed and what you filled in.
+6. Show me a summary of what changed and what you filled in.
 
 Do not commit anything unless I ask.
 ```
@@ -103,8 +134,8 @@ Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 ### Skills the kit needs
 | Skill | Type | How it installs |
 |---|---|---|
-| `swift-dev`, `idea-to-spec`, `oss-first` | plain skill | copied to `~/.claude/skills/` by `install-skills.sh` |
-| `ponytail`, `superpowers` | plugin | `/plugin marketplace add` + `/plugin install` (printed by the script) |
+| `idea-to-spec`, `oss-first`, `ios-feature-pipeline` | plain skill | copied to `~/.claude/skills/` by `install-skills.sh` |
+| `ponytail`, `superpowers`, `axiom` | plugin | `/plugin marketplace add` + `/plugin install` (printed by the script) |
 | `/code-review`, `fewer-permission-prompts` | built-in | ship with the Claude Code CLI |
 
 Credits & licenses for all of the above → [CREDITS.md](CREDITS.md).
@@ -135,13 +166,11 @@ third-party skills will drift from their sources over time. To refresh:
 # plugins — update via their marketplaces in Claude Code, then they live in ~/.claude
 /plugin update ponytail
 /plugin update superpowers
+/plugin update axiom
 
-# swift-dev sub-skills from twostraws/swift-agent-skills (per-skill, as needed)
-npx skills add twostraws/swift-agent-skills --skill <name>
-
-# standalone sub-skills
-npx skills add arjitj2/swiftui-design-principles
-npx skills add daetojemax/figma-to-swiftui-skill
+# standalone sub-skills (idea-to-spec, oss-first — authored by this kit)
+# pull the latest kit and re-run install-skills.sh
+git -C ~/iOS-agentic-kit pull && ~/iOS-agentic-kit/install-skills.sh
 ```
 Then re-snapshot: `./bundle-skills.sh && ./test-kit.sh`, and bump the date +
 versions in [CREDITS.md](CREDITS.md). The snapshot date and pinned versions are

@@ -19,7 +19,10 @@ the skill gates live below, not in a separate file.
 Big router skills, active every task — they redirect to the right internal guides:
 - `superpowers` — process discipline (brainstorm, debug, TDD, verify).
 - `ponytail` — efficiency: no over-building, no rewriting what already works.
-- `swift-dev` — master router for all Swift/iOS work; loads the right guides.
+- `axiom` — Swift/iOS domain skills with progressive closure; load the hub for your
+  domain and it dispatches the right sub-skill: `axiom-swiftui` (views/layout) ·
+  `axiom-concurrency` (async/await/actors) · `axiom-testing` (Swift Testing/XCTest) ·
+  `axiom-swift` (language) · `axiom-data` (SwiftData/CoreData) · `axiom-xcode` (build/debug).
 
 ## How to execute (orchestration)
 For *how* the work runs — not what to build — consult **`superpowers` first**.
@@ -39,19 +42,19 @@ does not enforce. Treat them as the default workflow; skip one only with reason.
 
 | Trigger | Skill | When |
 |---|---|---|
+| Building a new feature end-to-end | `ios-feature-pipeline` → idea→spec→speckit→execute | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` → write specs to `specs/` (see below) | before building |
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
-| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `swift-dev`→ios-debugger-agent | before any fix |
-| Implementing code | `ponytail` + `swift-dev` writing standards + `fewer-permission-prompts` | while coding |
-| Creating / polishing SwiftUI Views | native first + `swift-dev`→swiftui-design-principles (with ponytail) | before the view |
-| Writing tests | `swift-dev`→swift-testing-pro | with the code |
+| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `axiom-xcode` | before any fix |
+| Implementing code | `ponytail` + `axiom` (domain skill) + `fewer-permission-prompts` | while coding |
+| Creating / polishing SwiftUI Views | native first + `axiom-swiftui` (with ponytail) | before the view |
+| Writing tests | `axiom-testing` | with the code |
 | Claiming "done" | subagents: `superpowers:verification-before-completion` + `/code-review` | before finishing |
 
-`swift-dev` auto-routes its own sub-skills (figma-to-swiftui · ios-accessibility ·
-ios-debugger-agent · swift-concurrency-pro · swift-testing-pro · swiftdata-pro ·
-swiftui-design-principles · swiftui-performance-audit · swiftui-pro ·
-swiftui-ui-patterns · swiftui-view-refactor) — you don't invoke those directly.
+Axiom domain hubs use progressive closure — each hub (~400 words) dispatches to
+sub-skills on demand. Only the relevant domain loads; context is not blown during
+long plan and execution sessions.
 
 ## Specs (idea-to-spec)
 When `idea-to-spec` produces specs:
@@ -61,6 +64,18 @@ When `idea-to-spec` produces specs:
   project `CLAUDE.md` for this (a `## Specs` section: spec file → domain → status),
   or `specs/INDEX.md` if you prefer to keep it out of `CLAUDE.md`.
 - Before designing something new, read that orchestration doc first.
+
+## Speckit integration (optional, enhances idea-to-spec)
+When speckit is initialized in this repo (`.specify/` present), run the full
+structured pipeline after `idea-to-spec` produces a spec:
+- **`/speckit-clarify`** → resolves ambiguities
+- **`/speckit-specify`** → structured spec with acceptance scenarios
+- **`/speckit-plan`** → research + data model + constitution check (Axiom gates)
+- **`/speckit-tasks`** → trackable task list ready for execution
+
+Then execute with `superpowers:subagent-driven-development`. Include the relevant
+Axiom domain skill in every subagent context block — subagents start cold.
+The `ios-feature-pipeline` skill documents all phases and subagent context rules.
 
 ## Project-specific gates
 {{e.g. "always /security-review when touching Keychain / auth / networking"}}

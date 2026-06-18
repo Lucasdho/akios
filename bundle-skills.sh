@@ -16,9 +16,9 @@ add() {
   else echo "MISSING  $name ($src)" >&2; fi
 }
 
-add swift-dev            "$CC/skills/swift-dev"
 add idea-to-spec         "$CC/skills/idea-to-spec"
 add oss-first            "$CC/skills/oss-first"
+add ios-feature-pipeline "$CC/skills/ios-feature-pipeline"
 add ponytail             "$CC/plugins/cache/ponytail"
 add superpowers          "$CC/plugins/cache/superpowers-marketplace/superpowers"
 
