@@ -18,11 +18,13 @@ the skill gates live below, not in a separate file.
 ## Always on (Swift / iOS)
 Big router skills, active every task — they redirect to the right internal guides:
 - `superpowers` — process discipline (brainstorm, debug, TDD, verify).
-- `ponytail` — efficiency: no over-building, no rewriting what already works.
 - `axiom` — Swift/iOS domain skills with progressive closure; load the hub for your
   domain and it dispatches the right sub-skill: `axiom-swiftui` (views/layout) ·
   `axiom-concurrency` (async/await/actors) · `axiom-testing` (Swift Testing/XCTest) ·
   `axiom-swift` (language) · `axiom-data` (SwiftData/CoreData) · `axiom-xcode` (build/debug).
+
+**Optional (recommended):** `ponytail` — efficiency: no over-building, no rewriting
+what already works. The kit works without it; install it for the laziness overlay.
 
 ## How to execute (orchestration)
 For *how* the work runs — not what to build — consult **`superpowers` first**.
@@ -47,8 +49,8 @@ does not enforce. Treat them as the default workflow; skip one only with reason.
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
 | Bug, crash, flake, regression | `superpowers:systematic-debugging` + `axiom-xcode` | before any fix |
-| Implementing code | `ponytail` + `axiom` (domain skill) + `fewer-permission-prompts` | while coding |
-| Creating / polishing SwiftUI Views | native first + `axiom-swiftui` (with ponytail) | before the view |
+| Implementing code | `axiom` (domain skill) + `fewer-permission-prompts` (+ `ponytail` if installed) | while coding |
+| Creating / polishing SwiftUI Views | native first + `axiom-swiftui` (`ponytail` if installed) | before the view |
 | Writing tests | `axiom-testing` | with the code |
 | Claiming "done" | subagents: `superpowers:verification-before-completion` + `/code-review` | before finishing |
 

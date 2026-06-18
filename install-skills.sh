@@ -1,49 +1,42 @@
 #!/usr/bin/env bash
-# Install the plain skills this kit needs into ~/.claude/skills/ from the bundle.
-# Plugins (ponytail, superpowers) are NOT copied here — install them via their
-# marketplaces so their hooks/commands register. Commands printed at the end.
+# Install the authored skills this kit owns into ~/.claude/skills/, straight from
+# the repo tree (the repo is their source of truth). Kit-owned skills are
+# REFRESHED on every run so installed copies never drift — re-run after a pull.
+# Plugins (ponytail, superpowers, axiom) are NOT copied here; install them via
+# their marketplaces so their hooks/commands register. Commands printed at the end.
 set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
+SRC="$KIT/skills"
 DEST="$HOME/.claude/skills"
 mkdir -p "$DEST"
 
-TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
-unzip -q "$KIT/skills-bundle.zip" -d "$TMP"
+SKILLS=(idea-to-spec oss-first ios-feature-pipeline ios-agentic-kit)
 
-# Fallback source per plain skill, in case it's missing from the bundle.
-fallback() {
-  case "$1" in
-    idea-to-spec|oss-first|ios-feature-pipeline)
-      echo "npx skills add Lucasdho/iOS-agentic-kit --skill $1  (or re-clone the kit and re-run)" ;;
-    *) echo "(no known source)" ;;
-  esac
-}
-
-for s in idea-to-spec oss-first ios-feature-pipeline; do
-  if [ -e "$DEST/$s" ]; then
-    echo "skip      $s (already in ~/.claude/skills)"
-  elif [ -d "$TMP/skills/$s" ]; then
-    cp -R "$TMP/skills/$s" "$DEST/$s"
+for s in "${SKILLS[@]}"; do
+  if [ -d "$SRC/$s" ]; then
+    rm -rf "$DEST/$s"            # refresh: repo is canonical, overwrite any drift
+    cp -R "$SRC/$s" "$DEST/$s"
     echo "installed $s -> ~/.claude/skills/$s"
   else
-    echo "MISSING   $s — not in the bundle. Install it with:"
-    echo "          $(fallback "$s")"
+    echo "MISSING   $s — not in repo at $SRC/$s (re-clone the kit)" >&2
+    exit 1
   fi
 done
 
 # check
-for s in idea-to-spec oss-first ios-feature-pipeline; do
-  [ -f "$DEST/$s/SKILL.md" ] || {
-    echo "FAIL: $s is not installed. Get it with: $(fallback "$s")" >&2; exit 1; }
+for s in "${SKILLS[@]}"; do
+  [ -f "$DEST/$s/SKILL.md" ] || { echo "FAIL: $s did not install" >&2; exit 1; }
 done
 
 cat <<'EOF'
 
-Plugins — if NOT already installed, add them via their marketplaces inside Claude Code:
-  /plugin marketplace add DietrichGebert/ponytail   ->  /plugin install ponytail
+Plugins — install via their marketplaces inside Claude Code if not already present.
+Required:
   /plugin marketplace add obra/superpowers          ->  /plugin install superpowers
   /plugin marketplace add CharlesWiltgen/Axiom      ->  /plugin install axiom
+Optional (recommended — efficiency overlay; the kit works without it):
+  /plugin marketplace add DietrichGebert/ponytail   ->  /plugin install ponytail
 
-ok — plain skills handled; if any plugin above is missing, run its commands.
+ok — authored skills refreshed; install the required plugins above if missing.
 EOF

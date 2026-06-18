@@ -1,6 +1,6 @@
-# agentic-kit
+# iOS Agentic Kit
 
-A meta-system you plug into any repo to make agentic coding more efficient.
+A meta-system you plug into any Swift/iOS repo to make agentic coding more efficient.
 It drops a `CLAUDE.md` that imports the operating manual, context files, a
 path-scoped Swift rule, and a SessionStart hook that reminds the agent of the
 default gates each session.
@@ -26,8 +26,9 @@ automatically and survives compaction.
 ## How it's invoked
 You don't "run" the kit — it shapes the agent's behavior passively:
 1. **At session start**, Claude Code loads `CLAUDE.md`, which imports `@AGENTS.md`
-   and `@Context.md` in full; the SessionStart hook re-states the gates; the
-   always-on skills (`ponytail`, `superpowers`) self-activate via their own hooks.
+   and `@Context.md` in full; the SessionStart hook re-states the gates;
+   `superpowers` self-activates via its own hook (and `ponytail` too, if installed —
+   it's optional).
    A **project-root** `CLAUDE.md` is also re-injected after `/compact` (a CLAUDE.md
    in a subdirectory is not — another reason install defaults to the git root).
 2. **`AGENTS.md` orients** the agent: the loop, the gate table, routing.
@@ -78,13 +79,16 @@ Install the agentic-kit into this repo for me.
      git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
    If the folder already exists, run `git -C ~/iOS-agentic-kit pull` to update.
 2. Install the required skills: ~/iOS-agentic-kit/install-skills.sh
-   It copies the plain skills (idea-to-spec, oss-first, ios-feature-pipeline) into
-   ~/.claude/skills/. Then verify the three plugins are actually available. If any
-   is missing, give me the exact command to add it and STOP until I confirm — do
-   not continue without every skill:
-     /plugin marketplace add DietrichGebert/ponytail  &&  /plugin install ponytail
+   It copies the authored skills (idea-to-spec, oss-first, ios-feature-pipeline,
+   ios-agentic-kit) into ~/.claude/skills/, refreshing them from the repo. Then
+   verify the REQUIRED plugins (superpowers, axiom) are available. If either is
+   missing, give me the exact command and STOP until I confirm — don't continue
+   without them:
      /plugin marketplace add obra/superpowers         &&  /plugin install superpowers
      /plugin marketplace add CharlesWiltgen/Axiom     &&  /plugin install axiom
+   ponytail is OPTIONAL but recommended (efficiency overlay). Offer to install it,
+   but don't STOP if it's missing:
+     /plugin marketplace add DietrichGebert/ponytail  &&  /plugin install ponytail
 3. Run: ~/iOS-agentic-kit/install.sh "$(pwd)"
    Installs at the git repo root by default; pass `--here <path>` to install in an
    exact subfolder (e.g. the app dir when it sits below .git). It drops CLAUDE.md
@@ -132,12 +136,19 @@ git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
 Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 
 ### Skills the kit needs
-| Skill | Type | How it installs |
-|---|---|---|
-| `idea-to-spec`, `oss-first`, `ios-feature-pipeline` | plain skill | copied to `~/.claude/skills/` by `install-skills.sh` |
-| `ponytail`, `superpowers`, `axiom` | plugin | `/plugin marketplace add` + `/plugin install` (printed by the script) |
-| `/code-review`, `fewer-permission-prompts` | built-in | ship with the Claude Code CLI |
+| Skill | Type | Role | How it installs |
+|---|---|---|---|
+| `ios-agentic-kit` | authored | This kit's own guide — gates, routing, install | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `idea-to-spec` | authored | Idea → versioned specs in `specs/` | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `oss-first` | authored | Force tool/lib search before hand-writing complex code | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `ios-feature-pipeline` | authored | Full-lifecycle orchestrator (idea → speckit → execute) | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `superpowers` | plugin (required) | brainstorming, debugging, TDD, verification | `/plugin marketplace add` + `/plugin install` |
+| `axiom` | plugin (required) | Swift/iOS domain hubs (progressive closure) | `/plugin marketplace add` + `/plugin install` |
+| `ponytail` | plugin *(optional, recommended)* | Laziness/efficiency, anti over-build — kit works without it | `/plugin marketplace add` + `/plugin install` |
+| `/code-review`, `fewer-permission-prompts` | built-in | review the diff; trim permission prompts | ship with the Claude Code CLI |
 
+Authored skills are tracked in `skills/` (the repo is their source of truth);
+`install-skills.sh` overwrites the installed copies on every run so they never drift.
 Credits & licenses for all of the above → [CREDITS.md](CREDITS.md).
 
 ## Staying up to date
@@ -158,23 +169,22 @@ versioning" — just re-run `install.sh` to update and stamp it.
 > Maintainer: bump `VERSION` whenever you change templates, the hook, the rule,
 > or install logic, so downstream `check-update.sh` flags the staleness.
 
-## Updating bundled skills
-`skills-bundle.zip` is a snapshot — it does **not** track upstream. The bundled
-third-party skills will drift from their sources over time. To refresh:
+## Updating skills
+The authored skills live in `skills/` and are the repo's source of truth; the
+plugins are installed and updated through their marketplaces. To refresh:
 
 ```sh
-# plugins — update via their marketplaces in Claude Code, then they live in ~/.claude
+# authored skills (idea-to-spec, oss-first, ios-feature-pipeline, ios-agentic-kit)
+# pull the latest kit; install-skills.sh overwrites the installed copies
+git -C ~/iOS-agentic-kit pull && ~/iOS-agentic-kit/install-skills.sh
+
+# plugins — update via their marketplaces in Claude Code
 /plugin update ponytail
 /plugin update superpowers
 /plugin update axiom
-
-# standalone sub-skills (idea-to-spec, oss-first — authored by this kit)
-# pull the latest kit and re-run install-skills.sh
-git -C ~/iOS-agentic-kit pull && ~/iOS-agentic-kit/install-skills.sh
 ```
-Then re-snapshot: `./bundle-skills.sh && ./test-kit.sh`, and bump the date +
-versions in [CREDITS.md](CREDITS.md). The snapshot date and pinned versions are
-recorded there.
+The plugin versions this kit was validated against are pinned in
+[CREDITS.md](CREDITS.md); update them there when you re-pin.
 
 ## Why a hook and not just docs
 `AGENTS.md` is auto-loaded, but the per-task gates are easy to drift past
