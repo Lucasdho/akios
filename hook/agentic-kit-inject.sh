@@ -8,10 +8,10 @@ Default gates (reminder, not enforced — skip only with reason):
 - Idea -> spec           -> idea-to-spec (write to specs/, register domain in CLAUDE.md)
 - Before ANY code        -> plan mode OR superpowers:brainstorming
 - Before hand-writing    -> oss-first (is there a mature tool/lib first?)
-- Bug / failure / flake  -> superpowers:systematic-debugging + axiom->axiom-xcode
+- Bug / failure / flake  -> superpowers:systematic-debugging + axiom-build
 - Implementing code      -> axiom (domain skill) + fewer-permission-prompts (+ ponytail if installed)
-- Creating SwiftUI Views -> native first + axiom->axiom-swiftui (ponytail if installed)
-- Writing tests          -> axiom->axiom-testing
+- Creating SwiftUI Views -> native first + axiom-swiftui (ponytail if installed)
+- Writing tests          -> axiom-testing
 - Before "done"          -> subagents: superpowers:verification-before-completion + /code-review
 Read AGENTS.md -> Context.md if not already loaded. Durable decisions live in
 Claude Code's native auto-memory (MEMORY.md), not a file in the repo.

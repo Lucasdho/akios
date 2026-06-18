@@ -1,8 +1,16 @@
-> Adapted from [keskinonur/claude-code-ios-dev-guide](https://github.com/keskinonur/claude-code-ios-dev-guide) (MIT).
+# Permission Levels & `settings.json`
 
-# Sandbox Permission Levels
+How much the agent is allowed to touch is a `permissions` block in `.claude/settings.json`.
+The kit doesn't install one — pick a level that matches how much you trust the current task,
+and let the built-in `fewer-permission-prompts` skill trim the per-action prompts once you've
+settled on a set.
+
+Four graduated levels, loosest task → tightest. Use a tighter one for exploration/planning,
+a looser one once you're implementing.
 
 ## Level 1 — Read + Build Only
+
+For exploration, planning, and "look but don't touch" sessions (pairs with plan mode).
 
 ```json
 {
@@ -22,16 +30,22 @@
 
 ✅ Read, build, test, simulators  ❌ No file creation or modification
 
+> If you drive builds through Axiom (`axiom-build`) or the `builder` agent instead of
+> XcodeBuildMCP, swap the `mcp__xcodebuildmcp__*` entries for the tools those use (`Bash`
+> scoped to `xcodebuild`, etc.).
+
 ---
 
-## Level 2 — + Docs Writing
+## Level 2 — + Docs / Specs Writing
+
+Lets the agent write specs and docs (e.g. during `idea-to-spec`) but not Swift or config.
 
 ```json
 {
   "permissions": {
     "allow": [
       "Read", "Glob", "Grep",
-      "Write(docs/*)", "Edit(docs/*)",
+      "Write(specs/*)", "Edit(specs/*)", "Write(docs/*)", "Edit(docs/*)",
       "mcp__xcodebuildmcp__*"
     ],
     "deny": ["Write(*.swift)", "Edit(*.swift)", "Write(*.json)", "Write(*.plist)"]
@@ -39,18 +53,20 @@
 }
 ```
 
-✅ All of Level 1 + write PRDs/specs/docs  ❌ No Swift/config changes
+✅ Level 1 + write specs/docs  ❌ No Swift/config changes
 
 ---
 
 ## Level 3 — + Test Files
+
+Adds test files — useful for a test-first pass before production code is unlocked.
 
 ```json
 {
   "permissions": {
     "allow": [
       "Read", "Glob", "Grep",
-      "Write(docs/*)",
+      "Write(specs/*)",
       "Write(*Tests/*.swift)", "Write(*Tests/**/*.swift)",
       "Edit(*Tests/*.swift)", "Edit(*Tests/**/*.swift)",
       "mcp__xcodebuildmcp__*"
@@ -60,11 +76,13 @@
 }
 ```
 
-✅ All of Level 2 + test files  ❌ No production code
+✅ Level 2 + test files  ❌ No production code
 
 ---
 
 ## Level 4 — Full Development
+
+The implementing-code default. Everything except secrets and destructive commands.
 
 ```json
 {
@@ -79,7 +97,9 @@
 
 ---
 
-## Full Project settings.json Template
+## Full project `settings.json`
+
+Committed to the repo — shared baseline for everyone (and every agent) on the project.
 
 ```json
 {
@@ -101,7 +121,9 @@
 }
 ```
 
-## Personal settings.local.json
+## Personal `settings.local.json` (gitignored)
+
+Per-developer overrides — model preference, signing identity — not shared.
 
 ```json
 {
@@ -113,37 +135,10 @@
 }
 ```
 
-## Sandbox Workflow
+## A typical sandboxed session
 
-```bash
-# 1. Plan (read-only)
-claude --permission-mode plan
-
-# 2. "Ultrathink about how to implement X. DO NOT write code."
-# 3. Review plan
-
-# 4. Implement (Normal mode — asks per change)
-claude
-# Shift+Tab to cycle modes during session
-```
-
-## Sandbox Slash Commands
-
-### `.claude/commands/sandbox-review.md`
-```markdown
----
-allowed-tools: Read, Grep, Glob, mcp__xcodebuildmcp__build_*, mcp__xcodebuildmcp__test_*
----
-Analyze codebase read-only: read, build, test, report. DO NOT modify files.
-```
-
-### `.claude/commands/sandbox-build.md`
-```markdown
----
-allowed-tools: mcp__xcodebuildmcp__*, Read
----
-1. Clean: mcp__xcodebuildmcp__clean
-2. Build: mcp__xcodebuildmcp__build_sim_name_proj
-3. Test: mcp__xcodebuildmcp__test_sim_name_proj
-4. Report results. No file modifications.
-```
+1. **Plan read-only** — `claude --permission-mode plan` (or Level 1 above). Have the agent
+   design the change without writing anything; review the plan.
+2. **Implement** — switch to a looser level (Level 4) and let it work. Normal mode asks per
+   change; `Shift+Tab` cycles permission modes mid-session.
+3. Lean on `fewer-permission-prompts` to fold the repeated approvals into your `allow` list.

@@ -47,6 +47,10 @@ below (install, per-step routing, references) is in service of running that spin
 Durable decisions are **not** a repo file — they live in Claude Code's native auto-memory
 (`MEMORY.md`), written automatically and surviving compaction.
 
+Where each artifact (specs, rules, hooks, skills, agents, speckit, tasks) is created and
+stored is the **`## Where things live` artifact map** in the installed `AGENTS.md` — the
+canonical lookup for placing and finding files. Edit it there, not here.
+
 ## How it's invoked
 
 You don't "run" the kit — it shapes the agent's behavior passively:
@@ -72,7 +76,7 @@ session); the copy here is the portable version for repos without the kit instal
 | Designing a system / turning an idea into a spec | `idea-to-spec` → write specs to `specs/` | before building |
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
 | Hand-writing complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
-| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `axiom-xcode` | before any fix |
+| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `axiom-build` | before any fix |
 | Implementing code | `axiom` (domain skill) + `fewer-permission-prompts` (+ `ponytail` if installed) | while coding |
 | Creating / polishing SwiftUI Views | native first + `axiom-swiftui` (`ponytail` if installed) | before the view |
 | Writing tests | `axiom-testing` | with the code |
@@ -109,12 +113,10 @@ marketplaces — `install-skills.sh` prints the exact commands. Check staleness 
 > **Use it in** Swift/iOS/iPadOS/macOS repos — the gates are Swift-specific. **Don't use it in**
 > non-Swift projects; fork the structure (AGENTS.md + hook + your own gate table) instead.
 
-## Generic Claude-Code-for-iOS reference
+## Setup reference
 
-Setup material not specific to this kit (adapted from `keskinonur/claude-code-ios-dev-guide`):
+Optional setup material — permission tuning and custom hooks. Not part of the spine; reach
+for it when you're hardening a repo's `.claude/` config:
 
-- [references/xcodebuildmcp.md](references/xcodebuildmcp.md) — XcodeBuildMCP tools, scopes, config
-- [references/sandbox.md](references/sandbox.md) — sandbox permission levels (read-only → full dev)
-- [references/hooks.md](references/hooks.md) — Swift hook events, configs, scripts
-- [references/prd-workflow.md](references/prd-workflow.md) — PRD / spec / task templates + commands
-- [references/project-structure.md](references/project-structure.md) — `.claude/` layout, subagents
+- [references/sandbox.md](references/sandbox.md) — graduated permission levels + `settings.json` templates
+- [references/hooks.md](references/hooks.md) — Swift hook events, configs, and opt-in lint/format/protect scripts

@@ -66,7 +66,7 @@ Every subagent gets exactly the domain skill it needs — no full library, no co
 | Unit tests, Swift Testing, XCTest | `axiom-testing` |
 | Swift language patterns, types, protocols | `axiom-swift` |
 | SwiftData, CoreData, persistence, migrations | `axiom-data` |
-| Build system, Xcode config, schemes, debug | `axiom-xcode` |
+| Build system, Xcode config, schemes, debug | `axiom-build` |
 
 Example subagent context block:
 

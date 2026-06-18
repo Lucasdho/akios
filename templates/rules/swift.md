@@ -12,7 +12,7 @@ Before planning, writing or editing Swift:
   for your task and let it dispatch the right sub-skill:
   `axiom-swiftui` (views/layout) · `axiom-concurrency` (async/await/actors) ·
   `axiom-testing` (Swift Testing/XCTest) · `axiom-swift` (language) ·
-  `axiom-data` (SwiftData/CoreData) · `axiom-xcode` (build/debug)
+  `axiom-data` (SwiftData/CoreData) · `axiom-build` (build/debug)
 - Apply **`superpowers`** principles (debug instead of guessing); and **`ponytail`**
   if installed (smallest correct diff — optional but recommended).
 - **Above all, follow `AGENTS.md`** — the gate table and full workflow live there.
