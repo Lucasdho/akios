@@ -20,7 +20,8 @@ done
 
 # 2. Install templates + hook present.
 for f in templates/AGENTS.md templates/Context.md templates/CLAUDE.md \
-         templates/rules/swift.md hook/agentic-kit-inject.sh; do
+         templates/rules/swift.md templates/workflows/ios-feature-pipeline.yml \
+         hook/agentic-kit-inject.sh; do
   if [ -e "$KIT/$f" ]; then echo "ok   $f"
   else echo "FAIL: missing $f"; fail=1; fi
 done
