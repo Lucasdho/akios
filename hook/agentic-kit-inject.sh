@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # SessionStart hook: re-states the default skill gates every session.
 # It reminds, it does not enforce — the agent can still skip a gate with reason.
+# This is a compressed summary of the gate table in templates/AGENTS.md — intentional.
+# Don't try to keep it word-for-word in sync with AGENTS.md; keep it short for fast injection.
 cat <<'EOF'
 [agentic-kit · Swift/iOS] Always on: superpowers · axiom. Optional (recommended): ponytail — efficiency/anti-over-build.
 Default gates (reminder, not enforced — skip only with reason):
