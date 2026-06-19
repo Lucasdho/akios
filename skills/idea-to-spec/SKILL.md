@@ -23,6 +23,32 @@ The core bet: **specs emerge from accumulated decisions, not from a single gener
 6. **Dependency-aware changes.** When a decision is reopened, identify everything downstream that depended on it, remodel it, and show a "what changed" delta. Never leave the system silently inconsistent.
 7. **Mirror the user's language.** The skill is written in English; the session runs in whatever language the user speaks (including mid-conversation switches).
 
+## Intake — one prompt may be many specs (do this first)
+
+Before the macro loop, triage the raw idea. A single prompt often describes **several distinct
+specs** — different domains, each with its own data and its own done-bar (e.g. "I want the first UI
+screens *and* seed data *and* a settings flow"). Don't silently design the first one, and don't mash
+them into one spec.
+
+1. **Split.** If the idea spans more than one distinct domain, list the candidate specs back to the
+   user in one short turn — one line each, named, with the domain it owns. State plainly: "this
+   reads as N separate specs, not one."
+2. **Ask which to pursue** — one / some / all. Recommend a starting order when there's a natural
+   dependency (e.g. seed data before the screens that render it), with the reason. Wait.
+3. **Design sequentially, never interleaved.** If they pick more than one, run the macro loop on
+   them **one at a time** — finish (or reach an agreed seam on) one spec before opening the next.
+   Never have two specs' open questions in flight at once.
+4. **Label every question with its spec.** While designing one of several, prefix decisions so the
+   user always knows which spec they're answering for ("**[seed-data]** how many clubs?"). When you
+   close one and move to the next, announce the switch explicitly ("seed-data is locked — switching
+   to **first-screens**").
+5. **Register as you go.** Each spec gets its own `specs/<name>.md` and a row in the `## Specs`
+   table the moment it's framed, so the set is visible and they don't overlap.
+
+This is the design-time twin of the pipeline's *anti-drift* rule: anti-drift catches a new spec
+that surfaces **mid-flow**; intake catches the specs that were all in the **opening prompt**. Same
+discipline — one spec's questions at a time, each registered, none silently merged.
+
 ## The macro loop
 
 Work proceeds in **blocks** — one subsystem, phase, or feature per session-chunk (e.g., "the onboarding", "the audit", "phase X of the pipeline"). For each block:

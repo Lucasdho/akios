@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.1 (2026-06-19)
+
+### Added
+- **`/akios:init` is now idempotent + version-aware.** A new Step 0 reads the repo's recorded
+  `.claude/.agentic-kit-version` and compares it to the installed plugin: same version
+  short-circuits to a self-check ("already initialized — nothing to do"); an older version
+  **migrates** (refreshes only the always-copy hooks + version file, leaves the user's
+  `AGENTS.md`/`Context.md` untouched, re-verifies wiring) and reports the changelog diff; absent
+  runs the full onboard. No more re-onboarding an already-set-up repo.
+- **Anti-drift flow guards (keep the user in flow).** `ios-feature-pipeline` gains rule 6 ("stay
+  in the current phase") and a *Staying in flow (anti-drift)* reflex: when a build/data instruction
+  surfaces mid-design, name it → classify scope (this spec vs. its own) → route it through the
+  pipeline / register a new spec → only write files in Phase 3. `/akios:define` carries a Phase-1
+  guard pointing at it.
+- **Multi-spec intake.** `idea-to-spec` gains an *Intake* triage: when one prompt is really several
+  specs, split them, ask the user one/some/all, then design **sequentially** — one spec's questions
+  at a time, each labeled and registered in `## Specs`, never merged. `/akios:define` points at it.
+
 ## 0.4.0 (2026-06-19)
 
 ### Changed — speckit dropped; lean 3-phase spine

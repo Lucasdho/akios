@@ -33,6 +33,35 @@ off between phases.
    include the task's Axiom domain skill (tagged in `tasks.md`) plus `ponytail` if installed.
    Execution must never *depend* on subagents — this environment can deny them `xcodebuild`.
 5. **No push/merge without the human gate** at the end of Phase 3.
+6. **Stay in the current phase.** A phase ends only at its hand-off artifact (spec → tasks.md →
+   reviewed code). Don't run the next phase's work early — no app code or data files in Phase 1
+   or 2, no `tasks.md` written before the spec is approved.
+
+## Staying in flow (anti-drift)
+The pipeline's most common failure is the agent **jumping out of the current phase or spec** when a
+concrete build instruction surfaces mid-design — e.g. in Phase 1 the user says "just create the
+seed data / 5 teams / that model" and the agent starts hand-writing files, skipping `spec-to-tasks`
+and `task-execution`, often folding a *different* domain into the spec in flight.
+
+Two rules close that gap:
+
+- **WHAT is not HOW.** A mid-phase instruction to build something ("create X", "add Y") names a
+  *what*; it does **not** authorize skipping to execution. Stay in the phase you're in. (Same
+  principle as `superpowers`: instructions say what, not how.)
+- **When a build need surfaces mid-phase, STOP and route it — don't execute it inline.** Run this
+  reflex:
+  1. **Name** it out loud: "that's an implementation/data task, not part of this design phase."
+  2. **Classify scope:** does it belong to the *current* spec, or is it a *distinct domain*?
+     A different domain (its own data, its own DoD) is its **own spec** — register it in the
+     `## Specs` table, don't silently absorb it into the spec in flight.
+  3. **Route:** if it's a true blocker for the current work, finish the current spec's design, then
+     run that build need through its own `idea-to-spec → spec-to-tasks → task-execution`. If it's
+     not a blocker, note it and stay on task.
+  4. Only *then*, when you're legitimately in Phase 3 for the right spec, write code or data.
+
+If you catch yourself already mid-drift (writing files in a design phase), name the error, stop,
+and re-route — exactly as above. Recovering is cheap; shipping the wrong thing in the wrong spec
+is not.
 
 ## The 3-phase pipeline
 
