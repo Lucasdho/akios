@@ -26,4 +26,26 @@ for f in templates/AGENTS.md templates/Context.md templates/CLAUDE.md \
   else echo "FAIL: missing $f"; fail=1; fi
 done
 
+# 3. Plugin artifacts: manifests parse, plugin is named akios, commands present.
+if command -v jq >/dev/null; then
+  for m in .claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+    if jq -e . "$KIT/$m" >/dev/null 2>&1; then echo "ok   $m"
+    else echo "FAIL: $m missing or not valid JSON"; fail=1; fi
+  done
+  name="$(jq -r '.name // empty' "$KIT/.claude-plugin/plugin.json" 2>/dev/null || true)"
+  [ "$name" = "akios" ] || { echo "FAIL: plugin.json name is '$name', expected 'akios'"; fail=1; }
+else
+  echo "warn jq not found — skipping plugin manifest JSON validation"
+fi
+for c in init define plan deliver; do
+  f="$KIT/commands/$c.md"
+  if [ ! -f "$f" ]; then
+    echo "FAIL: missing command: commands/$c.md"; fail=1
+  elif ! grep -qE '^description:[[:space:]]*.+' "$f"; then
+    echo "FAIL: commands/$c.md has no 'description:' frontmatter"; fail=1
+  else
+    echo "ok   commands/$c.md"
+  fi
+done
+
 [ "$fail" -eq 0 ] && echo "ok — kit is consistent" || { echo "kit has missing artifacts" >&2; exit 1; }

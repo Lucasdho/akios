@@ -18,11 +18,26 @@ messy, half-finished app.
 
 ---
 
-## 2. Set it up (paste this)
+## 2. Set it up
 
-Open Claude Code **inside the app project you want to work on**, then paste the block below
-as your message. The assistant does the whole setup and asks you three simple questions
-along the way. You don't run any commands yourself.
+**Easiest — install the plugin.** In Claude Code, type these two lines:
+
+```text
+/plugin marketplace add Lucasdho/iOS-agentic-kit
+/plugin install akios
+```
+
+Then, with Claude Code open **inside your app project**, type `/akios:init` and answer its
+questions. It sets everything up for you and tells you if you still need to install the
+`superpowers` and `axiom` plugins (it shows the exact commands). When it's done, skip to
+section 3.
+
+---
+
+**Or — paste this (no plugin).** Prefer the script route, or using Codex/Gemini? Open Claude
+Code **inside the app project you want to work on** and paste the block below as your
+message. The assistant does the whole setup and asks you three simple questions along the
+way. You don't run any commands yourself.
 
 ```text
 Set up the iOS agentic-kit in this project for me. I'm new to this, so keep it simple

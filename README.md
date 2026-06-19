@@ -72,7 +72,33 @@ cp ~/iOS-agentic-kit/templates/workflows/ios-feature-pipeline.yml \
 ```
 (Requires `npx speckit init` in the project first.)
 
-## Install with a Claude Code agent (recommended)
+## Install as a plugin (recommended)
+The kit ships as a Claude Code plugin, **`akios`**. Two lines inside Claude Code:
+
+```text
+/plugin marketplace add Lucasdho/iOS-agentic-kit
+/plugin install akios
+```
+
+This installs the authored skills and registers four typed commands. Then, **inside the
+repo you want to set up**, run `/akios:init` — it interviews you, scans the repo, fills the
+`{{...}}` placeholders, wires the gate hook, and checks dependencies. (Plugins can't
+auto-install other plugins, so `init` prints the install lines for the required
+`superpowers` + `axiom` and optional `ponytail`.)
+
+### Commands
+| Command | What it does | Pipeline phase |
+|---|---|---|
+| `/akios:init` | Onboard this repo (interview → scan → fill files → wire hook → check deps) | — |
+| `/akios:define "<idea>"` | Turn a feature idea into an approved spec | 1 (`idea-to-spec`) |
+| `/akios:plan <spec>` | Spec → task backlog (speckit, or degraded path) | 2–5 |
+| `/akios:deliver <tasks.md>` | Implement, test, and review | 6 |
+
+All four are typed-only (`disable-model-invocation`) — they never auto-fire. The three
+pipeline commands are thin wrappers over `ios-feature-pipeline`; they guard for an
+initialized repo and send you to `/akios:init` if needed.
+
+## Install with a Claude Code agent
 Paste a single setup prompt into Claude Code from inside the repo you want to set up, and
 let the agent clone the kit, install the skills, check the plugins, run `install.sh`, and
 fill in the templates — asking you about folders, architecture, and target along the way.
@@ -80,7 +106,9 @@ fill in the templates — asking you about folders, architecture, and target alo
 The ready-to-paste block (plain-language framed) lives in **[START-HERE.md](START-HERE.md)
 § 2** — single source for the agent install, so the novice path and this one don't drift.
 
-## Install manually
+## Install manually (cross-agent / no plugin)
+For Codex, Gemini, or any non-plugin setup — a plugin command can't write into your repo,
+so these scripts drop the same context files directly:
 ```sh
 # 1. get the kit
 git clone https://github.com/Lucasdho/iOS-agentic-kit.git ~/iOS-agentic-kit
@@ -105,8 +133,9 @@ Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 | `ponytail` | plugin *(optional, recommended)* | Laziness/efficiency, anti over-build — kit works without it | `/plugin marketplace add` + `/plugin install` |
 | `/code-review`, `fewer-permission-prompts` | built-in | review the diff; trim permission prompts | ship with the Claude Code CLI |
 
-Authored skills are tracked in `skills/` (the repo is their source of truth);
-`install-skills.sh` overwrites the installed copies on every run so they never drift.
+Authored skills are tracked in `skills/` (the repo is their source of truth). Installing the
+`akios` plugin ships them automatically; `install-skills.sh` is only for the manual /
+cross-agent path, overwriting the installed copies on every run so they never drift.
 Credits & licenses for all of the above → [CREDITS.md](CREDITS.md).
 
 ## Staying up to date

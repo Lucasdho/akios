@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.3.0 (2026-06-18)
+
+### Added — plugin distribution + workflow commands
+- **The kit now ships as a Claude Code plugin, `akios`.** New
+  `.claude-plugin/plugin.json` (auto-discovers `commands/` + `skills/`) and
+  `.claude-plugin/marketplace.json` (same-repo marketplace, `source: "./"`). Install in
+  two lines: `/plugin marketplace add Lucasdho/iOS-agentic-kit` → `/plugin install akios`.
+- **Four typed slash commands** (`commands/*.md`, all `disable-model-invocation: true` so
+  they never auto-fire):
+  - `/akios:init` — onboards a repo: interview → scan → fill the `{{...}}` placeholders →
+    materialize the context files → wire the gate hook → check dependencies. The
+    intelligent layer over `install.sh`.
+  - `/akios:define` — pipeline Phase 1 (`idea-to-spec`).
+  - `/akios:plan` — pipeline Phases 2-5 (speckit clarify→specify→plan→tasks; degraded path
+    if no `.specify/`).
+  - `/akios:deliver` — pipeline Phase 6 (`superpowers:subagent-driven-development` + verify
+    + `/code-review`).
+  The three wrappers invoke `ios-feature-pipeline` at the named phase and do not duplicate
+  the spine (kit SSoT rule); they guard for an initialized repo and point to `/akios:init`.
+
+### Changed
+- `install.sh` reframed as the **cross-agent bootstrap** (Codex/Gemini and non-plugin
+  setups) — a plugin command can't write into a user repo. Claude Code users are pointed at
+  `/akios:init`. The gate hook stays a per-repo artifact (no plugin-level hook → no
+  pollution of non-iOS repos).
+- `test-kit.sh` now validates the plugin manifests parse, the plugin is named `akios`, and
+  all four command files exist with a `description:` frontmatter line.
+
 ## 0.2.3 (2026-06-18)
 
 ### Fixes
