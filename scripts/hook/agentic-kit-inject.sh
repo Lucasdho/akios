@@ -6,7 +6,7 @@
 cat <<'EOF'
 [agentic-kit · Swift/iOS] Always on: superpowers · axiom. Optional (recommended): ponytail — efficiency/anti-over-build.
 Default gates (reminder, not enforced — skip only with reason):
-- Full feature (idea to code) -> ios-feature-pipeline (idea-to-spec -> speckit -> subagent-driven-development)
+- Full feature (idea to code) -> ios-feature-pipeline (idea-to-spec -> spec-to-tasks -> task-execution)
 - Idea -> spec           -> idea-to-spec (write to specs/, register domain in CLAUDE.md)
 - Before ANY code        -> plan mode OR superpowers:brainstorming
 - Before hand-writing    -> oss-first (is there a mature tool/lib first?)
