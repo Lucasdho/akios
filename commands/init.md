@@ -12,6 +12,26 @@ into their repo, so you do this with your own file tools. Work at the **git repo
 Templates live in the installed plugin at `${CLAUDE_PLUGIN_ROOT}/templates/` and
 `${CLAUDE_PLUGIN_ROOT}/scripts/`. Read them from there; do not invent their contents.
 
+## 0. Detect state (idempotency gate — do this first)
+Don't re-onboard a repo that's already set up; re-running `/akios:init` should be cheap.
+Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's recorded version
+(`<root>/.claude/.agentic-kit-version`, may be absent), then branch:
+
+- **No version file (or no `AGENTS.md`)** → fresh repo. Run the **full** flow (steps 1–6).
+- **Recorded == installed** → already initialized at this version. **Skip the interview and
+  copies.** Run only the **self-check (step 5)** to confirm nothing rotted, repair any single
+  missing artifact (a deleted hook, a dropped import), and stop with: "Already initialized at
+  v<X> — nothing to do." Only re-run the full flow if the user explicitly asks to repair/reset.
+- **Recorded < installed** → **migrate, don't re-interview.** The context files already exist and
+  hold the user's answers, so skip step 1. Run steps 3–5 in *migration mode*: only the
+  **always-copy** artifacts get refreshed (the two hooks + the version file); the
+  *skip-if-exists* files (`AGENTS.md`, `Context.md`, `.claude/rules/swift.md`) are left untouched.
+  Re-verify the hooks are wired (step 4) and the `CLAUDE.md` imports are present (step 5). Write
+  the new version. Then **report the diff**: read `${CLAUDE_PLUGIN_ROOT}/CHANGELOG.md` and tell the user,
+  in two or three lines, what changed between their recorded version and the installed one — and
+  flag anything that needs a manual touch (e.g. a new template section their existing `AGENTS.md`
+  predates).
+
 ## 1. Interview (short — map answers to the placeholders)
 Ask the user, in one batched pass (skip anything the scan in step 2 already answers
 confidently, and confirm rather than re-ask):
