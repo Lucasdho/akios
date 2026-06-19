@@ -18,8 +18,13 @@ the skill gates live below, not in a separate file.
 ## Always on (Swift / iOS)
 Big router skills, active every task — they redirect to the right internal guides:
 - `superpowers` — process discipline (brainstorm, debug, TDD, verify).
-- `ponytail` — efficiency: no over-building, no rewriting what already works.
-- `swift-dev` — master router for all Swift/iOS work; loads the right guides.
+- `axiom` — Swift/iOS domain skills with progressive closure; load the hub for your
+  domain and it dispatches the right sub-skill: `axiom-swiftui` (views/layout) ·
+  `axiom-concurrency` (async/await/actors) · `axiom-testing` (Swift Testing/XCTest) ·
+  `axiom-swift` (language) · `axiom-data` (SwiftData/CoreData) · `axiom-build` (build/debug).
+
+**Optional (recommended):** `ponytail` — efficiency: no over-building, no rewriting
+what already works. The kit works without it; install it for the laziness overlay.
 
 ## How to execute (orchestration)
 For *how* the work runs — not what to build — consult **`superpowers` first**.
@@ -39,19 +44,40 @@ does not enforce. Treat them as the default workflow; skip one only with reason.
 
 | Trigger | Skill | When |
 |---|---|---|
+| Building a new feature end-to-end | `ios-feature-pipeline` → idea→spec→speckit→execute | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` → write specs to `specs/` (see below) | before building |
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
-| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `swift-dev`→ios-debugger-agent | before any fix |
-| Implementing code | `ponytail` + `swift-dev` writing standards + `fewer-permission-prompts` | while coding |
-| Creating / polishing SwiftUI Views | native first + `swift-dev`→swiftui-design-principles (with ponytail) | before the view |
-| Writing tests | `swift-dev`→swift-testing-pro | with the code |
+| Bug, crash, flake, regression | `superpowers:systematic-debugging` + `axiom-build` | before any fix |
+| Implementing code | `axiom` (domain skill) + `fewer-permission-prompts` (+ `ponytail` if installed) | while coding |
+| Creating / polishing SwiftUI Views | native first + `axiom-swiftui` (`ponytail` if installed) | before the view |
+| Writing tests | `axiom-testing` | with the code |
 | Claiming "done" | subagents: `superpowers:verification-before-completion` + `/code-review` | before finishing |
 
-`swift-dev` auto-routes its own sub-skills (figma-to-swiftui · ios-accessibility ·
-ios-debugger-agent · swift-concurrency-pro · swift-testing-pro · swiftdata-pro ·
-swiftui-design-principles · swiftui-performance-audit · swiftui-pro ·
-swiftui-ui-patterns · swiftui-view-refactor) — you don't invoke those directly.
+Axiom domain hubs use progressive closure — each hub (~400 words) dispatches to
+sub-skills on demand. Only the relevant domain loads; context is not blown during
+long plan and execution sessions.
+
+## Where things live (artifact map)
+One lookup for where every artifact is created and stored — so files land consistently and
+the agent (or a newcomer) finds them fast. These are the kit's fixed conventions; your own
+source dirs are described in `Context.md` `## Architecture`.
+
+| Artifact | Location | Naming | Found / loaded via |
+|---|---|---|---|
+| Operating files | repo root | `CLAUDE.md`, `AGENTS.md`, `Context.md` | Claude Code auto-loads `CLAUDE.md`, which imports the other two |
+| Specs | `specs/` | `<domain>.md`, one file per domain | the `## Specs` table in `CLAUDE.md` (see below) |
+| Durable decisions | native auto-memory (not in repo) | `MEMORY.md` | written automatically; survives compaction |
+| Path rules | `.claude/rules/` | `<topic>.md` (e.g. `swift.md`) | fires when a matching file is read |
+| Hooks | `.claude/hooks/` | `<event>-<name>.sh` | wired in `.claude/settings.json` |
+| Project skills | `.claude/skills/` | `<kebab-name>/SKILL.md` | auto-discovered by description |
+| Subagents | `.claude/agents/` | `<kebab-name>.md` | auto-discovered (if you add any) |
+| Speckit artifacts | `.specify/` | speckit-managed (`memory/constitution.md`, …) | speckit commands |
+| Task backlog | repo root or `.specify/` | `tasks.md` (from `/speckit-tasks`) | input to subagent-driven execution |
+| App source | per `Context.md` `## Architecture` | project-specific | `Context.md` |
+
+Adding a new artifact? Put it where the table says and name it the same way. If it's a spec,
+add a row to the `## Specs` table so the next session knows it exists.
 
 ## Specs (idea-to-spec)
 When `idea-to-spec` produces specs:
@@ -61,6 +87,18 @@ When `idea-to-spec` produces specs:
   project `CLAUDE.md` for this (a `## Specs` section: spec file → domain → status),
   or `specs/INDEX.md` if you prefer to keep it out of `CLAUDE.md`.
 - Before designing something new, read that orchestration doc first.
+
+## Full feature workflow (the spine)
+The end-to-end idea→ship spine is owned by **`ios-feature-pipeline`** — invoke it for any
+feature built from scratch. The spine at a glance:
+
+`idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review`
+
+When speckit is initialized (`.specify/` present) it runs the structured phases then executes
+via `superpowers:subagent-driven-development` (every subagent context block includes the relevant
+Axiom domain skill — subagents start cold). See the `ios-feature-pipeline` skill for the full
+phase guide, the artifact handoffs, and the no-speckit degraded path. Don't re-document the phases
+here — that skill is the single source of truth.
 
 ## Project-specific gates
 {{e.g. "always /security-review when touching Keychain / auth / networking"}}

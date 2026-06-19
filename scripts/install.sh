@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 # Plug the agentic-kit meta-system into a target repo.
 # Usage: ./install.sh /path/to/repo
+#
+# Cross-agent bootstrap. In Claude Code, prefer the `akios` plugin's `/akios:init`
+# (it interviews you and fills the {{...}} placeholders). This script exists for
+# Codex / Gemini / non-plugin setups, which still need the context files dropped —
+# a plugin command can't write into a user's repo. Both paths produce the same files.
 set -euo pipefail
 
-KIT="$(cd "$(dirname "$0")" && pwd)"
+KIT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="$(cat "$KIT/VERSION" 2>/dev/null || echo unknown)"
 
 # Args: [--here] /path/to/repo. By default the kit installs at the git repo root
@@ -62,7 +67,7 @@ fi
 
 # 4. Reinforcement hook.
 mkdir -p "$TARGET/.claude/hooks"
-cp "$KIT/hook/agentic-kit-inject.sh" "$TARGET/.claude/hooks/"
+cp "$KIT/scripts/hook/agentic-kit-inject.sh" "$TARGET/.claude/hooks/"
 chmod +x "$TARGET/.claude/hooks/agentic-kit-inject.sh"
 
 # 5. Wire the SessionStart hook into .claude/settings.json (idempotent).
@@ -95,4 +100,10 @@ done
 for imp in '@AGENTS.md' '@Context.md'; do
   grep -qF "$imp" "$TARGET/CLAUDE.md" || { echo "FAIL: CLAUDE.md does not import $imp" >&2; exit 1; }
 done
+# Warn if the SessionStart hook was never wired (jq absent and user hasn't added it manually).
+if ! grep -q agentic-kit-inject "$TARGET/.claude/settings.json" 2>/dev/null; then
+  echo "WARNING: SessionStart hook not wired in .claude/settings.json — add it manually:" >&2
+  echo "  bash \"\$CLAUDE_PROJECT_DIR/.claude/hooks/agentic-kit-inject.sh\"" >&2
+fi
 echo "ok — agentic-kit installed in $TARGET (fill in the {{...}} placeholders)"
+echo "    (Claude Code users: run /akios:init instead to fill them interactively)"
