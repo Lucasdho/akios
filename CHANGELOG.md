@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.4.0 (2026-06-19)
+
+### Changed — speckit dropped; lean 3-phase spine
+- **New spine:** `idea-to-spec → spec-to-tasks → task-execution → verify + /code-review`.
+  The four speckit phases (clarify/specify/plan/tasks) + the constitution bootstrap are gone —
+  they re-did rigor the kit already has (design happens decision-by-decision in `idea-to-spec`;
+  quality is gated by `AGENTS.md` house rules + axiom + ponytail + `/code-review`). A real run
+  showed speckit producing ~9 files for a `tasks.md` that one pass now produces as 1.
+- **`/akios:plan`** now runs `spec-to-tasks` (one pass, one confirm); **`/akios:deliver`** now
+  runs `task-execution`. No `.specify/`, no web/backend folder trees.
+
+### Added
+- **`spec-to-tasks` skill** — one pass from an approved spec to `tasks.md`: atomic tasks with
+  `[P]` parallel markers, checkpoint barriers, definitions of done, and a mandatory designer's-eye
+  pass that puts happy / empty / loading / error coverage in every UI task's DoD.
+- **`task-execution` skill** — runs `tasks.md` on a per-spec branch, commits at each checkpoint,
+  runs the unit + integration battery at `[major]` checkpoints, compresses context only between
+  specs, and stops at a hard human gate before any push or merge. Subagents are opt-in (never a
+  hard dependency — this environment can deny them `xcodebuild`).
+- **Two house rules** in `templates/AGENTS.md`: native types over wrappers (Swift `id`/`UUID`/
+  `Hashable`/`Codable` before any wrapper), and protocol-first repositories (protocol + default
+  impls; DoD = `Hashable` + JSON↔object round-trip).
+- **`skill-trace` PostToolUse hook** (`scripts/hook/skill-trace.sh`, optional) — appends skill
+  loads + skill-reference reads + a `git diff --shortstat` snapshot to `.akios/trace.jsonl`;
+  `task-execution` adds the test pass/fail count at `[major]` checkpoints for a before/after delta.
+  No test runs in the hook itself.
+
+### Migration
+- Repos with an existing `.specify/` keep working — those files just go unused; `/akios:plan`
+  stops invoking speckit. Re-run `/akios:init` (or `install.sh`) to pick up the new hook + house
+  rules and gitignore `.akios/`.
+
 ## 0.3.0 (2026-06-18)
 
 ### Added — plugin distribution + workflow commands

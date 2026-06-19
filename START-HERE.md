@@ -90,11 +90,9 @@ happens, and what *you* do at each step — mostly just answer questions and say
 | Step | What the assistant does | What you do |
 |---|---|---|
 | **Design** | Asks you questions and writes a short plan ("spec") of the feature | Answer, then approve the plan |
-| **Clarify** | Spots anything vague or missing and pins it down | Confirm the details |
-| **Plan** | Works out *how* to build it | Glance over it |
-| **Tasks** | Breaks it into a checklist of small steps | Nothing — just let it run |
-| **Build & test** | Writes the code and tests, step by step | Watch; answer if it asks |
-| **Review** | Checks its own work for problems | Approve, or ask for changes |
+| **Plan** | Breaks the spec into a checklist of small steps, in one pass | Glance over it once and say "looks good" |
+| **Build & test** | Writes the code and tests step by step, on its own branch, checking in at each milestone | Watch; answer if it asks |
+| **Review & ship** | Checks its own work, then asks if you want to push and where | Approve, then tell it where to put the code |
 
 You stay in control the whole way — nothing ships without you approving it. The first step
 (Design) **always** happens with you present; the assistant won't run off and build the
@@ -111,8 +109,8 @@ A few terms come up. Plain-English versions:
 - **Gate** — a "before you do X, do Y first" checkpoint. E.g. *before writing code, make a
   plan.* It's a habit, not a wall.
 - **Spec** — a short written description of a feature: what it does and how it should behave.
-- **Speckit** — an optional tool that turns a spec into a structured build checklist. The kit
-  works fine without it.
+- **Tasks** — the build checklist the assistant makes from the spec, in small steps with
+  clear "done" conditions and checkpoints where it runs the tests.
 - **Axiom** — a library of Apple/Swift expertise the assistant pulls in when it touches
   Swift code, so the code follows current best practice.
 - **Subagent** — a fresh helper the assistant spins up for one focused job (like building one

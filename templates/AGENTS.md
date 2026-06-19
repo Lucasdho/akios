@@ -27,13 +27,13 @@ Big router skills, active every task — they redirect to the right internal gui
 what already works. The kit works without it; install it for the laziness overlay.
 
 ## How to execute (orchestration)
-For *how* the work runs — not what to build — consult **`superpowers` first**.
-It owns the execution playbook: context optimization, when and how to spawn
-subagents, parallelizing fan-out work, writing and executing plans, and
-subagent-driven development. Reach for it before improvising an approach to:
+For *how* a feature backlog runs, **`task-execution` owns the loop** (branch per spec,
+checkpoint commits, test battery at major checkpoints, human gate before push/merge) —
+it's Phase 3 of the spine. For general orchestration *around* that — context
+optimization, parallel fan-out, writing/executing standalone plans — reach for
+`superpowers`:
 - splitting a task across parallel agents → `superpowers:dispatching-parallel-agents`
-- driving a multi-step build through subagents → `superpowers:subagent-driven-development`
-- turning a plan into reviewed execution → `superpowers:writing-plans` / `executing-plans`
+- turning a standalone plan into reviewed execution → `superpowers:writing-plans` / `executing-plans`
 
 Note: a spawned subagent starts cold — it does NOT inherit these gates. When you
 dispatch one for gated work, restate the relevant gate in its prompt.
@@ -44,7 +44,7 @@ does not enforce. Treat them as the default workflow; skip one only with reason.
 
 | Trigger | Skill | When |
 |---|---|---|
-| Building a new feature end-to-end | `ios-feature-pipeline` → idea→spec→speckit→execute | before starting |
+| Building a new feature end-to-end | `ios-feature-pipeline` → idea-to-spec → spec-to-tasks → task-execution | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` → write specs to `specs/` (see below) | before building |
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
@@ -72,8 +72,8 @@ source dirs are described in `Context.md` `## Architecture`.
 | Hooks | `.claude/hooks/` | `<event>-<name>.sh` | wired in `.claude/settings.json` |
 | Project skills | `.claude/skills/` | `<kebab-name>/SKILL.md` | auto-discovered by description |
 | Subagents | `.claude/agents/` | `<kebab-name>.md` | auto-discovered (if you add any) |
-| Speckit artifacts | `.specify/` | speckit-managed (`memory/constitution.md`, …) | speckit commands |
-| Task backlog | repo root or `.specify/` | `tasks.md` (from `/speckit-tasks`) | input to subagent-driven execution |
+| Task backlog | repo root | `tasks.md` (from `spec-to-tasks`) | input to `task-execution` |
+| Skill trace (optional) | `.akios/` | `trace.jsonl` (append-only) | `skill-trace` PostToolUse hook; gitignore it |
 | App source | per `Context.md` `## Architecture` | project-specific | `Context.md` |
 
 Adding a new artifact? Put it where the table says and name it the same way. If it's a spec,
@@ -92,13 +92,15 @@ When `idea-to-spec` produces specs:
 The end-to-end idea→ship spine is owned by **`ios-feature-pipeline`** — invoke it for any
 feature built from scratch. The spine at a glance:
 
-`idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review`
+`idea-to-spec → spec-to-tasks → task-execution → verify + /code-review`
 
-When speckit is initialized (`.specify/` present) it runs the structured phases then executes
-via `superpowers:subagent-driven-development` (every subagent context block includes the relevant
-Axiom domain skill — subagents start cold). See the `ios-feature-pipeline` skill for the full
-phase guide, the artifact handoffs, and the no-speckit degraded path. Don't re-document the phases
-here — that skill is the single source of truth.
+Three phases: `idea-to-spec` (interactive design → `specs/<feature>.md`) → `spec-to-tasks`
+(one pass → `tasks.md` with `[P]` markers, checkpoints, DoDs, UI states) → `task-execution`
+(branch per spec, checkpoint commits, test battery at major checkpoints, verify + `/code-review`,
+human gate before push/merge). When `task-execution` dispatches a subagent it includes that task's
+Axiom domain skill — subagents start cold and are opt-in. No speckit, no `.specify/`, no
+constitution. See the `ios-feature-pipeline` skill for the full phase guide — single source of
+truth; don't re-document the phases here.
 
 ## Project-specific gates
 {{e.g. "always /security-review when touching Keychain / auth / networking"}}
@@ -107,4 +109,9 @@ here — that skill is the single source of truth.
 - Shortest working diff. No speculative abstractions, no scaffolding "for later".
 - One runnable check behind any non-trivial logic.
 - Boring over clever. Deletion over addition.
+- **Native types over wrappers.** Use Swift's own `id` / `UUID` / `Hashable` / `Codable`
+  before writing a wrapper type. A wrapper needs a one-line justification.
+- **Protocol-first repositories / data access.** Define a `protocol` + default
+  implementations; concrete types inherit. Smaller, reviewable PRs. A repository's done-bar
+  is: protocol defined, defaults provided, `Hashable` + JSON↔object round-trip covered.
 - {{PROJECT_RULE — e.g. "never touch /migrations without a backup plan"}}

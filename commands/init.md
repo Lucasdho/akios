@@ -33,9 +33,7 @@ ask which is right before writing.
 
 ## 3. Materialize the context files (never clobber existing ones)
 Copy each template into the repo, replacing every `{{...}}` token with the resolved value.
-**Important:** the only placeholders to fill are the ones in `Context.md`, `AGENTS.md`, and
-`CLAUDE.md`. Do NOT touch any `{{ inputs.* }}` tokens elsewhere — those are speckit's own
-workflow syntax.
+The placeholders to fill live only in `Context.md`, `AGENTS.md`, and `CLAUDE.md`.
 
 | File | Source | Rule |
 |---|---|---|
@@ -44,27 +42,37 @@ workflow syntax.
 | `CLAUDE.md` | `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@Context.md` imports is missing (Context first so AGENTS ends on top) |
 | `.claude/rules/swift.md` | `${CLAUDE_PLUGIN_ROOT}/templates/rules/swift.md` | skip if it already exists |
 | `.claude/hooks/agentic-kit-inject.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/hook/agentic-kit-inject.sh` | always copy; make executable |
+| `.claude/hooks/skill-trace.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/hook/skill-trace.sh` | always copy; make executable (optional skill-use telemetry) |
 | `.claude/.agentic-kit-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
 
-## 4. Wire the SessionStart gate hook (idempotent)
-In `<root>/.claude/settings.json` (create as `{}` if absent): if the text
-`agentic-kit-inject` is already present, leave it ("hook already wired"). Otherwise append
-to `.hooks.SessionStart` this entry (use `jq` if available, else edit the JSON directly):
-```
-{ "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/agentic-kit-inject.sh\"" } ] }
-```
+Also append `.akios/` to the repo's `.gitignore` (the skill trace is runtime data, not source).
+
+## 4. Wire the hooks (idempotent)
+In `<root>/.claude/settings.json` (create as `{}` if absent), use `jq` if available, else edit
+the JSON directly:
+- **SessionStart gate hook** — if `agentic-kit-inject` is already present, leave it. Otherwise
+  append to `.hooks.SessionStart`:
+  ```
+  { "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/agentic-kit-inject.sh\"" } ] }
+  ```
+- **PostToolUse skill-trace hook** (optional telemetry) — if `skill-trace` is already present,
+  leave it. Otherwise append to `.hooks.PostToolUse`:
+  ```
+  { "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-trace.sh\"" } ] }
+  ```
 
 ## 5. Self-check (fail loudly)
-Confirm all six artifacts exist, `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`,
-the hook is wired, and **no `{{...}}` placeholder remains** in `Context.md` / `AGENTS.md` /
-`CLAUDE.md`. Report any miss.
+Confirm the artifacts exist, `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`, both
+hooks are wired (SessionStart + PostToolUse), and **no `{{...}}` placeholder remains** in
+`Context.md` / `AGENTS.md` / `CLAUDE.md`. Report any miss.
 
 ## 6. Dependency check (the kit can't auto-install other plugins)
 Check whether these are installed; for any missing one, print the exact install lines:
 - **Required:** superpowers — `/plugin marketplace add obra/superpowers` → `/plugin install superpowers`
 - **Required:** axiom — `/plugin marketplace add CharlesWiltgen/Axiom` → `/plugin install axiom`
 - **Optional:** ponytail — `/plugin marketplace add DietrichGebert/ponytail` → `/plugin install ponytail`
-- **Speckit** (for `/akios:plan`): note if `.specify/` is absent — `/akios:plan` will use the
-  degraded path until `npx speckit init` is run.
+
+No speckit is needed — `/akios:plan` runs the kit's own `spec-to-tasks` pass (one file, no
+`.specify/`).
 
 Finish with: the repo is onboarded; next step is `/akios:define "<your feature idea>"`.

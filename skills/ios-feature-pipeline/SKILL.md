@@ -4,94 +4,63 @@ description: Workflow orchestrator for taking a raw iOS feature idea all the way
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
 # iOS Feature Pipeline — Idea to Working Code
 
-A 6-phase orchestrator for turning a raw iOS feature idea into implemented, tested, reviewed code. Each phase uses a specific tool. This skill tells you which tool, in what order, and what to hand off between phases.
+A 3-phase orchestrator for turning a raw iOS feature idea into implemented, tested, reviewed
+code. Each phase uses one skill. This skill says which skill, in what order, and what to hand
+off between phases.
 
-> **This skill is the canonical definition of the kit's idea→ship workflow spine.** Other surfaces (the `ios-agentic-kit` skill, the project `AGENTS.md`) summarize it and point here — edit the spine here, not there.
+> **This skill is the canonical definition of the kit's idea→ship workflow spine.** Other
+> surfaces (the `ios-agentic-kit` skill, the project `AGENTS.md`) summarize it and point here —
+> edit the spine here, not there.
 
-**Spine at a glance:** `idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review`
+**Spine at a glance:** `idea-to-spec → spec-to-tasks → task-execution → verify + /code-review`
+
+> **v2 — speckit dropped.** Earlier versions ran speckit (clarify/specify/plan/tasks) +
+> a constitution between design and execution. That re-did rigor the kit already has — design
+> happens decision-by-decision in `idea-to-spec`; quality is enforced by the gates in
+> `AGENTS.md` + axiom + ponytail + `/code-review`. The four speckit phases collapsed into one
+> `spec-to-tasks` pass. No `.specify/`, no constitution.
 
 ## Non-negotiable rules
+1. **Phase 1 is always interactive.** Never automate or skip it — the user must be present.
+2. **Hand-off 1→2:** the spec file path from `idea-to-spec` is the input to `spec-to-tasks`.
+3. **Hand-off 2→3:** the `tasks.md` from `spec-to-tasks` is the sole input to `task-execution`.
+4. **Subagents start cold and are opt-in.** When `task-execution` dispatches one, its prompt must
+   include the task's Axiom domain skill (tagged in `tasks.md`) plus `ponytail` if installed.
+   Execution must never *depend* on subagents — this environment can deny them `xcodebuild`.
+5. **No push/merge without the human gate** at the end of Phase 3.
 
-1. **Phase 1 is always interactive.** Never automate or skip it. The user must be present.
-2. **Hand-off 1→2:** the spec text or file path produced by `idea-to-spec` becomes `$ARGUMENTS` for `speckit-clarify`.
-3. **Hand-off 5→6:** `tasks.md` from `speckit-tasks` is the plan input for `subagent-driven-development`.
-4. **Subagents start cold.** Every dispatch must include the correct Axiom domain skill (see table below) — no exceptions — plus `ponytail` if it's installed (optional, recommended).
-5. **Speckit prerequisite:** phases 2–5 require `.specify/` to exist. If absent, use the degraded path (see below).
-6. **Constitution check:** if `.specify/memory/constitution.md` does not exist before phase 4, run `/speckit-constitution` first — Axiom gates are baked in at the plan phase.
+## The 3-phase pipeline
 
-## The 6-phase pipeline
-
-| # | Phase | Tool | Mode | What it produces |
+| # | Phase | Tool | Mode | Produces |
 |---|---|---|---|---|
-| 1 | Design | `/idea-to-spec` | **Interactive — user must be present** | `specs/<feature>.md` |
-| 2 | Clarify | `/speckit-clarify <spec>` | Automated | Resolved ambiguities appended to spec |
-| 3 | Specify | `/speckit-specify` | Automated | Structured speckit artefacts; triggers `agent-context-update` |
-| 4 | Plan | `/speckit-plan` | Automated | Ranked plan with Axiom gates enforced via constitution |
-| 5 | Tasks | `/speckit-tasks` | Automated | `tasks.md` — the execution backlog |
-| 6 | Execute | `superpowers:subagent-driven-development` | Automated, fresh subagents | Implemented, tested feature |
+| 1 | Design | `/idea-to-spec` (`/akios:define`) | **Interactive — user present** | `specs/<feature>.md` |
+| 2 | Plan | `spec-to-tasks` (`/akios:plan`) | One pass, one confirm | `tasks.md` |
+| 3 | Execute | `task-execution` (`/akios:deliver`) | Branch, checkpoints, verify+review | Implemented, reviewed feature |
 
-### Phase-by-phase instructions
+### Phase-by-phase
 
-**Phase 1 — Design (`/idea-to-spec`)**
-Run this interactively with the user. Do not proceed until they have approved a spec and it is written to `specs/<feature>.md`. The spec file path (or its text content) is what you pass to phase 2.
+**Phase 1 — Design (`idea-to-spec`).** Run interactively. Don't proceed until the user has
+approved a spec written to `specs/<feature>.md`. That path feeds Phase 2.
 
-**Phase 2 — Clarify (`/speckit-clarify <spec>`)**
-Pass the spec path or text as `$ARGUMENTS`. This surfaces open questions and resolves ambiguity before the spec is formalized. Output stays in the spec.
+**Phase 2 — Plan (`spec-to-tasks`).** One pass: spec + `Context.md` + `MEMORY.md` → atomic tasks
+with `[P]` parallel markers, checkpoint barriers, definitions of done, and per-task UI-state
+coverage (happy/empty/loading/error). One human confirm of the task graph, then write `tasks.md`.
+See the `spec-to-tasks` skill for the full pass and the `tasks.md` format. No speckit artefacts.
 
-**Phase 3 — Specify (`/speckit-specify`)**
-Formalizes the spec into `.specify/` artefacts. The extension hook auto-triggers `speckit-agent-context-update` after this phase — let it run.
+**Phase 3 — Execute (`task-execution`).** Branch per spec; run checkpoint by checkpoint; commit at
+each barrier; run the unit + integration battery at `[major]` checkpoints; compress context only
+between specs; verify + `/code-review`; then stop at the hard human gate (push? merge where?). See
+the `task-execution` skill for the full loop. Axiom routing for subagent dispatch lives in
+`spec-to-tasks` (each task is pre-tagged with its domain skill).
 
-**Phase 4 — Plan (`/speckit-plan`)**
-Produces the ranked implementation plan. The project constitution enforces Axiom gates here. If `.specify/memory/constitution.md` is absent, run `/speckit-constitution` first, then re-run this phase.
-
-**Phase 5 — Tasks (`/speckit-tasks`)**
-Breaks the plan into discrete tasks and writes `tasks.md`. This file is the sole input for phase 6.
-
-**Phase 6 — Execute (`superpowers:subagent-driven-development`)**
-Drive execution from `tasks.md`. Each subagent dispatch must include the Axiom domain skill for that task type (see routing table below), plus `ponytail` if installed. The subagent's context block must state the Axiom skill explicitly.
-
-## Axiom domain skill routing (subagent context blocks)
-
-Every subagent gets exactly the domain skill it needs — no full library, no context waste.
-
-| Task type | Axiom skill to include |
-|---|---|
-| Views, SwiftUI layouts, previews | `axiom-swiftui` |
-| async/await, actors, Sendable, concurrency | `axiom-concurrency` |
-| Unit tests, Swift Testing, XCTest | `axiom-testing` |
-| Swift language patterns, types, protocols | `axiom-swift` |
-| SwiftData, CoreData, persistence, migrations | `axiom-data` |
-| Build system, Xcode config, schemes, debug | `axiom-build` |
-
-Example subagent context block:
-
-```
-Skills active for this subagent: axiom-swiftui (+ ponytail if installed)
-Task: implement ProductCardView per tasks.md §3
-Inputs: specs/catalog-feature.md, tasks.md
-```
-
-## Degraded path (no speckit / no `.specify/`)
-
-If `.specify/` does not exist and you cannot run `npx speckit init`:
-
-1. Complete phase 1 normally (`/idea-to-spec` → spec file).
-2. Replace phases 2–5 with:
-   - `superpowers:brainstorming` to surface open questions and design options.
-   - `superpowers:writing-plans` to produce a task breakdown (save as `tasks.md`).
-3. Proceed to phase 6 normally with `superpowers:subagent-driven-development` + Axiom routing.
-
-State clearly in any handoff notes that the speckit phases were skipped and the plan is less formally gated.
-
-## What belongs in a subagent prompt (checklist)
-
-- [ ] Correct Axiom domain skill listed (pick from routing table above)
-- [ ] `ponytail` listed too, if installed (optional, recommended)
-- [ ] Reference to `tasks.md` section or specific task ID
-- [ ] Reference to relevant spec file(s)
-- [ ] Any project-specific gotchas from `Context.md` that apply to this task type
+## What belongs in a subagent prompt (when one is dispatched)
+- [ ] The task's Axiom domain skill (already tagged on the task in `tasks.md`)
+- [ ] `ponytail`, if installed (optional, recommended)
+- [ ] The specific task id + its DoD
+- [ ] The relevant spec file(s)
+- [ ] Any `Context.md` gotcha matching this task type

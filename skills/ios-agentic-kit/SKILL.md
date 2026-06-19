@@ -27,12 +27,14 @@ them — don't make them follow shell steps by hand.
 The kit's job is to bind scattered skills into **one spec-driven flow** from idea to shipped code:
 
 ```
-idea-to-spec → speckit (clarify→specify→plan→tasks) → subagent-driven-development → verify + /code-review
+idea-to-spec → spec-to-tasks → task-execution → verify + /code-review
 ```
 
 For any end-to-end feature, **start with `/ios-feature-pipeline`** — it's the canonical orchestrator
-that owns the full phase guide, the artifact handoffs, and the no-speckit degraded path. Everything
-below (install, per-step routing, references) is in service of running that spine.
+that owns the full phase guide and the artifact handoffs. (v2 dropped speckit: design rigor lives in
+`idea-to-spec`, quality gates in `AGENTS.md` + axiom + ponytail; the four speckit phases collapsed
+into one `spec-to-tasks` pass.) Everything below (install, per-step routing, references) is in
+service of running that spine.
 
 ## What it installs (per repo)
 
@@ -47,7 +49,7 @@ below (install, per-step routing, references) is in service of running that spin
 Durable decisions are **not** a repo file — they live in Claude Code's native auto-memory
 (`MEMORY.md`), written automatically and surviving compaction.
 
-Where each artifact (specs, rules, hooks, skills, agents, speckit, tasks) is created and
+Where each artifact (specs, rules, hooks, skills, agents, tasks, trace) is created and
 stored is the **`## Where things live` artifact map** in the installed `AGENTS.md` — the
 canonical lookup for placing and finding files. Edit it there, not here.
 
@@ -72,7 +74,7 @@ session); the copy here is the portable version for repos without the kit instal
 
 | Trigger | Skill | When |
 |---|---|---|
-| Building a new feature end-to-end | `ios-feature-pipeline` → idea→spec→speckit→execute | before starting |
+| Building a new feature end-to-end | `ios-feature-pipeline` → idea-to-spec → spec-to-tasks → task-execution | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` → write specs to `specs/` | before building |
 | About to generate ANY code | plan mode OR `superpowers:brainstorming` | before code |
 | Hand-writing complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |

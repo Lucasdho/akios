@@ -48,29 +48,23 @@ You don't "run" the kit — it shapes the agent's behavior passively:
 > prepends any missing import to an existing one), so the gates and project context
 > reach Claude Code by default — not just the hook reminder.
 
-## Full pipeline with speckit (optional)
+## Full pipeline (idea → shipped code)
 
-The `ios-feature-pipeline` skill orchestrates the complete path from raw idea to
-running code. When speckit is initialized in the project, the pipeline is:
+The `ios-feature-pipeline` skill orchestrates the complete path in **three lean phases** — no
+speckit, no `.specify/`, no constitution (v2 dropped them: design rigor already lives in
+`idea-to-spec`, quality gates in `AGENTS.md` + axiom + ponytail + `/code-review`):
 
-| Phase | Tool | Mode |
-|---|---|---|
-| 1 — Design | `/idea-to-spec` | Interactive — user present, always |
-| 2 — Clarify | `/speckit-clarify` | Automated |
-| 3 — Specify | `/speckit-specify` | Automated |
-| 4 — Plan | `/speckit-plan` | Automated — constitution enforces Axiom gates |
-| 5 — Tasks | `/speckit-tasks` | Automated |
-| 6 — Execute | `superpowers:subagent-driven-development` | Fresh subagents, Axiom domain skill per task |
+| Phase | Tool | Mode | Produces |
+|---|---|---|---|
+| 1 — Design | `idea-to-spec` (`/akios:define`) | Interactive — user present, always | `specs/<feature>.md` |
+| 2 — Plan | `spec-to-tasks` (`/akios:plan`) | One pass, one confirm | `tasks.md` (`[P]` markers, checkpoints, DoDs, UI states) |
+| 3 — Execute | `task-execution` (`/akios:deliver`) | Branch, checkpoint commits, verify + review | Implemented, reviewed feature |
 
-Invoke `/ios-feature-pipeline` to get the full phase guide including subagent
-context rules and the degraded path for projects without speckit.
-
-To add the speckit workflow template to a project that has speckit initialized:
-```sh
-cp ~/iOS-agentic-kit/templates/workflows/ios-feature-pipeline.yml \
-   /path/to/your/repo/.specify/workflows/
-```
-(Requires `npx speckit init` in the project first.)
+`spec-to-tasks` collapses what used to be four speckit phases into one pass. `task-execution`
+runs the backlog on a per-spec branch, commits at each checkpoint, runs the unit + integration
+battery at `[major]` checkpoints, and stops at a hard human gate before any push or merge.
+Subagents are opt-in (each task is pre-tagged with its Axiom domain skill); execution never
+depends on them. Invoke `/ios-feature-pipeline` for the full phase guide.
 
 ## Install as a plugin (recommended)
 The kit ships as a Claude Code plugin, **`akios`**. Two lines inside Claude Code:
@@ -89,10 +83,10 @@ auto-install other plugins, so `init` prints the install lines for the required
 ### Commands
 | Command | What it does | Pipeline phase |
 |---|---|---|
-| `/akios:init` | Onboard this repo (interview → scan → fill files → wire hook → check deps) | — |
+| `/akios:init` | Onboard this repo (interview → scan → fill files → wire hooks → check deps) | — |
 | `/akios:define "<idea>"` | Turn a feature idea into an approved spec | 1 (`idea-to-spec`) |
-| `/akios:plan <spec>` | Spec → task backlog (speckit, or degraded path) | 2–5 |
-| `/akios:deliver <tasks.md>` | Implement, test, and review | 6 |
+| `/akios:plan <spec>` | Spec → task backlog in one pass (`spec-to-tasks`) | 2 |
+| `/akios:deliver <tasks.md>` | Implement, test, review; stop before push/merge (`task-execution`) | 3 |
 
 All four are typed-only (`disable-model-invocation`) — they never auto-fire. The three
 pipeline commands are thin wrappers over `ios-feature-pipeline`; they guard for an
@@ -127,7 +121,9 @@ Then fill in the `{{...}}` placeholders in `Context.md` / `AGENTS.md`.
 | `ios-agentic-kit` | authored | This kit's own guide — gates, routing, install | refreshed to `~/.claude/skills/` by `install-skills.sh` |
 | `idea-to-spec` | authored | Idea → versioned specs in `specs/` | refreshed to `~/.claude/skills/` by `install-skills.sh` |
 | `oss-first` | authored | Force tool/lib search before hand-writing complex code | refreshed to `~/.claude/skills/` by `install-skills.sh` |
-| `ios-feature-pipeline` | authored | Full-lifecycle orchestrator (idea → speckit → execute) | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `ios-feature-pipeline` | authored | 3-phase orchestrator (idea-to-spec → spec-to-tasks → task-execution) | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `spec-to-tasks` | authored | One-pass spec → `tasks.md` (replaces speckit) | refreshed to `~/.claude/skills/` by `install-skills.sh` |
+| `task-execution` | authored | Run `tasks.md` → committed, reviewed code (replaces subagent-driven-development) | refreshed to `~/.claude/skills/` by `install-skills.sh` |
 | `superpowers` | plugin (required) | brainstorming, debugging, TDD, verification | `/plugin marketplace add` + `/plugin install` |
 | `axiom` | plugin (required) | Swift/iOS domain hubs (progressive closure) | `/plugin marketplace add` + `/plugin install` |
 | `ponytail` | plugin *(optional, recommended)* | Laziness/efficiency, anti over-build — kit works without it | `/plugin marketplace add` + `/plugin install` |
