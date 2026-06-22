@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.3 (2026-06-22)
+
+### Added
+- **`deep-brainstorm` Phase 5 — R-W-W Validation Audit.** After the spec-burst, scores each
+  spec against Real / Win / Worth-It criteria (rubric adapted from FounderLens MVA). Writes
+  `specs/rww-audit.md` in the target project with per-spec scores and band (Green / Yellow /
+  Red). Red specs get Roadmap status `needs-revision`; Yellow specs get `[audit: shaky]` note.
+- **`just-vibes` `needs-revision` fuel filter.** Specs at status `needs-revision` are skipped
+  during fuel detection by default. Pass `--force` to include them. PARK logic updated: a
+  `needs-revision` spec is never delivered even after a green quality gate.
+- **`specs/deep-brainstorm-rww-audit.md`** — the design spec for this feature.
+
 ## 0.7.2 (2026-06-22)
 
 ### Added

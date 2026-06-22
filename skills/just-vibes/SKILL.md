@@ -93,14 +93,21 @@ Whenever you make a decision unattended:
 3. **`tasks.md`** (legacy single-file format) — tasks exist, run execute phase using the file as
    the backlog. Treat each unchecked `[ ]` item as a pending task in checkpoint order.
 4. **`specs/*.md` at status `designed`** in `Roadmap.md` — has a spec, needs plan → execute.
+   - **Skip `needs-revision` specs** (R-W-W audit flagged them weak) unless `--force` is passed.
+     Log each skipped spec in the journal with reason "audit: needs-revision".
 5. **`specs/*.md` present but no `Roadmap.md`** — treat each spec as `designed`, run plan → execute.
 6. **`Vision.md` / `Roadmap.md` items with no spec** — needs full brainstorm → plan → execute.
+
+> **`needs-revision` specs:** Roadmap status set by the deep-brainstorm R-W-W audit when a spec
+> scores below 41/100. Skipped in default mode — the spec needs revision before it's
+> execution-ready. Pass `--force` to include them (at your own risk; audit findings apply).
 
 **Fuel detection procedure:**
 ```
 1. Check for tasks/todo/*.md  → execute fuel
 2. Check for tasks.md         → execute fuel (legacy)
 3. Read Roadmap.md if present → find specs at status `designed`
+   └ SKIP any spec at status `needs-revision` unless --force was passed
 4. List specs/*.md            → any spec without a tasks/todo/ entry = plan fuel
 5. Read Vision.md / Roadmap.md for backlog items without specs → brainstorm fuel
 6. Nothing found              → report "no fuel" and stop
@@ -148,6 +155,8 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
              team → push feature/<spec> + open a PR (gh)
            Commit trailer carries Akios-Instance. Update Roadmap status → done.
    PARK   (red, unfixable): keep branch + logs; set Roadmap status to `blocked`; DO NOT deliver.
+           Also PARK if the spec is at `needs-revision` — even a green quality gate does not
+           authorize delivery of a spec the R-W-W audit flagged as weak. Revise the spec first.
 6. JOURNAL append the cycle to .akios/just-vibes-journal.md:
              - unit built, fuel type used, phases run
              - key decisions made (with reasoning) per phase
