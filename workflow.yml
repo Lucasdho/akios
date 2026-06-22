@@ -50,9 +50,25 @@ phases:
     outputs: [tasks/done/*.md]
     roadmap: done
 
+# deep-brainstorm is a PRE-EXECUTION RUN-STYLE. It does whole-product discovery and cartography,
+# producing a complete spec family. Its output feeds the normal brainstorm→plan→execute pipeline.
 # just-vibes is a RUN-STYLE over the phases above, not a phase. It drives them unattended,
 # picking the next fuel and delivering without the per-spec human gate (the quality gate stays).
 run_styles:
+  - id: deep-brainstorm
+    command: /akios:deep-brainstorm   # add an idea/focus as an argument to narrow the session
+    skill: deep-brainstorm
+    default: interactive whole-app discovery → spec family in one session
+    unattended: deepthink posture (called under just-vibes); no human input; all decisions recorded
+    produces: specs/*.md (one per domain) + Roadmap.md rows at status designed
+    prereqs: [Context.md]             # soft gate — warn if missing, offer /akios:init
+    outputs: [specs/*.md]
+    roadmap: designed (all produced specs)
+    founderlens_integration: >
+      if founderlens-behavior skill is available and no first-diamond spec exists,
+      Discover phase invokes it; if a founderlens spec already exists, Discover summarizes
+      its decisions and offers to skip to Cartograph.
+
   - id: just-vibes
     command: /akios:just-vibes      # add --force to loop instead of stopping after one unit
     skill: just-vibes

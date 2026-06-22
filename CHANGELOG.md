@@ -1,12 +1,29 @@
 # Changelog
 
+## 0.7.2 (2026-06-22)
+
+### Added
+- **`deep-brainstorm` skill + command.** Whole-app mapping session — runs FounderLens Double
+  Diamond on the entire product, cartographs every major surface (screens, data, infrastructure,
+  cross-cutting, business logic, integrations), scopes each area (core/enhance/future), and
+  bursts out a complete family of versioned specs in one session. Registered in `workflow.yml`
+  as a `run_style`. Invoked via `/akios:deep-brainstorm`.
+- **`founderlens-behavior` skill.** Chat-native FounderLens co-founder persona — walks an idea
+  through the Double Diamond first diamond (Discover → Define) and Midpoint Validation Audit,
+  one ingredient at a time. Used as the Discover phase in `deep-brainstorm`.
+
+### Changed
+- **`grill-ui` → `align-ui`.** Renamed for clarity. All references in `task-execution` and
+  `CHANGELOG.md` updated.
+
 ## 0.7.1 (2026-06-22)
 
 ### Added
-- **`grill-ui` skill.** Pre-implementation UI alignment gate that grills the user branch-by-branch
-  (structure → layout → components → interactions → states → animation) before any SwiftUI View
-  task is written. Fires automatically inside `task-execution` for UI-scoped tasks; auto-skipped
-  in just-vibes (writes `tasks/ui-alignment/<Screen>.md` unattended with `[auto]` markers).
+- **`align-ui` skill** (formerly `grill-ui`). Pre-implementation UI alignment gate that walks
+  the user decision-by-decision (structure → layout → components → interactions → states →
+  animation) before any SwiftUI View task is written. Fires automatically inside `task-execution`
+  for UI-scoped tasks; auto-skipped in just-vibes (writes `tasks/ui-alignment/<Screen>.md`
+  unattended with `[auto]` markers).
 - **`handoff` skill + command.** Cross-session context transfer via `tasks/handoffs/`. Supports
   the bidirectional pattern: Session 1 writes `<topic>.md`, Session 2 returns
   `<topic>-return.md`. References existing artifacts by path rather than duplicating content.

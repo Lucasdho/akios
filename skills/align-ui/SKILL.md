@@ -1,13 +1,13 @@
 ---
-name: grill-ui
-description: Pre-implementation UI alignment gate. Grills the user branch-by-branch on every visual and interaction decision for a screen before any SwiftUI code is written. Produces a ui-alignment doc that task-execution loads as implementation ground truth.
+name: align-ui
+description: Pre-implementation UI alignment gate. Walks the user decision-by-decision through every visual and interaction choice for a screen before any SwiftUI code is written. Produces a ui-alignment doc that task-execution loads as implementation ground truth.
 license: MIT
 metadata:
   author: Lucas Oliveira
   version: "1.0.0"
 ---
 
-# Grill UI — Pre-implementation UI Alignment
+# Align UI — Pre-implementation UI Alignment
 
 Runs before any SwiftUI View task is implemented. The spec defines *what* the screen does;
 this skill aligns *how* it looks and behaves — resolving every UI decision with the user before
