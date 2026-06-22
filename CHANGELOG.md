@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.7.1 (2026-06-22)
+
+### Added
+- **`grill-ui` skill.** Pre-implementation UI alignment gate that grills the user branch-by-branch
+  (structure → layout → components → interactions → states → animation) before any SwiftUI View
+  task is written. Fires automatically inside `task-execution` for UI-scoped tasks; auto-skipped
+  in just-vibes (writes `tasks/ui-alignment/<Screen>.md` unattended with `[auto]` markers).
+- **`handoff` skill + command.** Cross-session context transfer via `tasks/handoffs/`. Supports
+  the bidirectional pattern: Session 1 writes `<topic>.md`, Session 2 returns
+  `<topic>-return.md`. References existing artifacts by path rather than duplicating content.
+  Invoked via `/akios:handoff [topic]`.
+
+### Changed
+- **Mandatory compact between specs.** `task-execution` compact rule upgraded from advisory to
+  hard rule: warn at 110k, compact at 135k, `/compact` required after every spec before the
+  next one starts — no exceptions.
+
 ## 0.7.0 (2026-06-22)
 
 ### Added — just-vibes (autonomous run)
