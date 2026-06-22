@@ -1,0 +1,68 @@
+# akios — phase contract (single source of truth)
+# Commands are thin wrappers that read this file. Phase detection and prereq
+# gating are computed from it:
+#   - current phase  = the highest phase whose `outputs` already exist (per spec)
+#   - phase gate     = all of a phase's `prereqs` exist (soft gate: warn + offer)
+# See specs/pipeline.md §1-2.
+
+version: 1
+
+# init writes the active mode into Roadmap.md; brainstorm reads it.
+modes: [new, one-shot, feature]
+
+# init also writes the collaboration flag into Roadmap.md. Drives delivery + multi-instance:
+#   solo -> just-vibes merges + pushes the default branch; no claim etiquette.
+#   team -> just-vibes pushes feature/<spec> + opens a PR; claim-before-work + signatures in force.
+collaboration: [solo, team]
+
+# init is bootstrap, NOT a phase (no spec/task prerequisite).
+bootstrap:
+  command: /akios:init
+  creates:
+    - CLAUDE.md
+    - AGENTS.md
+    - Context.md
+    - Roadmap.md
+    - specs/
+    - tasks/        # todo/ in-progress/ review/ done/
+    - archive/
+    - code-references/
+
+phases:
+  - id: brainstorm
+    command: /akios:brainstorm
+    skill: idea-to-spec
+    prereqs: [Context.md, Roadmap.md]
+    outputs: [specs/*.md]
+    roadmap: designed
+
+  - id: plan
+    command: /akios:plan
+    skill: spec-to-tasks
+    prereqs: [specs/*.md]
+    outputs: [tasks/todo/*.md]
+    roadmap: planned
+
+  - id: execute
+    command: /akios:execute
+    skill: task-execution
+    prereqs: [tasks/todo/*.md]
+    outputs: [tasks/done/*.md]
+    roadmap: done
+
+# just-vibes is a RUN-STYLE over the phases above, not a phase. It drives them unattended,
+# picking the next fuel and delivering without the per-spec human gate (the quality gate stays).
+run_styles:
+  - id: just-vibes
+    command: /akios:just-vibes      # add --force to loop instead of stopping after one unit
+    skill: just-vibes
+    default: one unit, then stop at the spec boundary
+    force: loop over all fuel until exhausted or interrupted
+    fuel_precedence:                # most-ready first
+      - explicit idea (argument)
+      - tasks/todo/*.md             # ready to execute
+      - specs/*.md @ designed       # plan -> execute
+      - Vision.md / Roadmap.md item # brainstorm (unattended deepthink) -> plan -> execute
+    waives: human push/merge gate (invocation = authorization)
+    keeps: quality gate (verify + code-review + bounded fix loop; park red, never deliver broken)
+    multi_instance: claim-before-work + Akios-Instance signatures; Roadmap status is monotonic (higher wins)

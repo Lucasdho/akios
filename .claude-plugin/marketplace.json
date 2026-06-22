@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "akios",
+  "description": "Agentic workflow kit for Swift/iOS development in Claude Code.",
+  "owner": { "name": "Lucas Oliveira", "url": "https://github.com/Lucasdho" },
+  "plugins": [
+    {
+      "name": "akios",
+      "source": "./",
+      "category": "development",
+      "description": "Spec-driven idea-to-ship pipeline, skill gates, and repo onboarding for Swift/iOS."
+    }
+  ]
+}

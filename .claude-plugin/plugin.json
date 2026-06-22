@@ -1,0 +1,10 @@
+{
+  "name": "akios",
+  "version": "0.7.0",
+  "description": "Agentic Claude Code workflow kit for Swift/iOS repos: spec-driven idea-to-ship pipeline, skill gates, and repo onboarding. No external plugin dependencies.",
+  "author": { "name": "Lucas Oliveira", "url": "https://github.com/Lucasdho" },
+  "homepage": "https://github.com/Lucasdho/akios",
+  "repository": "https://github.com/Lucasdho/akios",
+  "license": "MIT",
+  "keywords": ["swift", "ios", "swiftui", "agentic", "workflow"]
+}
