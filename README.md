@@ -1,4 +1,4 @@
-# akios
+# AKIOS - Agentic Kit for IOS
 
 A Claude Code plugin that gives your agent a structured, repeatable workflow for building
 Swift / iOS apps — design, plan, execute — so features ship clean instead of being improvised
