@@ -18,7 +18,7 @@ run it against the backlog in `tasks/todo/`:
 - **Runner routing** from each task: `≤20k → orchestrator` (inline), `>20k → subagent`. Subagents
   are opt-in and start cold — their prompt MUST name the task's `swift-dev` domain sub-skill (plus
   `ponytail` if installed). If the subagent layer is unavailable, degrade to inline.
-- Manage context (warn 120k / urgent `/compact` 180k; compress only between specs).
+- Manage context (warn 110k / urgent `/compact` 135k). **Mandatory `/compact` between every spec** — never start a new spec without compacting first.
 - On spec completion, archive (`archive/Archive.md` + move spec) and record durable decisions to `MEMORY.md`.
 - `/verify` and `/code-review` before claiming done.
 - Stop at the **hard human gate**: ask whether to push and where to merge. Never push or merge on your own.

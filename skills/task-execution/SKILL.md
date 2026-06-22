@@ -61,12 +61,21 @@ for each task (by checkpoint, respecting [P]/area):
   move  tasks/todo/<T>.md → tasks/in-progress/
   consult the PRIORITY CHAIN (below) before choosing any pattern
   load the task's swift-dev domain sub-skill by scope
+  [UI gate] if task is UI-scoped → run grill-ui (skip under just-vibes)
   TDD  → failing test → implement → green        (see TDD posture)
   move  → tasks/review/
   /verify (when runnable) + /code-review
   move  → tasks/done/        (only when the DoD is actually met; failure loops to in-progress)
 ↳ at each checkpoint barrier: audit EVERY task's DoD, then commit "checkpoint: <name>"
 ```
+
+- **UI alignment gate.** A task is UI-scoped when its title or scope mentions View, Screen,
+  SwiftUI, layout, or UI. Before writing any implementation code, run the `grill-ui` skill:
+  it resolves every visual and interaction decision with the user and writes
+  `tasks/ui-alignment/<ScreenName>.md`. Load that file as the highest-priority reference for
+  the task — it overrides `swift-dev` and `code-references/` for visual decisions.
+  Under just-vibes the gate is skipped; `grill-ui` auto-decides and writes the alignment doc
+  unattended (every auto-decision marked `[auto]`).
 
 - **Runner routing + model tier.** Read the task's `runner`: `≤20k → orchestrator` (run inline in this
   session); `>20k → subagent` (dispatch). When you dispatch, pick the **cheapest model that fits**: a
@@ -113,10 +122,24 @@ While executing, watch for preference signals — an explicit statement ("prefir
 correction (the 2nd time the user undoes the same kind of change). At a natural pause, **propose**
 appending it to `~/.claude/akios/preferences.md` (dedup, append-only). Never write silently.
 
-## Context management
-Monitor the window: **warn at 120k**, **urgent `/compact` at 180k**. Compress **only between specs**
-— after one spec fully ships and before the next begins. Never compress mid-spec; that drops live
-execution context and you re-derive it at cost.
+## Context management — MANDATORY compact between specs
+
+**Hard rule: run `/compact` after every spec completes, before starting the next one.**
+This is not advisory. A spec boundary is the only safe compression point — mid-spec compaction
+drops live execution context (task state, DoD progress, checkpoint position) and forces costly
+re-derivation.
+
+```
+spec N ships → archive → /compact ← MANDATORY → spec N+1 starts
+```
+
+Monitor the window and act before it forces you:
+- **110k tokens:** warn the user, finish the current task cleanly before the next.
+- **135k tokens:** urgent — complete the current checkpoint, then `/compact` immediately,
+  even if mid-spec. A forced compaction mid-spec is the failure; reaching 135k without
+  warning is the error to fix.
+
+Never start a new spec without compacting first, regardless of token count.
 
 ## Archive on spec completion
 When a spec's last checkpoint is green and all its tasks are `done`:
@@ -144,6 +167,8 @@ branch + logs, mark it `blocked` in `Roadmap.md`, never deliver red). Delivery t
 **team** → push `feature/<spec>` + open a PR (`gh`). Commits carry the `Akios-Instance:` trailer.
 
 ## Anti-patterns
+- Starting a new spec without running `/compact` first — no exceptions.
+- Implementing a UI task without running `grill-ui` first — except under just-vibes.
 - Pushing or merging without the explicit human gate — **except** under `/akios:just-vibes`, which is
   itself the authorization. Outside just-vibes, never.
 - Delivering a red spec under just-vibes because the fix loop "gave up" — park it (branch + logs), never ship it.
