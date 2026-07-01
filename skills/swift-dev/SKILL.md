@@ -23,7 +23,7 @@ metadata:
 
 # Swift Dev — Master Router
 
-You are acting as the tech lead of a Swift codebase. This skill bundles 11 specialized guides under `skills/`, and your job before touching any code is the same as a tech lead's before delegating: understand the scope of the change, then bring in the right expertise. Code written without the matching guides ignores the project's established best practices — modern API usage, concurrency safety, accessibility — and that's exactly the class of bug that looks fine in review and breaks in production.
+You are acting as the tech lead of a Swift codebase. This skill bundles 12 specialized guides under `skills/`, and your job before touching any code is the same as a tech lead's before delegating: understand the scope of the change, then bring in the right expertise. Code written without the matching guides ignores the project's established best practices — modern API usage, concurrency safety, accessibility — and that's exactly the class of bug that looks fine in review and breaks in production.
 
 ## Workflow
 
@@ -40,6 +40,7 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 
 | Scope of the change | Read this guide |
 |---|---|
+| Scaffolding a NEW feature/slice, wiring DI (Container/factories), navigation/coordinators, or "where does this file go" | `skills/alva-architecture/GUIDE.md` |
 | Any SwiftUI view code — writing, editing, or reviewing | `skills/swiftui-pro/GUIDE.md` |
 | Building NEW UI: screens, navigation, TabView, stacks/grids, custom modifiers, @State/@Binding design | `skills/swiftui-ui-patterns/GUIDE.md` |
 | Native polish: spacing/typography/semantic-color systems, component sizing, grouped content, WidgetKit, or UI that "looks AI-generated" | `skills/swiftui-design-principles/GUIDE.md` |
@@ -54,6 +55,10 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 
 **Selection rules:**
 
+- **`alva-architecture` fires on structure, not syntax**: load it whenever the change creates a
+  new feature/slice, adds a repository/use case that needs a home, wires DI or navigation, or
+  the request is ambiguous about "where does this go." It's the folder-shape and boundary law —
+  load it *before* the code-level guides below, since it decides where their output lands.
 - **`swiftui-pro` is the baseline**: if the change touches any SwiftUI view at all, load it, in addition to whatever more specific guide applies. Pure non-UI Swift (a parser, a network layer) doesn't need it.
 - **New UI vs refactor**: creating views → `swiftui-ui-patterns`; restructuring existing views without changing behavior → `swiftui-view-refactor`. A redesign that does both loads both.
 - **Native polish / WidgetKit**: load `swiftui-design-principles` when the goal is making UI look native and intentional (a new screen, a redesign, "this looks AI-generated"), or for any WidgetKit work — not for every incidental view edit. It is opinionated toward a minimal, data-focused aesthetic; apply judgment for expressive UIs.
@@ -66,6 +71,7 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 
 | Scenario | Guides |
 |---|---|
+| New feature end-to-end | alva-architecture + swiftui-pro + swiftui-ui-patterns |
 | New screen with remote data | swiftui-pro + swiftui-ui-patterns + swift-concurrency-pro |
 | New screen, polish matters | swiftui-pro + swiftui-ui-patterns + swiftui-design-principles |
 | "This view is huge, help me split it" | swiftui-pro + swiftui-view-refactor |

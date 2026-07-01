@@ -10,7 +10,7 @@ checkpoint: 2
 
 # T002 — New `swift-dev` architecture guide (ALVA slice shape)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Add a new bundled guide to `swift-dev` encoding the reconciled ALVA slice shape (alva-adoption
