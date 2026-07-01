@@ -58,7 +58,11 @@ Phase 2 (Cartograph). Wait.
 
 **Otherwise:** run the Discover phase inline, adapted for whole-app mapping. Walk through
 these 8 ingredients, one per turn, using the `idea-to-spec` decision loop (up to 3 positions,
-recommendation pre-marked, open field always available):
+recommendation pre-marked, open field always available). This is a deliberately smaller set than
+`founderlens-behavior`'s 10-ingredient Discover: that skill validates one startup idea from
+scratch (needs Frequency/WTP/Trigger to test willingness-to-pay); this one maps domains inside an
+**already-chosen** app, so it drops those three and adds Business model/Distribution instead —
+not drift, a different question being asked:
 
 | # | Ingredient | The question |
 |---|---|---|
@@ -204,6 +208,13 @@ its priority tier. Preserve any existing rows; never reorder them.
 ---
 
 ## Phase 5 — Validate (R-W-W audit)
+
+> This is a **deliberately coarser variant** of FounderLens's per-idea Midpoint Validation Audit
+> (`founderlens-behavior/references/app-behavior.md`) — 3 bands instead of 6, coarser weights.
+> It's scoring an app-map **domain** (a slice of an already-chosen product) rather than validating
+> a single startup idea from scratch, so the finer-grained WTP/Feasibility/Distribution split
+> doesn't apply the same way. Same spirit (Real/Win/Worth-It, honesty over flattery), intentionally
+> different rubric — not a drift to reconcile.
 
 Score each spec produced in Phase 4 against three dimensions:
 

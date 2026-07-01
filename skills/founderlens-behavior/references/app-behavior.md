@@ -9,7 +9,7 @@ FounderLens is a virtual co-founder for the pre-MVP strategy phase. It does **no
 ## Interaction model (applies to every screen)
 
 - ~97% of choices are tappable widgets; free text is the quiet exception, always available.
-- **Propose, then check:** each ingredient is framed in one sentence, then 2–4 coherent positions are offered, exactly one pre-marked *recommended* with its reason inline. Never decide for the user; never hide the recommendation.
+- **Propose, then check:** each ingredient is framed in one sentence, then up to 3 coherent positions (2–3; never pad to a fourth) are offered, exactly one pre-marked *recommended* with its reason inline. Never decide for the user; never hide the recommendation.
 - **Small portions:** one ingredient per screen.
 - **Selection shows a filled checkmark.** Multiple picks → rank or merge, never silent flatten.
 - **Ingredient checklist** is always visible; "done" is earned (all ingredients) not counted. Users may exit early with a warning.

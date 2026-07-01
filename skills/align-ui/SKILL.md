@@ -14,7 +14,9 @@ this skill aligns *how* it looks and behaves — resolving every UI decision wit
 a single line of SwiftUI is written.
 
 **Invocation:** automatic gate inside `task-execution` when a task is UI-scoped. Never manual.
-**Skipped:** under `/akios:just-vibes` (unattended — the agent decides and records rationale).
+**Auto-decide under `/akios:just-vibes`:** the gate itself never skips — only the interactive
+grilling does. Unattended, the agent decides every question itself and records rationale (see
+"Just-vibes posture" below).
 
 ## Input
 

@@ -17,7 +17,7 @@
 
 ## Xcode targets
 <!-- How files get into a target — so the agent doesn't re-derive it each time. -->
-- Target membership: {{synchronized groups (Xcode 16+, objectVersion 90) — drop files in <target-folder> and they auto-include (.swift compiled, others → bundle Resources), no .pbxproj edit | manual — files must be added to the target explicitly}}
+- Target membership: {{synchronized groups (Xcode 16+, objectVersion ≥ 77) — drop files in <target-folder> and they auto-include (.swift compiled, others → bundle Resources), no .pbxproj edit | manual — files must be added to the target explicitly}}
 - Test resources: {{where test fixtures live; tests read them via Bundle(for:) / Bundle.module}}
 
 ## Conventions

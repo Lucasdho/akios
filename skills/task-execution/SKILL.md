@@ -48,8 +48,9 @@ a unit before touching it so two instances never build the same thing. **Solo mo
   in the commit so the original owner sees it.
 - **Roadmap.md is shared.** It stays the single source of truth, but edit **only your unit's line** in
   the `## Specs` table — never reorder it. Status is **monotonic** (`designed < planned < in-progress
-  < done`); on a merge conflict, **higher status wins** (a finished spec is never demoted by a stale
-  edit). This rule lets an unattended run resolve the merge without a human.
+  < done`, plus the `needs-revision`/`blocked` demotion side-states — full order in `Roadmap.md`'s
+  status-enum note); on a merge conflict, **higher status wins** (a finished spec is never demoted by
+  a stale edit). This rule lets an unattended run resolve the merge without a human.
 
 ## The task lifecycle (state = folder)
 Each task file lives in a folder that **is** its state. Process tasks checkpoint by checkpoint,
@@ -61,7 +62,7 @@ for each task (by checkpoint, respecting [P]/area):
   move  tasks/todo/<T>.md → tasks/in-progress/
   consult the PRIORITY CHAIN (below) before choosing any pattern
   load the task's swift-dev domain sub-skill by scope
-  [UI gate] if task is UI-scoped → run align-ui (skip under just-vibes)
+  [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
   TDD  → failing test → implement → green        (see TDD posture)
   move  → tasks/review/
   /verify (when runnable) + /code-review
@@ -74,11 +75,15 @@ for each task (by checkpoint, respecting [P]/area):
   it resolves every visual and interaction decision with the user and writes
   `tasks/ui-alignment/<ScreenName>.md`. Load that file as the highest-priority reference for
   the task — it overrides `swift-dev` and `code-references/` for visual decisions.
-  Under just-vibes the gate is skipped; `align-ui` auto-decides and writes the alignment doc
-  unattended (every auto-decision marked `[auto]`).
+  Under just-vibes the **interactive grilling** is skipped — `align-ui` still runs, in auto-decide
+  mode, and writes the alignment doc unattended (every auto-decision marked `[auto]`).
 
-- **Runner routing + model tier.** Read the task's `runner`: `≤20k → orchestrator` (run inline in this
-  session); `>20k → subagent` (dispatch). When you dispatch, pick the **cheapest model that fits**: a
+- **Runner routing + model tier.** Read the task's `runner`: `≤20k → orchestrator` (always run inline);
+  `>20k → subagent-eligible` — **eligibility, not a mandate**: dispatch only when `AGENTS.md`'s
+  subagent-economy rule also says yes (driving session **≥120k tokens** *and* the task is heavy and
+  isolatable). Below that bar, run a `subagent`-tagged task inline too — the field sizes the task, it
+  doesn't override the session-pressure judgment call. When you do dispatch, pick the **cheapest model
+  that fits**: a
   simple, well-scoped task (mechanical edit, a focused search, one test file, a refactor with a clear
   precedent) → **haiku**; a task that implements real behavior end-to-end (judgment + TDD across files)
   → **sonnet**. Never dispatch a model more capable than the subtask needs. (The driving session itself
@@ -168,7 +173,8 @@ branch + logs, mark it `blocked` in `Roadmap.md`, never deliver red). Delivery t
 
 ## Anti-patterns
 - Starting a new spec without running `/compact` first — no exceptions.
-- Implementing a UI task without running `align-ui` first — except under just-vibes.
+- Implementing a UI task without running `align-ui` first — interactively, or in auto-decide mode
+  under just-vibes; the gate itself never skips, only the grilling does.
 - Pushing or merging without the explicit human gate — **except** under `/akios:just-vibes`, which is
   itself the authorization. Outside just-vibes, never.
 - Delivering a red spec under just-vibes because the fix loop "gave up" — park it (branch + logs), never ship it.

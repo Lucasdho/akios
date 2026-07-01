@@ -32,7 +32,8 @@ that read it:
 brainstorm (idea-to-spec) → plan (spec-to-tasks) → execute (task-execution)
 ```
 
-For any end-to-end feature, **start with `/ios-feature-pipeline`** — the entry point that reads
+For any end-to-end feature, **start with `ios-feature-pipeline`** (a skill, invoked by description
+or by name — not a `/akios:*` slash command) — the entry point that reads
 `workflow.yml`, detects the current phase per spec, and walks the hand-offs. (No speckit: design
 rigor lives in `idea-to-spec`, quality in `AGENTS.md` + `swift-dev` + `/code-review`.)
 
@@ -100,14 +101,21 @@ on demand, so only the relevant domain loads during long plan/execute sessions.
 
 ## Skills the kit ships
 
-| Skill | Type | Notes |
-|---|---|---|
-| `idea-to-spec`, `spec-to-tasks`, `task-execution` | authored | the three phase engines |
-| `swift-dev` | authored | Swift/iOS domain master router (replaces axiom) |
-| `ios-feature-pipeline`, `ios-agentic-kit` | authored | orchestrator + self-knowledge |
-| `oss-first` | authored | tool-first check before hand-generating |
-| `ponytail` | plugin (optional) | efficiency overlay — `/plugin install`; the kit works without it |
-| `/code-review`, `/verify`, `fewer-permission-prompts` | built-in | ship with the Claude Code CLI |
+Not a fixed count — deliberately unenumerated by number (an exact skill count in prose drifts the
+moment a skill is added). The authored skills live under `skills/` in the source repo; see that
+directory listing for the current, always-accurate set. By role:
+
+| Role | Skills |
+|---|---|
+| Phase engines | `idea-to-spec`, `spec-to-tasks`, `task-execution` |
+| Whole-app cartography | `deep-brainstorm`, `founderlens-behavior` |
+| Orchestration + self-knowledge | `ios-feature-pipeline`, `ios-agentic-kit` |
+| Gates | `align-ui` (pre-implementation UI alignment) |
+| Autonomous run | `just-vibes` |
+| Domain knowledge | `swift-dev` (Swift/iOS master router, replaces axiom) |
+| Utility | `oss-first` (tool-first check), `handoff` (session handoff docs) |
+| Optional plugin | `ponytail` (efficiency overlay) — the kit works without it |
+| Built-in (ship with the Claude Code CLI) | `/code-review`, `/verify`, `fewer-permission-prompts` |
 
 No required external plugins. Everything the spine routes to is shipped by the kit.
 

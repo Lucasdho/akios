@@ -3,7 +3,14 @@
 # gating are computed from it:
 #   - current phase  = the highest phase whose `outputs` already exist (per spec)
 #   - phase gate     = all of a phase's `prereqs` exist (soft gate: warn + offer)
-# See specs/pipeline.md §1-2.
+#
+# Status enum (Roadmap.md `## Specs` table), monotonic for merge-conflict resolution:
+#   needs-revision < designed < planned < in-progress < blocked < done
+# `needs-revision` (deep-brainstorm's R-W-W audit flagged the spec weak) and `blocked`
+# (task-execution's fix loop gave up) are demotion side-states, not phases below — a
+# spec must move back to `designed`/`in-progress` before advancing again. Higher status
+# always wins on conflict, so `done` beats `blocked` beats `in-progress`/`planned`/`designed`
+# beats `needs-revision`.
 
 version: 1
 
@@ -74,10 +81,12 @@ run_styles:
     skill: just-vibes
     default: one unit, then stop at the spec boundary
     force: loop over all fuel until exhausted or interrupted
-    fuel_precedence:                # most-ready first
+    fuel_precedence:                # most-ready first — full detail in the just-vibes skill
       - explicit idea (argument)
       - tasks/todo/*.md             # ready to execute
-      - specs/*.md @ designed       # plan -> execute
+      - tasks.md                    # legacy single-file format; execute fuel
+      - specs/*.md @ designed       # plan -> execute (skip @ needs-revision unless --force)
+      - specs/*.md with no Roadmap.md entry  # treat as designed; plan -> execute
       - Vision.md / Roadmap.md item # brainstorm (unattended deepthink) -> plan -> execute
     waives: human push/merge gate (invocation = authorization)
     keeps: quality gate (verify + code-review + bounded fix loop; park red, never deliver broken)

@@ -11,9 +11,10 @@ session by session.
 - **Execute** (`/akios:execute`) — implement, test, and code-review each task; stop before push/merge
 - **Autonomous run** (`/akios:just-vibes`) — drive the whole pipeline unattended; quality gate stays on
 
-The kit ships 8 skills (Swift domain knowledge, idea-to-spec, task execution, and more),
-a phase contract (`workflow.yml`), and a SessionStart hook that re-states the workflow gates
-every session so the agent never drifts.
+The kit ships a full skill family (Swift domain knowledge, idea-to-spec, task execution,
+whole-app cartography, autonomous runs, and more — see `skills/ios-agentic-kit/SKILL.md`
+for the current set), a phase contract (`workflow.yml`), and a SessionStart hook that
+re-states the workflow gates every session so the agent never drifts.
 
 ## Install
 
@@ -39,9 +40,11 @@ Then, inside the repo you want to set up:
 |---|---|
 | `/akios:init` | Onboard a repo — interview → scan → fill templates → wire hook |
 | `/akios:brainstorm "<idea>"` | Idea → approved spec in `specs/` |
+| `/akios:deep-brainstorm [focus]` | Map the whole app → a complete spec family in one session |
 | `/akios:plan <spec>` | Spec → task backlog in `tasks/todo/` |
 | `/akios:execute` | Implement tasks; stop before push/merge |
 | `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
+| `/akios:handoff` | Write a handoff doc for another agent session, or return results |
 
 All commands are typed-only (`disable-model-invocation`) — they never auto-fire.
 

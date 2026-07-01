@@ -33,8 +33,15 @@ This skill does the one thing that was missing: decompose the spec into runnable
      a task that would exceed it. Atomic = one coherent change with one Definition of Done.
 3. **Estimate cost (rough proxy).** `est_tokens ≈ Σ touched-file sizes + description weight`. For
    **new** files, estimate from the spec description (acknowledged as rough). Record `est_tokens`
-   on the task and derive `runner`: **`≤20k → orchestrator`** (runs in the main session),
-   **`>20k → subagent`**.
+   on the task and derive `runner`: **`≤20k → orchestrator`** (always runs in the main session),
+   **`>20k → subagent-eligible`**. This field sizes the task — it does not mandate dispatch;
+   `task-execution` still applies `AGENTS.md`'s subagent-economy rule (session context pressure
+   **and** an isolatable task) before actually dispatching one.
+
+   *Worked example:* a task editing two existing files (~3k + ~5k tokens) plus one new ~4k-token
+   view, with a two-sentence description (~0.1k) → `est_tokens ≈ 12k` → `runner: orchestrator`.
+   A task touching six files across a data layer + its tests (~9k) plus a new ~15k-token
+   migration path, description weight ~0.5k → `est_tokens ≈ 25k` → `runner: subagent-eligible`.
 4. **Graph parallelism by area.** Tag a task `[P]` (`parallel: true`) only if it shares no files
    and no produced symbols with another `[P]` task in the same checkpoint — i.e. a **different
    area**. Same-area tasks **serialize**.

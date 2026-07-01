@@ -4,6 +4,9 @@
 
 .claude/
 /speckit
-Vision.md
-Roadmap.md
-Context.md
+
+# Vision.md / Roadmap.md / Context.md are NOT ignored here: this repo dogfoods its own kit on
+# itself (see Context.md "What this repo is"), so its root Vision/Roadmap/Context are the real,
+# current project state — not template output — and must be tracked like any other source file.
+# (These three names ARE the right ignore in a *consumer* repo /akios:init sets up; don't copy
+# this exception there without checking which case applies.)

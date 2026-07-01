@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.4 (2026-06-24)
+
+### Housekeeping
+- No skill or workflow-behavior changes. Repo cleanup only:
+  - Removed `specs/pipeline.md`, `specs/plugin-architecture.md`, `specs/preferences-and-priority.md`
+    — content already shipped into `workflow.yml`/`AGENTS.md` in the v0.7.0 refactor (Roadmap still
+    tracks them as `done`); left `workflow.yml` with a stale reference to the deleted
+    `specs/pipeline.md`, fixed in 0.8.0's contract-consistency pass.
+  - Removed a stray committed `.akios/just-vibes-journal.md` — that path is runtime-local and
+    gitignored; it should never have been committed.
+  - Removed the legacy root `tasks.md` and its already-completed `tasks/todo/*.md` entries.
+
 ## 0.7.3 (2026-06-22)
 
 ### Added

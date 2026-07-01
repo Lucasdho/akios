@@ -71,7 +71,9 @@ than guessing.
 Work **inline by default** — a subagent is cold (re-fed context, fresh tooling) and billed on top of
 your session, so it rarely pays for itself. Reach for one only when **both** hold:
 - **Context pressure** — the driving session is at **≥120k tokens (~60% of a 200k window)**, i.e. inline
-  work is starting to crowd the window (this is the same 120k "warn" line `task-execution` watches), **and**
+  work is starting to crowd the window (a distinct, earlier threshold from `task-execution`'s own
+  **110k** context-warn line — that one triggers a mandatory `/compact` before the next spec; this one
+  is the subagent-dispatch judgment call), **and**
 - **The task is heavy and isolatable** — a large, self-contained chunk (a whole spec's tasks, a wide
   mechanical sweep) that genuinely benefits from running in its own window.
 
@@ -222,8 +224,9 @@ Coordination is **git-based, safety-first, no central server** — the etiquette
   claim push is rejected, pull, re-check, and yield if a teammate took it. Full protocol in `task-execution`.
 - **One branch per spec; never two instances on one branch.** Worktrees keep parallel builds isolated.
 - **`Roadmap.md` is shared and single-source.** Edit only your unit's line; never reorder the table.
-  Status is **monotonic** (`designed < planned < in-progress < done`) — on a merge conflict, higher
-  status wins, so an unattended run resolves it without a human.
+  Status is **monotonic** (`designed < planned < in-progress < done`, plus the `needs-revision`/
+  `blocked` demotion side-states — see `Roadmap.md`'s status-enum note for the full order) — on a
+  merge conflict, higher status wins, so an unattended run resolves it without a human.
 - **Solo (`collaboration: solo`) skips all of this** — no claims, and delivery merges + pushes the
   default branch directly.
 
