@@ -62,12 +62,14 @@ for each task (by checkpoint, respecting [P]/area):
   move  tasks/todo/<T>.md → tasks/in-progress/
   consult the PRIORITY CHAIN (below) before choosing any pattern
   load the task's swift-dev domain sub-skill by scope
+  [Foundation gate] before writing any new helper/protocol/component → consult ONLY
+    Foundation/ (never the whole repo); see "Foundation ledger" below
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
   TDD  → failing test → implement → green        (see TDD posture)
   move  → tasks/review/
   /verify (when runnable) + /code-review
   move  → tasks/done/        (only when the DoD is actually met; failure loops to in-progress)
-↳ at each checkpoint barrier: audit EVERY task's DoD, then commit "checkpoint: <name>"
+↳ at each checkpoint barrier: audit EVERY task's DoD + the boundary lint, then commit "checkpoint: <name>"
 ```
 
 - **UI alignment gate.** A task is UI-scoped when its title or scope mentions View, Screen,
@@ -96,6 +98,26 @@ for each task (by checkpoint, respecting [P]/area):
   every token you hand it, so pasting the whole conversation is the most expensive mistake here — send
   the slice, not the session.
 
+## Foundation ledger (ALVA — read, never count)
+Before creating any new helper, protocol, or shared component, consult **only**
+`Foundation/Design-tokens/` and `Foundation/Code-tokens/` — a small, bounded search — never the
+whole repo (`swift-dev`'s `alva-architecture` guide, doctrine P6). If nothing there fits, the code
+is born inside the current feature; it is not shared preemptively.
+
+- **You read `Foundation/usage-ledger.json`; you never count.** The count is produced by a
+  deterministic tool (`scripts/alva-usage-ledger.sh` or its consumer-repo git-hook installation) —
+  investigating usage across features is not something you do by grepping the repo per-run.
+- **Each ledger entry becomes a task, not a silent move.** Every `candidates_promote` /
+  `candidates_demote` entry in the ledger gets written as a new `tasks/todo/T<NNN>-*.md` (promote:
+  move the symbol to its `target` behind a contract if it's a Code-token; demote: return it to its
+  sole remaining feature). Promotion is **suggested**, reviewed like any other task — never mutate
+  `Foundation/` because the ledger said so without a task and a DoD.
+- **Boundary lint runs at the checkpoint barrier.** A feature importing another feature's
+  `domain/`/`data/` internals (instead of its `contract/`) fails the barrier audit — fix the import
+  or extend the contract before the checkpoint commits. This is the lint realization of doctrine
+  P3 (folder-first + lint by default; compiler-enforced local SPM modules only once the app has
+  earned it — a recurring violation, or the user asks).
+
 ## The priority chain (consult before any code decision)
 First tier with a relevant answer wins; lower tiers only fill silence:
 
@@ -117,10 +139,11 @@ rewritten because of a general preference.
   project has the harness. Don't force brittle view tests.
 
 ## Barrier = audit + commit
-At each `↳ barrier`: verify **every** task's DoD is met (not "code exists" — DoD met). Then
-`git commit -m "checkpoint: <name>"`. A failing DoD blocks the commit; fix or split, don't paper over
-it. At a `[major]` checkpoint, run the unit + integration battery first — a red battery blocks the
-next checkpoint.
+At each `↳ barrier`: verify **every** task's DoD is met (not "code exists" — DoD met), **and** run
+the boundary lint (no slice importing another slice's internals instead of its `contract/`). Then
+`git commit -m "checkpoint: <name>"`. A failing DoD or a boundary violation blocks the commit; fix
+or split, don't paper over it. At a `[major]` checkpoint, run the unit + integration battery first —
+a red battery blocks the next checkpoint.
 
 ## Feedback logging (preferences)
 While executing, watch for preference signals — an explicit statement ("prefiro X") or a repeated
@@ -181,6 +204,13 @@ branch + logs, mark it `blocked` in `Roadmap.md`, never deliver red). Delivery t
 - Working a task whose `owner:` is **another** instance's signature (team mode) — yield and pick another.
 - Reordering or demoting the `Roadmap.md` `## Specs` table — edit only your line; status only moves up.
 - Making execution depend on subagents (they can be denied `xcodebuild`) — always degrade to inline.
+- Counting Foundation usage yourself (grepping the repo to judge "is this used elsewhere") instead
+  of reading `Foundation/usage-ledger.json` — that's the exact per-run investigation cost the
+  ledger exists to remove.
+- Moving a symbol into `Foundation/` because the ledger flagged it, without writing a task first —
+  promotion is suggested, not automatic.
+- A slice importing another slice's `domain/`/`data/` instead of its `contract/` — boundary
+  violation, blocks the checkpoint.
 - Committing a checkpoint whose DoDs aren't actually met.
 - Compressing context mid-spec.
 - Writing to `preferences.md` silently, or recording project-specific facts there (those go to `MEMORY.md`).

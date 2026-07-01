@@ -10,7 +10,7 @@ checkpoint: 4
 
 # T005 — `task-execution` reads the ledger + boundary lint audit
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Execution **reads** `Foundation/usage-ledger.json` (never counts by hand): before writing any

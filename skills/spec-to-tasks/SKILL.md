@@ -27,8 +27,12 @@ This skill does the one thing that was missing: decompose the spec into runnable
 
 1. **Read** the spec(s) + `Context.md` + `MEMORY.md`. Nothing else. Don't re-clarify what the spec
    already settled — if something is genuinely ambiguous, ask one direct question, no clarify ceremony.
-2. **Decompose by similarity + size.**
-   - **Group by similarity** — same file / area / concern travels together.
+2. **Decompose by similarity + size, on the ALVA slice.**
+   - **Group by similarity** — same file / area / concern travels together, and for a new or
+     touched feature, `area` follows the slice sub-folder it belongs to (`Features/<F>/domain`,
+     `.../data`, `.../presentation/<View>`, `.../contract`, `.../tests`) — not an app-wide layer.
+     A task never spans two features' internals; cross-feature work is a `contract/` change on
+     one side and a consumer change on the other, as separate tasks.
    - **Bound by size** — estimate each task's cost and keep it under the **80k soft ceiling**; split
      a task that would exceed it. Atomic = one coherent change with one Definition of Done.
 3. **Estimate cost (rough proxy).** `est_tokens ≈ Σ touched-file sizes + description weight`. For
@@ -57,10 +61,17 @@ This skill does the one thing that was missing: decompose the spec into runnable
      needs a one-line justification in the task.
    - **Protocol-first repositories** — `protocol` + defaults; concretes inherit. A repository task's
      DoD includes "protocol defined, defaults provided, `Hashable` + JSON↔object round-trip covered."
-8. **Tag each task with its `swift-dev` domain sub-skill** (routing below) — the executor's
-   subagent starts cold and must load it.
-9. **One interactive confirm.** Show the checkpoint/task graph + est_tokens/runner + designer's-eye
-   coverage compactly. Get a yes or adjustments. *Then* write the task files into `tasks/todo/`.
+8. **Foundation-consult step (every task that creates a helper, protocol, or component).**
+   Add a DoD line: "consulted `Foundation/Design-tokens`/`Code-tokens` before writing new shared
+   code — reused if found, else born inside this feature." This is the executable form of ALVA
+   P6 (`swift-dev`'s `alva-architecture` guide) — the task, not the agent's judgment, is what
+   carries the reminder forward into execution.
+9. **Tag each task with its `swift-dev` domain sub-skill** (routing below) — the executor's
+   subagent starts cold and must load it. A task that scaffolds a new feature/slice, or touches
+   `Router/`/`Container/`, is tagged `alva-architecture` first, alongside whatever code-level
+   guide also applies.
+10. **One interactive confirm.** Show the checkpoint/task graph + est_tokens/runner + designer's-eye
+    coverage compactly. Get a yes or adjustments. *Then* write the task files into `tasks/todo/`.
 
 ## Task file format
 One file per task in `tasks/todo/`, following `templates/task.md`:
@@ -72,7 +83,7 @@ spec: specs/<feature>.md
 est_tokens: 14k
 runner: orchestrator        # ≤20k orchestrator · >20k subagent
 parallel: true              # true = [P]; shares no files/symbols with siblings this checkpoint
-area: ThemeStore            # same-area tasks serialize
+area: Squad/presentation/SquadList   # slice sub-folder; same-area tasks serialize
 checkpoint: 1               # [major] checkpoints run the test battery
 swift_dev: swiftui-pro      # domain sub-skill the cold subagent must load
 ---
@@ -90,6 +101,7 @@ State is the **containing folder**; `task-execution` moves the file `todo → in
 
 | Task type | swift-dev sub-skill |
 |---|---|
+| New feature/slice scaffold, DI wiring, navigation/coordinators | `alva-architecture` |
 | Views, SwiftUI layouts, previews | `swiftui-pro` |
 | async/await, actors, Sendable, concurrency | `swift-concurrency-pro` |
 | Unit tests, Swift Testing | `swift-testing-pro` |

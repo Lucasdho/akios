@@ -10,7 +10,7 @@ checkpoint: 4
 
 # T004 — `spec-to-tasks` emits ALVA slice-shaped tasks
 
-> **State:** todo
+> **State:** done
 
 ## Description
 UI/feature task decomposition emits tasks scoped to the ALVA slice
