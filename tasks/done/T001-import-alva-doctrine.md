@@ -10,7 +10,7 @@ checkpoint: 1
 
 # T001 — Import the ALVA doctrine as ground-truth
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Register `specs/alva-architecture-doctrine.md` in `Roadmap.md` and have the installed

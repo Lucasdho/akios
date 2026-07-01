@@ -20,10 +20,22 @@ Two internal routers, no external plugin dependencies:
   and loads the right bundled guide before any code: `swiftui-pro` (views/layout) ·
   `swift-concurrency-pro` (async/await/actors/Sendable) · `swift-testing-pro` (Swift
   Testing) · `swiftdata-pro` (SwiftData) · `ios-accessibility` · `ios-debugger-agent`
-  (run/debug) · plus performance/refactor/figma guides on demand. Replaces the old axiom gate.
+  (run/debug) · `alva-architecture` (new feature / slice scaffolding, DI, coordinators) ·
+  plus performance/refactor/figma guides on demand. Replaces the old axiom gate.
 - **`task-execution`** — owns the execution loop (Phase 3): branch per spec, folder-state
   task lifecycle, checkpoint commits, TDD-first, human gate before push/merge. Absorbs the
   execution discipline the kit used to borrow from superpowers.
+
+## Architecture (ALVA)
+Every new feature is a **vertical slice**, not a shared app-wide layer. A feature lives
+entirely under `Features/<Feature>/{domain,data,presentation,contract,tests,Feature-spec.md}`;
+cross-feature composition happens only at the top (`Router/`, `Container/`), and shared leaf
+code graduates into `Foundation/{Design-tokens,Code-tokens}` on evidence of reuse (a
+deterministic usage ledger), never by upfront guess. This supersedes any shared
+`DomainLayer/DataLayer/PresentationLayer` split — package-by-layer is not the folder law here.
+Load `swift-dev`'s `alva-architecture` guide before scaffolding any new feature or slice; the
+full portable doctrine (ALVA — Agent-Legible Vertical Architecture) is this kit's own
+ground-truth reference, publishable standalone from the akios-specific realization.
 
 **Optional (not required):** `ponytail` — efficiency overlay (no over-building, no rewriting
 what works). The kit has no external dependency on it; install it for yourself if you like.
