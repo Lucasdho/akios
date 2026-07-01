@@ -10,7 +10,7 @@ checkpoint: 3
 
 # T003 — Foundation ledger PoC (ripgrep + git-hook)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Ship strategy A (ripgrep + pre-commit git-hook) from alva-adoption §3: a hook that counts
