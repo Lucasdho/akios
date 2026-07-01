@@ -12,6 +12,14 @@ unless marked *open*.
 
 > **State:** designed
 
+> **[SUPERSEDED 2026-07-01 — see `alva-adoption.md` D1/D2]** §1 (A1, the shared
+> `DomainLayer/DataLayer/PresentationLayer` folder shape) and §2 (A2, the flat rule-of-two promotion
+> table) are subsumed by ALVA's vertical-slice structure — the human fork this spec assumed is now
+> resolved in ALVA's favor. **§3–§8 remain live**, behaviorally unchanged, re-homed inside a slice's
+> `presentation/` (component birth is now per-view — `presentation/<View>/components/` — not the flat
+> `Feature/Components/` these sections still describe below; read `alva-adoption.md` §1/§2 for the
+> current folder shape).
+
 > **The shift:** from domain-first (models → screens → extract components) to **UI-first,
 > feature-by-feature** — gather context via specs → build flexible dumb components → compose dumb
 > screens → make them live with ViewModels → create data models just-in-time as development needs
@@ -82,9 +90,10 @@ crystallizes when data modeling consolidates.
 Per screen, three stages:
 
 1. **Components `[P]`** — build the dumb, reusable components (parallelizable; share no files).
-2. **Dumb screen** — compose the components into the screen with **mock/static data**. This is
-   what `visual-grounding` screenshots and **converges against the approved prototype** — the
-   last point at which the look is determined.
+2. **Dumb screen** — compose the components into the screen with **mock/static data**. Under
+   `prototype-first-workflow.md` v2.0, this stage *is* the approved `ui-variations` graduate — there
+   is no separate reference to converge against; the last point at which the look is determined is
+   the explore/remix round itself, before graduation.
 3. **Make-it-live** — attach the screen's `@Observable` ViewModel (injected via `init`) and pull
    **data just-in-time in the same pass** (the viewmodel wiring and the data shape co-emerge).
 
@@ -96,8 +105,8 @@ as a first-class stop. **This is the precise resolution of the prototype↔compo
 prototype is the *design* unit (per screen); the component is the *build* unit (extracted bottom-up
 during translation). They never conflict.
 
-`spec-to-tasks` emits UI tasks on this shape; the `design→execute` handoff delivers an approved
-per-screen reference that stage 2 grounds against.
+`spec-to-tasks` emits UI tasks on this shape; the `design→execute` handoff delivers an already-graduated
+per-screen dumb screen — stage 2 is already done by the time `execute` picks it up.
 
 ---
 
@@ -168,9 +177,9 @@ an external dependency, against akios's Vision.
 - **Entities:** `Player`, `Squad`, `Match` land in `DomainLayer/Models/` when data modeling
   consolidates; `DataLayer/Repositories/PlayerRepository` (protocol) is backed by the SwiftData
   base repo.
-- **Build order (SquadList):** build `PlayerRow` + `FormBadge` `[P]` → compose `SquadListView`
-  with mock players → `visual-grounding` converges it against `prototypes/Squad/SquadList.html`
-  → attach `SquadListViewModel(playerRepo:)` via `init`, pull real players JIT.
+- **Build order (SquadList):** build `PlayerRow` + `FormBadge` `[P]` → `ui-variations` explores +
+  remixes `SquadListView` with mock players, graduating the approved variation directly →
+  attach `SquadListViewModel(playerRepo:)` via `init`, pull real players JIT.
 - **DI:** composition root registers a `SquadListViewModelFactory` into the container; the Router's
   `navigationDestination(for: .squadList)` draws it, builds the VM with `PlayerRepository`, injects
   via `init`.
@@ -195,20 +204,24 @@ an external dependency, against akios's Vision.
 
 ## 8. Open / next
 
-- **[CONSEQUENCE — to implement]** `spec-to-tasks`: emit UI tasks on the A3 stage shape
-  (`components [P] → dumb-screen+grounding → make-it-live`); add Block-C sub-skills to the routing
-  table.
-- **[CONSEQUENCE — to implement]** `task-execution`: drive the A3 stages; fire `visual-grounding`
-  at the dumb-screen stage; "make-it-live" merges VM + JIT data.
-- **[CONSEQUENCE — to implement]** `swift-dev`: gains an architecture reference encoding the layer
-  structure, the dumb-component law, and the factory/router DI shape (home decided at encoding).
+> **Superseded note:** the items below describe A1/A2's folder shape, which `alva-adoption.md`
+> D1/D2 now owns (§1, resolved 2026-07-01). Kept here as a historical record of what this spec
+> originally asked for; `alva-adoption.md` §7 is the live implementation backlog.
+
+- **[SUPERSEDED — see `alva-adoption.md` §7.4]** `spec-to-tasks`: emit UI tasks on the A3 stage shape
+  (`components [P] → dumb-screen (ui-variations) → make-it-live`), nested under `presentation/<View>/`.
+- **[SUPERSEDED — see `alva-adoption.md` §7.5]** `task-execution`: drive the A3 stages inside
+  `presentation/<View>/`; "make-it-live" merges VM + JIT data. No `visual-grounding` fire — grounding
+  is built into `ui-variations`' graduation (`prototype-first-workflow.md` v2.0 §5).
+- **[SUPERSEDED — see `alva-adoption.md` §7.2]** `swift-dev`: gains an architecture reference encoding
+  the ALVA slice structure, the dumb-component law, and the factory/router DI shape.
 - **[CONSEQUENCE — to implement]** `swiftui-ui-patterns`: record the narrow "screens get
   ViewModels, components don't; screens are few" override.
-- **[CONSEQUENCE — to implement]** `/akios:init` + `templates/`: scaffold the
-  Domain/Data/Presentation + Features + `prototypes/` layout; `Context.md` notes `prototypes/`
-  stays out of the app target.
+- **[SUPERSEDED — see `alva-adoption.md` §7.9]** `/akios:init` + `templates/`: scaffold the ALVA slice
+  tree + top-level `scratchs/`; `Context.md` notes `scratchs/` stays out of the app target.
 - **[CONSEQUENCE — to implement]** `align-ui`: confirmed scope — states/interactions/navigation +
   the per-screen JIT **data-shape (DTO) declaration**.
-- **Block B dependency:** the `DesignSystem` struct + tokens that `PresentationLayer/DesignSystem/`
-  houses are defined in `swiftui-design-doctrine.md`, along with native-first, reusable
-  ViewModifiers, and `containerRelativeFrame` adaptivity.
+- **Block B dependency:** the `DesignSystem` struct + tokens that `Foundation/Design-tokens/`
+  houses (superseded home, was `PresentationLayer/DesignSystem/`) are defined in
+  `swiftui-design-doctrine.md`, along with native-first, reusable ViewModifiers, and
+  `containerRelativeFrame` adaptivity.

@@ -78,7 +78,7 @@ surface (§2):
   `[P]`, why this task carries this pack.
 - **`task-execution` (execute):** learning mode annotates each priority-chain resolution and doctrine
   application inline, and gives the end-of-unit digest. Delivery mode stays quiet and fast.
-- **`align-ui` / `visual-grounding` (design):** learning mode explains *which Nielsen heuristic* a state
+- **`align-ui` / `ui-variations` (design):** learning mode explains *which Nielsen heuristic* a state
   satisfies and *why native-over-custom* fired here.
 
 **Decision & reason:** reusing the flag-reading pattern `collaboration` established means threading posture

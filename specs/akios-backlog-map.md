@@ -18,6 +18,12 @@ family that answers the backlog. Read this first; it is the table of contents fo
 ## 1. The backlog, itemized
 
 Every line of the raw AKIOS backlog, given a stable ID so the rest of the family can reference it.
+**B30–B36 are exceptions** — added in later sessions (2026-07-01), not from the original raw
+list; kept in the same table/ID scheme so the rest of the family can reference them identically.
+B32–B35 come from a friend's ("Julio") first `/akios:init` run — real onboarding friction, not
+self-generated backlog. B36 comes from a self-audit of the kit's own shipped contract (commands,
+skills, templates, `workflow.yml`) — see `specs-review-2026-07-01.md` on branch
+`claude/inspiring-rubin-3vksm6` (not yet merged into this branch).
 
 | ID | Demand (raw) | Theme |
 |---|---|---|
@@ -50,6 +56,13 @@ Every line of the raw AKIOS backlog, given a stable ID so the rest of the family
 | **B27** | Turn text/image treatment into reusable view modifiers | UI craft |
 | **B28** | Agents can code complexity but can't *infer* a beautiful UI; needs visual inspiration + supervision | UI grounding |
 | **B29** | Robust system to load designs from Figma/Stitch, compare to the app's design, and re-iterate | UI grounding |
+| **B30** | Load the user's own "factory" Swift code (components, repository CRUD templates, use cases, gateway protocols, design-system files) into akios as copy-and-adapt seed content, separate from skeletons | Knowledge / starter content |
+| **B31** | Architecture-keyed whole-project skeletons — different starter trees for different architectures; the oneshot picks an architecture and gets that architecture's skeleton if one is registered | Knowledge / starter content |
+| **B32** | just-vibes push/merge automation must be asked as its own question, separate from `collaboration: solo/team` — a repo can be worked on by a group while the user is the only one running akios on it | Collaboration & autonomy posture |
+| **B33** | `/akios:init` must narrate what it's doing while it runs, not execute long steps silently | Init UX |
+| **B34** | `/akios:init`'s file-materialization step must survive tool-call errors (failed `cp`, an auto-mode-blocked batched `chmod +x` forcing a fallback to per-file calls that then also error) without leaving the agent stuck in an ambiguous "did it land or not" state | Init reliability |
+| **B35** | Consolidate every akios-generated file under one folder, and offer the user an option to gitignore all of it, so `/akios:init` doesn't pollute the person's repo | Init footprint / repo hygiene |
+| **B36** | Self-review of the shipped kit contract found real drift: `align-ui` "skip vs run under just-vibes" stated three contradictory ways, `runner: subagent` per-task routing conflicts with `AGENTS.md`'s session-pressure subagent-economy rule, `AGENTS.md` misquotes task-execution's 110k context-warn line as 120k, plus number/enum drift (`objectVersion` 77 vs 90, two divergent R-W-W rubrics claiming to be the same one, 3 conflicting skill counts, `needs-revision`/`blocked` missing from the status enum) and dangling refs (`specs/pipeline.md`, `founderlens-sim`, `/ios-feature-pipeline` as a command). Needs a reconciliation pass against `workflow.yml` + `AGENTS.md` as the two authorities. Full detail: `specs-review-2026-07-01.md`, branch `claude/inspiring-rubin-3vksm6`. | Kit self-consistency / contract drift |
 
 ---
 
@@ -79,7 +92,7 @@ Two families designed in prior sessions cover the majority. **Both are `designed
 | B26 DesignSystem struct | `swiftui-design-doctrine` §1 (`enum DesignSystem` token namespace) |
 | B27 Text/image reusable modifiers | `swiftui-design-doctrine` §4 (`.textStyle`/`.imageStyle` role modifiers) |
 | B28 Beautiful-UI needs inspiration + supervision | `prototype-first-workflow` (the whole thesis) |
-| B29 Figma/Stitch load → compare → iterate | `prototype-first-workflow` §1/§5 + `visual-grounding` + `figma-to-swiftui` |
+| B29 Figma/Stitch load → compare → iterate | **no longer covered** — `prototype-first-workflow` v2.0 (2026-07-01) parked Figma/Stitch/HTML ingestion in favor of direct-to-SwiftUI `ui-variations`; `figma-to-swiftui` still exists but is unrouted. See that spec's §1 and §9 "FUTURE — parked" items if this is reactivated. |
 
 **Gap note:** B14 (coordinator) is only lightly served — `ui-first-architecture` §5 gives a Router but
 not a coordinator pattern for multi-step custom flows. This folds into **ALVA adoption** (§4 below), which
@@ -118,12 +131,17 @@ What the two families do **not** cover. Each becomes a spec in this family.
 | G4 | `operating-modes.md` | B3 | A third posture flag `learning \| delivery` that decides whether akios teaches the *why* as it builds or just ships. |
 | G5 | `verification-and-learning-loop.md` | B2, B19 | Post-execution: **prove** it works (build/test/spec/visual) and **learn** from divergence (a hurdles ledger the next run reads). |
 | G6 | `code-review-doctrine.md` | B10, B11, B12 | A principled review reference — SOLID/DRY/ACID + ALVA & UI conformance + folder-drift — that the "claiming done" gate loads. |
+| G7 | `snippet-library.md` | B30 | Extend the pack format with literal, copy-and-adapt Swift snippets (components, repository templates, use cases, gateway protocols, design-system files), user-global, separate from skeletons. |
+| G8 | `skeleton-library.md` | B31 | Architecture-keyed whole-project starter trees for `/akios:init`'s greenfield path — user picks an architecture, gets that architecture's skeleton if one is registered, else today's default scaffold. |
+| G9 | `collaboration-autonomy.md` *(not yet written)* | B32 | Split "who else works on this repo" (`collaboration: solo/team`) from "should just-vibes auto-push/merge" — two independent questions, not one flag standing in for both. |
+| G10 | `init-reliability-and-ux.md` *(not yet written)* | B33, B34, B35 | `/akios:init` narrates its steps as it runs, verifies each materialization step actually landed instead of assuming, avoids batched calls that trip the auto-mode classifier, and keeps its footprint in one gitignore-able folder. |
+| G11 | `contract-consistency-reconciliation.md` *(not yet written)* | B36 | Reconcile the ~17 drift points from the 2026-07-01 self-review against `workflow.yml`/`AGENTS.md` as the two authorities: fix the 3 outright contradictions first (align-ui skip/run, runner routing vs. subagent economy, 110k/120k), then number/enum drift, then dangling refs. |
 
 ---
 
-## 4. The one architectural decision the family turns on
+## 4. The architectural fork — RESOLVED 2026-07-01
 
-**ALVA vs. ui-first-architecture folder law.** Both are `designed`; they disagree on structure:
+**ALVA vs. ui-first-architecture folder law.** Both were `designed`; they disagreed on structure:
 
 - **ui-first-architecture §1:** shared, app-wide `DomainLayer/`, `DataLayer/`, `PresentationLayer/`, with
   `Features/<F>/` holding only presentation (`Components/Models/Screens`). *Layer-first.*
@@ -131,21 +149,22 @@ What the two families do **not** cover. Each becomes a spec in this family.
   tests/`; sharing happens only through a graduated `Foundation/` and composition at the top
   (`Router/`, `Container/`). *Feature-first vertical slices.*
 
-**Recommendation (settled in `alva-adoption.md`, flagged here for the human):** **ALVA's structure wins.**
-Its cost function (minimize tokens-to-a-correct-verifiable-change) is the stronger principle and it
-*explicitly* supersedes package-by-layer (ALVA D2). The UI family's structural sections
-(`ui-first-architecture` §1 A1, §2 A2) are **subsumed** by ALVA §4/§6. Everything *behavioral* in the UI
-family survives unchanged and re-homes inside a slice's `presentation/`:
+**Confirmed by the human: ALVA's structure wins.** Its cost function (minimize tokens-to-a-correct-
+verifiable-change) is the stronger principle and it *explicitly* supersedes package-by-layer (ALVA D2).
+The UI family's structural sections (`ui-first-architecture` §1 A1, §2 A2) are **subsumed** by ALVA §4/§6.
+Everything *behavioral* in the UI family survives and re-homes inside a slice's `presentation/`:
 
 - the build-order law (A3: components → dumb screen → make-it-live),
-- the dumb-component law (A4: data + closures via `init`),
+- the dumb-component law (A4: data + closures via `init`) — **refined**: components nest per-view
+  (`presentation/<View>/components/`), promoting to `Foundation/Design-tokens/` via the ledger on 2nd use,
 - the factory/router DI shape (A5 → ALVA's `Container/` + `Router/`),
 - the whole design doctrine (B1–B5: DesignSystem tokens, native-over-custom, Nielsen, role modifiers,
   `containerRelativeFrame`) → ALVA's `Foundation/Design-tokens`,
-- the prototype→translate→ground loop (Block C) → orthogonal to structure; untouched.
+- the design-phase explore/remix loop (`prototype-first-workflow.md` v2.0, `ui-variations`) → orthogonal
+  to structure; graduates directly into `presentation/<View>/`.
 
-> This is the only fork that changes what gets built. If the human prefers to keep layer-first structure,
-> reopen `alva-adoption.md` D1 — everything downstream keys off it.
+> This was the only fork that changed what gets built. It no longer blocks anything — `alva-adoption.md`
+> is `spec-to-tasks`-ready. Full detail: `alva-adoption.md` D1/D2 (v1.1).
 
 ---
 
@@ -161,14 +180,28 @@ Dependency-ordered. Each phase only depends on earlier ones.
    slice instead of a shared `PresentationLayer/`). Lands the entire UI backlog (B13–B29).
 4. **`knowledge-architecture.md` → build (G2).** The foundational extensibility layer; `code-references/`
    generalizes into knowledge packs; `swift-dev` becomes "the iOS pack." Lands B4–B6, B12.
-5. **`skill-authoring.md` → build (G3).** Now that packs exist, one authoring path scaffolds both skills
+5. **`snippet-library.md` → build (G7).** Adds `kind: snippet` to the pack format from step 4 — the
+   user's own factory code (components, repository templates, use cases, gateways) as a user-global,
+   copy-and-adapt pack. Lands B30. Depends only on step 4 existing; independent of steps 6–8 below.
+6. **`skeleton-library.md` → build (G8).** Architecture-keyed whole-project starters for
+   `/akios:init`'s greenfield path. Lands B31. No dependency on step 5 (snippets and skeletons ship
+   independently); only needs the user-global storage convention from step 4.
+7. **`skill-authoring.md` → build (G3).** Now that packs exist, one authoring path scaffolds both skills
    and packs. Lands B1.
-6. **`operating-modes.md` (G4)** + **`verification-and-learning-loop.md` (G5)** + **`code-review-doctrine.md`
+8. **`operating-modes.md` (G4)** + **`verification-and-learning-loop.md` (G5)** + **`code-review-doctrine.md`
    (G6).** The three discipline layers; independent of each other, each plugs into `task-execution` +
    `just-vibes`. Land B2, B3, B11, B19, and reinforce B10.
 
-Steps 2–3 are the biggest and highest-value (they discharge ~20 of 29 backlog lines). Steps 4–6 are the
+Steps 2–3 are the biggest and highest-value (they discharge ~20 of 29 backlog lines). Steps 4–8 are the
 new capabilities that make akios *extensible and self-correcting* rather than just disciplined.
+
+**G9/G10/G11 — registered, not yet sequenced.** G9/G10 surfaced from real `/akios:init` onboarding
+friction (2026-07-01); G11 surfaced from a self-audit of the shipped kit contract (2026-07-01, see
+`specs-review-2026-07-01.md` on branch `claude/inspiring-rubin-3vksm6`). None are yet designed or
+placed in the ordering above. G11 is a special case worth flagging: unlike G1–G10, it isn't new
+surface area — it's **fixing drift in what's already shipped**, so it could reasonably jump the queue
+(cheap, no design phase needed for most items — mostly find-and-replace against `workflow.yml`/
+`AGENTS.md`) rather than wait its turn behind the build-order above.
 
 ---
 

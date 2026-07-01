@@ -1,5 +1,5 @@
 # akios — ALVA Adoption & Reconciliation
-**Working spec · v1.0 · architecture family · 2026-06-30**
+**Working spec · v1.1 · architecture family · 2026-06-30**
 
 Turns the `alva-architecture-doctrine.md` draft into an **adopted, executable** part of akios. It does
 three things: (1) reconciles ALVA's folder law with the `designed` UI-overhaul family so they stop
@@ -10,6 +10,13 @@ module-boundary posture, the coordinator add), and (3) produces the ordered buil
 slice). Answers backlog **B7–B12, B14, and fixes B10** (`akios-backlog-map.md`).
 
 > **State:** designed
+
+> **v1.1 changelog (2026-07-01):** the human fork (§10, was blocking) is **resolved — ALVA wins,
+> confirmed**. Two refinements land: components nest **per-view** inside `presentation/`
+> (`presentation/<View>/components/<Component>/`, not a flat `presentation/Components/`); and the
+> reconciled tree + worked example are re-synced to `prototype-first-workflow.md` v2.0 (the
+> `ui-variations` skill + `./scratchs/` archive replace the retired `prototypes/`/`visual-grounding`
+> mechanics referenced here previously).
 
 > **The shift:** ALVA already *is* the architecture answer — this spec stops it from being a lonely draft.
 > It resolves the one real conflict (ALVA vertical slices vs. the UI family's shared layers) in ALVA's
@@ -41,15 +48,23 @@ Project/
     Squad/
       domain/                → Player, Squad entities + use cases (the slice owns them)
       data/                  → PlayerRepository protocol + SwiftData/Store concretes
-      presentation/          → Screens/ + Components/ + Models/ (the ENTIRE UI family A1/A3/A4 lives here)
-        Screens/SquadList/   { SquadListView.swift, SquadListViewModel.swift }
-        Components/          { PlayerRow.swift, FormBadge.swift }  ← dumb components, A4
-        Models/             { SquadRowData.swift }                ← JIT view-state DTOs, A2 (now slice-local)
+      presentation/          → per-view folders + Models/ (the ENTIRE UI family A1/A3/A4 lives here)
+        SquadList/            { SquadListView.swift, SquadListViewModel.swift, components/PlayerRow/, components/FormBadge/ }
+        Models/               { SquadRowData.swift }              ← JIT view-state DTOs, A2 (now slice-local)
       contract/              → public facade: protocol + DTOs other slices import (ALVA §5)
       tests/                 → co-located TDD (ALVA P7)
       Feature-spec.md        → SDD: intention + declared contract/Foundation consumption
-  prototypes/                → approved visual references, out of the app target (Block C; storage OPEN item resolved here → top-level)
+  scratchs/                  → rejected `ui-variations` rounds, compilable + previewable, out of the app
+                                target (prototype-first-workflow.md v2.0 §3; top-level, per-view/-component)
 ```
+
+**Components nest per-view, not in a flat `presentation/Components/`.** A component is born inside the
+view/screen that first needed it — `presentation/<View>/components/<Component>/`. It promotes to
+`Foundation/Design-tokens/` through the ledger (D3) on its 2nd distinct use, **wherever that use comes
+from** (no intermediate feature-wide tier) — the same two-stop shape ALVA already uses for every other
+leaf, just with the birth point one level deeper than the original UI-family A2 assumed. Once promoted,
+other views consult `Foundation/Design-tokens/` before building something similar (ALVA P6) rather than
+re-authoring it. *(Refines D2's carry-over row for the dumb-component law — see §2.)*
 
 **Decision & reason:** ALVA's cost function — minimize tokens-to-a-correct-verifiable-change — is a
 *stronger* organizing principle than the UI family's layer split, and ALVA explicitly rejects
@@ -60,11 +75,11 @@ weaker layout. The reconciliation is nearly loss-free because the UI family's va
 *behavioral* (how components are built and wired), not *where the folders sit* — and every behavioral law
 survives, re-homed inside `presentation/`.
 
-> **[RESOLVED — was OPEN in `prototype-first-workflow` §3 and `ui-first-architecture` §8]** `prototypes/`
-> storage: **top-level**, outside the Xcode app target. Per-slice prototype storage is rejected because a
-> prototype is a *design-phase* artifact that predates the slice's code and is often cross-screen; a
-> top-level `prototypes/<Feature>/<Screen>.{html,png}` + `manifest.md` keeps it out of the compile graph
-> and lets `design` run before the slice exists.
+> **[RESOLVED — superseded 2026-07-01 by `prototype-first-workflow.md` v2.0]** the old `prototypes/`
+> HTML/manifest storage question is moot — there is no separate reference artifact anymore. What
+> survives is the same *posture*: rejected `ui-variations` rounds live **top-level**, outside the Xcode
+> app target, at `scratchs/<Component-or-View>.swift` — still per-slice-adjacent, still out of the
+> compile graph, still lets `design` run before a slice's screen exists.
 
 ---
 
@@ -75,9 +90,9 @@ So nothing is lost in the reconciliation, this is the exhaustive map of UI-famil
 
 | UI-family law | Source | New home in ALVA |
 |---|---|---|
-| Build-order (components → dumb screen → make-it-live) | A3 | `Features/<F>/presentation/` — unchanged, per screen |
-| Dumb-component law (data + closures via `init`) | A4 | `presentation/Components/` — unchanged |
-| Few-screens-many-components / VM-per-screen | A4.1 | `presentation/Screens/` — unchanged |
+| Build-order (components → dumb screen → make-it-live) | A3 | `Features/<F>/presentation/<View>/` — unchanged, per screen |
+| Dumb-component law (data + closures via `init`) | A4 | `presentation/<View>/components/` — **refined 2026-07-01**: nests per-view, not a flat `presentation/Components/`; promotes to `Foundation/Design-tokens/` via the ledger on 2nd use, no intermediate feature-wide tier (§1) |
+| Few-screens-many-components / VM-per-screen | A4.1 | `presentation/<View>/` — unchanged |
 | JIT view-state DTOs | A2 | `presentation/Models/` — now **slice-local** (was `Feature/Models/`); promotion to shared is via ALVA's Foundation ledger, not rule-of-two |
 | Domain entity home | A2 | `Features/<F>/domain/` — **the slice owns its entities** (ALVA), *not* a shared `DomainLayer/` |
 | Repository protocol + concretes | A5 | `Features/<F>/data/` — slice-local; a repo shared by 2+ slices graduates to `Foundation/Code-tokens` behind a contract |
@@ -87,7 +102,7 @@ So nothing is lost in the reconciliation, this is the exhaustive map of UI-famil
 | Nielsen heuristics backbone | B3 | `align-ui` design phase — unchanged |
 | Text/image role modifiers | B4 | `Foundation/Design-tokens/` — unchanged |
 | `containerRelativeFrame` adaptivity | B5 | doctrine — unchanged |
-| Prototype → translate → ground | Block C | orthogonal to structure — fully unchanged |
+| Explore + remix + graduate (`ui-variations`) | Block C v2.0 | orthogonal to structure — approved variation graduates directly into `presentation/<View>/`; rejects archive to top-level `scratchs/` (§1) |
 
 **Decision & reason:** the one *substantive* change is entity/DTO/repo homing — they move from shared
 app-wide layers into the slice, and cross-slice sharing routes through `contract/` (for domain) or the
@@ -172,9 +187,9 @@ only for genuinely multi-step custom flows; the default remains plain Router nav
   **designed**.
 - This spec (`alva-adoption.md`) is added under **Architecture adoption**, status **designed → planned**
   once its backlog (§7) is written to `tasks/todo/`.
-- `ui-first-architecture.md`'s Notes column is annotated: *"§1/§2 superseded by ALVA §4/§6 — see
-  alva-adoption.md D1/D2; §3–§8 behavioral laws survive."* Status is unchanged (still `designed`); it is not
-  archived, because most of it is still live.
+- `ui-first-architecture.md`'s Notes column is annotated: *"§1/§2 superseded by ALVA §4/§6 (confirmed
+  2026-07-01) — see alva-adoption.md D1/D2; §3–§8 behavioral laws survive."* Status is unchanged (still
+  `designed`); it is not archived, because most of it is still live.
 
 **Decision & reason:** the doctrine and its adoption are two specs because ALVA Part I is *publishable
 independently of akios* (ALVA D15) — keeping the portable doctrine separate from the akios operationalization
@@ -219,9 +234,9 @@ to a decision above or an ALVA principle. Sequenced so each depends only on earl
   run produces slice-shaped spec rows with contract-boundary notes.
 - [ ] **7.9 — `/akios:init` + `templates/` scaffold.** Scaffold the reconciled tree (§1): `Router/`,
   `Container/`, `Foundation/{Design-tokens,Code-tokens,usage-ledger.json}`, `Features/<F>/{domain,data,
-  presentation/{Screens,Components,Models},contract,tests,Feature-spec.md}`, top-level `prototypes/`. Include
-  the DesignSystem + role-modifier stubs from `ui-overhaul-implementation` 4.1. `Context.md` notes
-  `prototypes/` stays out of the target. *DoD:* init produces the tree; the ledger stub + git-hook install;
+  presentation/{<View>/components/, Models/},contract,tests,Feature-spec.md}`, top-level `scratchs/`.
+  Include the DesignSystem + role-modifier stubs from `ui-overhaul-implementation` 4.1. `Context.md` notes
+  `scratchs/` stays out of the target. *DoD:* init produces the tree; the ledger stub + git-hook install;
   the design-token stubs are present.
 - [ ] **7.10 — Coordinator reference (§5).** A short `swift-dev` note on the Router coordinator pattern for
   multi-step custom flows. *DoD:* the note exists and cross-links the DI guide (7.2).
@@ -238,12 +253,16 @@ to a decision above or an ALVA principle. Sequenced so each depends only on earl
 ## 8. Worked example — futebol-manager *Squad* slice, reconciled
 
 - **Structure:** `Features/Squad/` owns `domain/{Player,Squad,Match}`, `data/{PlayerRepository (protocol) +
-  SwiftData concrete}`, `presentation/{Screens/SquadList, Components/PlayerRow+FormBadge, Models/SquadRowData}`,
+  SwiftData concrete}`, `presentation/{SquadList/{SquadListView.swift, SquadListViewModel.swift,
+  components/PlayerRow/, components/FormBadge/}, Models/SquadRowData}`,
   `contract/{SquadContract protocol + Buyer-style DTOs}`, `tests/`, and a `Feature-spec.md` declaring it
   consumes `Foundation.DesignSystem` + (say) `Match.contract`.
-- **UI build (unchanged from the UI family, now inside `presentation/`):** build `PlayerRow` + `FormBadge`
-  `[P]` → compose `SquadListView` with mock data → `visual-grounding` converges it against
-  `prototypes/Squad/SquadList.html` → attach `SquadListViewModel(playerRepo:)` via `init`, pull data JIT.
+- **UI build (unchanged from the UI family, now inside `presentation/`):** `ui-variations` explores 4
+  named `#Preview` variations of `SquadListView` (built from `PlayerRow`/`FormBadge`, existing
+  `DesignSystem` tokens) with sample data covering an empty squad and a 100+-player roster; the developer
+  remixes two liked variations into 3 hybrids and approves one, which graduates directly to
+  `presentation/SquadList/SquadListView.swift` — the rest archive to `scratchs/SquadListView-variations.swift`
+  → attach `SquadListViewModel(playerRepo:)` via `init`, pull data JIT.
 - **DI:** `Container/` registers a `SquadListViewModelFactory`; `Router/` resolves
   `navigationDestination(.squadList)` via that factory. A multi-step "sign a new player" wizard gets a
   `SignPlayerCoordinator` in `Router/` (§5).
@@ -272,10 +291,9 @@ to a decision above or an ALVA principle. Sequenced so each depends only on earl
 
 ## 10. Open / next
 
-- **[HUMAN FORK — see `akios-backlog-map.md` §4]** D1 assumes ALVA structure wins. If the human prefers
-  layer-first, reopen D1 and D2 re-home in reverse; §7 changes materially. This is the one blocking decision.
-- **[CONSEQUENCE — to implement]** Everything in §7 (the backlog) — this spec is `spec-to-tasks`-ready once
-  the fork is confirmed.
+- **[RESOLVED 2026-07-01 — see `akios-backlog-map.md` §4]** The human fork is closed: **ALVA structure
+  confirmed**, no reversal. D1/D2 stand as written, refined by the per-view component nesting (§1/§2).
+- **[CONSEQUENCE — to implement]** Everything in §7 (the backlog) — this spec is `spec-to-tasks`-ready now.
 - **[COMPOSES WITH]** `code-review-doctrine.md` (G6) enforces the boundary lint (§4) and the DRY-via-ledger
   posture (§3); `knowledge-architecture.md` (G2) may ship ALVA itself as a loadable "architecture knowledge
   pack" so non-iOS stacks can adopt the portable Part I.

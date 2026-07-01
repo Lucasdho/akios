@@ -65,8 +65,9 @@ theme appears.
   `Menu`, `.searchable`, `SF Symbols`, system materials, `Divider()`.
 - **Building custom requires a one-line justification** recorded at the component:
   `// custom: native <X> can't do <Y>`. The **exception log is the artifact**, not a percentage.
-- The **`visual-grounding` / `align-ui` checkpoint flags un-justified custom controls** (a
-  hand-rolled toggle, a `GeometryReader` progress bar where `Gauge` fits).
+- The **`align-ui` checkpoint flags un-justified custom controls** (a hand-rolled toggle, a
+  `GeometryReader` progress bar where `Gauge` fits) — during the `ui-variations` explore round and
+  again at its post-wiring check (`prototype-first-workflow.md` v2.0 §5–§6).
 
 **Decision & reason:** "~97% native" is a vibe, not a measurable metric — but "did you try native
 first, and if not, why" is checkable by a human or agent. The ~97% survives as the **spirit in
@@ -102,10 +103,12 @@ SwiftUI check:
 **Decision & reason:** the heuristics are about *interaction & flow completeness*, which is precisely
 align-ui's job and precisely what a **static prototype can't express** — so they belong to align-ui in
 the design phase, giving it the named backbone it currently lacks. Making them the backbone of
-`visual-grounding` (rejected) muddies a sharp tool: grounding is a *visual diff against the approved
-prototype* (Block C) and most heuristics (undo, error prevention) aren't visible in a screenshot.
-Parking them as a section in `swiftui-design-principles` (rejected) gives them no firing moment — that
-guide is pixel craft, not flow completeness, so they'd sit unread.
+`visual-grounding` (rejected at the time; the skill itself is retired as of `prototype-first-workflow.md`
+v2.0) muddied a sharp tool: grounding was a *visual diff against the approved prototype* (Block C v1.0)
+and most heuristics (undo, error prevention) aren't visible in a screenshot — the reasoning holds even
+though the tool it warned against no longer exists. Parking them as a section in
+`swiftui-design-principles` (rejected) gives them no firing moment — that guide is pixel craft, not flow
+completeness, so they'd sit unread.
 
 ---
 

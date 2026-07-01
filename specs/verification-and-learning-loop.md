@@ -52,7 +52,7 @@ when all three that apply are green.
 |---|---|---|---|
 | **Build/test proof** | it compiles and the tests pass | the auto-build/test hook (§4) → `xcodebuild` + test battery | every code task |
 | **Spec-conformance proof** | it did what the task said + followed the loaded doctrine | the divergence audit (§1) + `/code-review` doctrine (G6) | every task |
-| **Visual proof** | it looks like the approved design | `visual-grounding` structured diff vs the prototype | UI tasks only |
+| **Visual proof** | it looks like the approved design | `align-ui`'s post-wiring check: real data vs the `ui-variations`-graduated screen | UI tasks only |
 
 - The three map onto the kit's existing gate (`/verify` + `/code-review`) and the UI family's grounding —
   this spec *names* them as a set and makes the **build/test proof automatic** (§4) rather than reliant on a
@@ -150,8 +150,8 @@ gate) — the loop adds *behavior* at existing points rather than new phases, ke
   the main actor → fetch in `.task{}` [tags: swiftdata, concurrency]"*, `Times hit: 2`, + a `MEMORY.md`
   pointer. Next time a slice fetches in a VM, `task-execution` loads that hurdle first and avoids it.
 - **Three proofs:** build/test proof green (auto-hook ran `xcodebuild test`); spec-conformance green (divergence
-  classified benign + `/code-review` clean); visual proof green (`visual-grounding` converged vs the prototype).
-  Only then `→ done`.
+  classified benign + `/code-review` clean); visual proof green (`align-ui`'s post-wiring check holds against
+  the graduated `ui-variations` screen). Only then `→ done`.
 
 ---
 

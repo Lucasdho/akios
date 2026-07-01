@@ -1,234 +1,257 @@
 # akios — Prototype-First Visual Workflow
-**Working spec · v1.0 · UI overhaul annex (spec 1 of 3)**
+**Working spec · v2.0 · UI overhaul annex (spec 1 of 3)**
 
 Defines how akios takes a feature from "context gathered" to "a beautiful SwiftUI screen we
-trust" by routing through a fast visual medium (HTML/Tailwind) instead of asking an agent to
-one-shot visual beauty directly in SwiftUI. Introduces a new `design` phase, three new skills
-(`prototype`, `html-to-swiftui`, `visual-grounding`), and a hard prototype-approval gate.
-First of a 3-spec UI overhaul family: **`prototype-first-workflow` → `ui-first-architecture`
-→ `swiftui-design-doctrine`** (designed in order C → A → B). Everything here is settled unless
-marked *open*.
+trust" by generating and remixing **multiple SwiftUI `#Preview` variations directly**, instead of
+routing through an external visual medium and translating it. Introduces one new skill
+(`ui-variations`) and folds approval into the existing `design` phase. First of a 3-spec UI
+overhaul family: **`prototype-first-workflow` → `ui-first-architecture` → `swiftui-design-doctrine`**
+(designed in order C → A → B). Everything here is settled unless marked *open*.
 
 > **State:** designed
 
-> **Core bet (the thesis):** agents can code complexity but cannot *infer* what is visually
-> beautiful, and cannot reliably one-shot a UI without (a) original visual inspiration and
-> (b) supervision during execution. So we move the "make it beautiful" step into a cheap,
-> fast-feedback medium (HTML/CSS/Tailwind, live in a browser) where a human can iterate to a
-> satisfying result, then translate that approved artifact to SwiftUI and *converge* the running
-> app against it. Proven informally by a Gemini Pro + Antigravity run that generated a prompt and
-> implemented a satisfying interface — this spec systematizes that loop.
+> **v2.0 changelog:** full pivot, replacing v1.0's HTML/Tailwind-first loop. Xcode 27's agent +
+> Preview tooling makes SwiftUI itself the cheap, live-iterable medium — so there is no longer a
+> reason to detour through HTML and translate back. `prototype`, `html-to-swiftui`, and
+> `visual-grounding` are retired from the active build (none had shipped); `figma-to-swiftui`
+> (which had shipped) is parked, not deleted. One new skill, `ui-variations`, owns the whole loop.
+> New nested component/screen folder convention (§3) — carries as a consequence into
+> `ui-first-architecture.md` (Block A), resolved in a follow-up session. Driven by two grounding
+> documents supplied by the user: Apple's Xcode 27 agent-workflow guide and its SwiftUI
+> prototyping-with-Previews companion (2026-07-01).
 
 Worked example threaded throughout: **futebol-manager** — a football-manager iOS app, designed
-UI-first, that starts with `deep-brainstorm` and arrives with **3 finished UI HTML files** as
-bring-it references.
+UI-first, that starts with `deep-brainstorm` and builds every screen through the variation/remix
+loop below (no external HTML/Figma files this time).
 
 ---
 
-## 1. The reference (C1) — medium-agnostic, HTML-preferred
+## 1. The medium (C1) — SwiftUI `#Preview`, generated in place; Figma/Stitch/HTML parked
 
-The pipeline does **not** standardize on a single prototype format. The canonical thing is *an
-approved visual reference*, which may be:
+**Decision:** the design phase generates prototypes **directly in SwiftUI**, as named `#Preview`
+blocks, built from what already exists in the project: `PresentationLayer/DesignSystem/` tokens,
+promoted `PresentationLayer/Components/`, and copy-and-adapt snippets from `snippet-library.md`
+(`Foundation/Design-tokens`, per ALVA). The **primary** way a `DesignSystem` or a component comes
+into being is direct agent-assisted code generation — conversation in the Xcode chat / terminal —
+not an external design tool.
 
-| Source | Path into the loop | Notes |
+**Figma / Stitch / HTML are parked, not built into this loop.** They have real value (Figma's MCP
+path already extracts structured tokens+layout) but wiring them in — even as an optional
+background feeder into `Foundation/Design-tokens` + `references/*.md` — is deferred to a future
+session. Nothing here blocks reviving that path later; it is simply not part of what gets built
+now.
+
+**Decision & reason:** Xcode Previews render live without a full rebuild — the exact property
+that made HTML/Tailwind attractive in v1.0 (cheap, fast-feedback, human-iterable) — so routing
+through a second medium and translating back no longer buys anything; it only adds a translation
+step and the cross-engine rendering mismatch v1.0 had to work around (§5). Standardizing on
+Figma/Stitch as the primary input (rejected) reintroduces a dependency on external tools for a
+strategy that is now "100% focused on Xcode." Building the optional-ingestion path now anyway
+(rejected, considered in the prior session) — no dependency forces it; better to ship the core
+loop first and revive ingestion when it's actually wanted.
+
+---
+
+## 2. Generation & remix mechanics (C2) — bounded defaults, user override, sample data with edges
+
+**Two rounds, one skill (`ui-variations`, §4):**
+
+| Round | Default count | Produces |
 |---|---|---|
-| **HTML / CSS / Tailwind** | default authoring medium | what `prototype` generates; what a `bring-it` user most often supplies; live-iterable in a browser |
-| **Figma** | existing `figma-to-swiftui` MCP path | keeps its rich structured path (nodes + tokens); not rebuilt to HTML |
-| **Stitch** | export → HTML or screenshot | treated as HTML or as a screenshot reference |
-| **Screenshot / mockup / Dribbble** | image reference | feeds translation + grounding directly as pixels |
+| **Explore** | 3–5 named `#Preview`s | divergent styles from one prompt (features + mood/style params), each a runnable variation built from existing components/tokens/snippets |
+| **Remix** | 3 named `#Preview`s | hybrids combining the specific elements the user liked across the explore round (e.g. "the typography from A, the layout from B") |
 
-**Decision & reason:** standardizing on HTML alone (rejected) would force Figma — which already
-has a structured MCP path that yields tokens and layout — through a lossy HTML rebuild, and a
-pixels-only rule (rejected) would discard exactly the Tailwind classes / Figma tokens that make
-translation accurate (spacing and tokens are where agents fail). Medium-agnostic with HTML as the
-default authoring medium keeps the cheap-iteration medium where beauty is reachable, while letting
-structured sources use their richest path. **Cost accepted:** two translators coexist
-(`html-to-swiftui` new + `figma-to-swiftui` existing) — neutralized because they share one
-downstream grounding loop and one output discipline (Block A/B references).
+- **User-specified count wins.** If the user states a quantity for either round, `ui-variations`
+  uses it — the defaults above are just what fires when they don't.
+- **Edge-case guard:** on a quantity far outside a reasonable range (the user's own examples: 1 or
+  100), the agent **warns, doesn't block** — states plainly that 1 defeats the anti-anchoring
+  purpose of exploring at all, and that 100 spends heavily for marginal signal — then proceeds with
+  what the user actually asked for once they confirm.
+- **Sample data ships with every explore round**, in its own file, covering the edge cases a real
+  screen will hit: empty state, unbounded/large data (100+ items), and long-text truncation — per
+  the grounding doc's "Estratégia 2." This is not a separate skill or step; it is a required output
+  of the same generation pass, so every variation is judged against real-shaped data, not
+  best-case mocks.
 
----
-
-## 2. Who builds the prototype (C2) — akios generates by default; bring-it is a fast-path
-
-**Default:** after context/specs exist, `prototype` produces HTML/Tailwind per screen, renders it
-(screenshot), shows the user, and iterates *in the browser medium* until the user approves.
-
-**Bring-it fast-path:** if the user already has a finished reference (HTML / Figma / Stitch /
-screenshot), generation is skipped — straight to ingest + approve.
-
-**Decision & reason:** the common case is that no design exists yet, and the whole "iterate to
-beauty in a cheap medium under supervision" thesis only pays off if akios can *produce* that
-medium. "Never generate, always bring" (rejected) abandons that workflow and strands users with no
-design tool; "bring is default, generate on request" (rejected) makes the common no-design path an
-opt-in every time. **Cost accepted:** akios owns a real generation/iteration loop — that loop *is*
-the feature.
+**Decision & reason:** fixed small defaults (3–5 / 3) match what the grounding docs recommend and
+keep cost predictable without a human specifying anything; a hard cap (rejected) fights the user
+when they have a real reason to want more or fewer; no default at all (rejected) forces a question
+on every single design-phase run for no benefit in the common case.
 
 ---
 
-## 3. What "approved" means (C3) — hard gate + durable stored artifact
+## 3. Approval & graduation (C3) — the winner lands in place; losers stay compilable in scratch
 
-- **Hard gate:** no SwiftUI is written for a screen until its reference is **explicitly approved**
-  by the user. This is the cheap-failure checkpoint — the entire reason for routing through HTML
-  is to fail and iterate *here*, before the expensive SwiftUI step.
-- **Durable artifact:** the approved reference is committed to the repo —
-  `prototypes/<Feature>/<Screen>.{html,png}` (or a Figma/Stitch URL) — with a one-line row in
-  `prototypes/manifest.md` (source · path · approved date) and a link from that screen's
-  `ui-alignment` doc.
-- **Unattended (`/akios:just-vibes`):** akios auto-approves its own best prototype, marks it
-  `[auto]`, and records the rationale — mirroring how `align-ui` already behaves unattended.
+- **The approved variation graduates directly into its final file** — no translation step, because
+  it is already the target code. It lands at:
+  ```
+  Features/<Feature>/<View>/<View>View.swift        ← next to its ViewModel
+  Features/<Feature>/<View>/components/<Component>/  ← view-local components
+  ```
+  *(New nested-by-view convention — supersedes `ui-first-architecture.md`'s current
+  `Features/<Feature>/Components/` + `Screens/<Screen>/` shape. That spec's A1/A2 need the matching
+  update; tracked as the next block, not resolved here — see Open/Next.)*
+- **Everything that didn't win** — the rest of the explore round, the remix losers — is archived to
+  a **scratch file that still compiles and still previews**: `./scratchs/<Component-or-View>.swift`
+  at the project root. Nothing is silently deleted at approval time.
+- **Cleanup is manual or agent-assisted, never automatic.** The developer deletes a scratch file by
+  hand, or asks the agent to. No background job prunes `./scratchs/`.
+- **Unattended (`/akios:just-vibes`):** `ui-variations` auto-selects its best explore-round
+  variation without waiting for a remix round (there's no one to state taste preferences to), marks
+  it `[auto]`, and records the rationale — mirroring how `align-ui` already behaves unattended.
 
-**Decision & reason:** the stored reference is what the grounding loop *and* the next session
-converge against — "specs are the memory" applies to visual design too. A soft gate (rejected)
-lets the costly SwiftUI step run on an unapproved prototype — the exact waste being removed. An
-ephemeral gate with nothing stored (rejected) leaves the grounding loop nothing durable to
-converge against next session.
-
-> **[OPEN — reconcile in `ui-first-architecture` (Block A)] Storage location.** Top-level
-> `prototypes/<Feature>/` is the working decision. The user floated per-feature-folder storage
-> (`Feature/<Screen>/prototype.html`). Whichever is chosen, the artifact must sit **outside the
-> Xcode app target** so `.html` never bundles. Resolve when A fixes the per-feature structure.
+**Decision & reason:** graduating straight into place (no separate `prototypes/` approval
+artifact, unlike v1.0) is possible *because* the medium is already the target medium — there is
+nothing left to converge later. Keeping losers in a compiling scratch file (rejected: delete
+immediately) preserves "why this one won" as a paper trail the user can actually look at (a real
+file with real previews beats a git-log entry), without the overhead of a `manifest.md` (rejected:
+full ceremony) for what is, ultimately, an aesthetic choice.
 
 ---
 
-## 4. The skill inventory (C4) — three focused new skills
+## 4. Skill inventory (C4) — one skill: `ui-variations`
 
 | Skill | Owns | Phase |
 |---|---|---|
-| `prototype` | generate + iterate HTML/Tailwind to the approval gate; ingest brought references | `design` |
-| `html-to-swiftui` | translate an approved HTML/Tailwind reference into SwiftUI | `execute` |
-| `visual-grounding` | the convergence QA loop (screenshot running app → diff vs approved reference → fix → repeat) | `execute` |
+| `ui-variations` | explore round, remix round, approve-and-graduate, archive-losers-to-scratch, sample-data-with-edge-cases | `design` |
 
-- `figma-to-swiftui` is **left intact** as the Figma-source translator.
-- `visual-grounding` is **shared**: both `html-to-swiftui` and `figma-to-swiftui` route their
-  validation through it.
-- **No duplicated output discipline:** the SwiftUI-output rules (dumb components via `init`,
-  unified `DesignSystem`, native-first, reusable ViewModifiers, `containerRelativeFrame`) live in
-  Block A (structure) + Block B (craft) references; both translators load them rather than
-  restating them.
+**Retired from the active build — parked, not deleted, real value preserved for later:**
 
-**Decision & reason:** three focused skills give clean phase separation and let the mature
-`figma-to-swiftui` guide stay untouched. A unified `reference-to-swiftui` translator (rejected) is
-cleaner long-term but requires refactoring a large working asset — real regression risk for
-elegance (migration P1→P2 remains possible later). A single `prototype-pipeline` mega-skill
-(rejected) does three jobs and prevents the Figma path from reusing grounding.
+- `prototype`, `html-to-swiftui`, `visual-grounding` — never shipped (confirmed: not present in
+  `skills/`). Their planned jobs are fully superseded by §1–§3 above; nothing is lost by not
+  building them.
+- `figma-to-swiftui` — **did** ship, stays exactly as it is today, just **not routed through this
+  loop**. Its structured MCP token/layout extraction remains a real asset for a future session that
+  wants to wire Figma/Stitch back in as an optional feeder (§1).
+
+**Decision & reason:** one skill owning the whole design-phase loop is possible precisely because
+there's no longer a translator/grounder pair to keep separate from a generator — collapsing what
+was three skills into one isn't a shortcut, it's what falls out of removing the cross-medium
+translation this family existed to manage in v1.0.
 
 ---
 
-## 5. Convergence (C5) — agent-driven structured visual diff, no pixel gate
+## 5. Deliberate exclusion — no cross-engine convergence loop
 
-**Crux fact:** a SwiftUI render and an HTML render come from **different engines** (fonts,
-antialiasing, layout) and will never be pixel-identical. The reference is **design intent, not a
-pixel target.**
+v1.0's `visual-grounding` existed to solve one problem: a SwiftUI render and an HTML render come
+from different engines and are never pixel-identical, so convergence needed an agent-driven
+structured diff. **That problem no longer exists** — the approved variation *is* SwiftUI, so there
+is nothing to diff it against.
 
-The `visual-grounding` loop:
-
-1. Build + run the app; **screenshot the running screen** (simulator, via the existing
-   `ios-debugger-agent` path; Xcode Preview snapshot as a lighter fallback).
-2. Place the app screenshot beside the approved reference; the multimodal agent emits a
-   **categorized diff** — `layout · spacing · color · typography · assets · missing/extra`.
-3. Fix the material differences; re-screenshot; repeat under a **max-iteration cap**.
-4. **Verdict:** the agent proposes "converged" when only trivial or intentional-platform diffs
-   remain. Attended → the user confirms. Unattended → auto-accept with the diff report recorded.
-
-**Decision & reason:** a perceptual pixel-diff threshold (rejected) is objective and CI-friendly
-but produces constant false fails across mediums and would force the reference to *be* a SwiftUI
-render — killing the cheap-HTML thesis. Agent-driven structured diff is the only method robust to
-cross-engine rendering, and it reuses the structured-audit discipline `figma-to-swiftui` already
-has, adding the running-app loop it lacks. **Cost accepted:** leans on the agent's visual judgment
-— bounded by the iteration cap and the human verdict.
-
-> **[OPTIONAL — per-project opt-in] Snapshot regression-lock.** After convergence, optionally
-> capture a SwiftUI snapshot baseline (`swift-snapshot-testing`) so *future* edits are guarded by
-> a fast pixel test against the app's own approved render (which **is** pixel-stable, unlike
-> SwiftUI-vs-HTML). Not baked in; feeds the Vision wishlist "Xcode integration hooks" item.
+One narrower question survives: after `execute`'s make-it-live stage wires the real ViewModel and
+real data, does the **real-data render** still hold up against what the **mock-data-approved**
+variation looked like? (E.g., the mock tested a 100-player roster; does the real 150-player roster
+still look right?) This is a same-engine, same-code check — much lighter than v1.0's cross-engine
+diff — and it belongs to `align-ui`, which already owns states/interactions/navigation in the
+design phase (§6). No new skill for it.
 
 ---
 
-## 6. Pipeline integration (C6) — a new `design` phase; `align-ui` folds in and shrinks
+## 6. Pipeline integration (C6) — `design` keeps its job, the job's substance changes
 
-Pipeline becomes:
+Pipeline shape is unchanged (still 4 phases):
 
 ```
-brainstorm  →  plan  →  design  →  execute
-(specs)        (tasks)   (prototype +    (html-to-swiftui +
-                          approve +        visual-grounding,
-                          align-ui gaps)   per UI task)
+brainstorm  →  plan  →  design          →  execute
+(specs)        (tasks)   (ui-variations:    (make-it-live:
+                          explore+remix+     wire ViewModel,
+                          graduate,          pull data JIT,
+                          align-ui gaps)     align-ui post-wiring check)
 ```
 
-- **`design` runs per spec/slice**, not whole-app: it generates + approves prototypes for that
-  spec's screens (or ingests bring-it references), then hands an approved-reference set to
-  `execute`.
-- **`align-ui` relocates into `design` and shrinks.** The approved prototype now answers
-  layout / visual hierarchy / key components (a picture beats the old Q&A decision tree), so
-  `align-ui` stops being an execute-time interrogation and covers only what a static prototype
-  *cannot*: **states** (empty / loading / error / success), **interactions & gestures**, and
-  **navigation + data wiring**.
-- **`execute`** runs `html-to-swiftui` then `visual-grounding` for each UI task.
+- **`design` runs per spec/slice**, same as v1.0: it produces approved, graduated screens/
+  components for that spec, then hands off to `execute`.
+- **The "hard gate" concept collapses into `ui-first-architecture.md`'s existing build-order law
+  (A3: components → dumb screen → make-it-live).** There is no separate approval mechanism to
+  implement — a screen simply cannot enter make-it-live until its `ui-variations` round has
+  graduated a winner into place, which *is* A3's ordering already.
+- **`align-ui`** keeps its existing design-phase scope (states / interactions & gestures /
+  navigation + JIT DTO shape) and **absorbs** the one surviving question from §5 (does real data
+  break the approved look).
+- **`execute`** runs make-it-live directly on the graduated screen — no translation skill, no
+  grounding skill, per feature.
 
-**Decision & reason:** a distinct `design` phase matches the thesis ("make sure the UI is as
-intended before progressing"), is a clean `workflow.yml` addition, and gives bring-it a natural
-home. Execute-time prototyping (rejected) interleaves visual approval with coding and prevents
-seeing a feature's whole UI before building. Brainstorm-time prototyping (rejected) bloats
-brainstorm and couples spec-approval cadence to visual-approval cadence.
+**Decision & reason:** unchanged from v1.0's reasoning for *why* a distinct `design` phase exists
+(makes the UI-approval checkpoint a first-class stop, not interleaved with coding) — only the
+mechanism inside it changed. See prior-session decision record: keeping `design` distinct (chosen)
+over collapsing it into `execute` (rejected — loses the checkpoint) or making it conditional/
+optional per screen (rejected — introduces a subjective "does this need it" judgment call other
+specs would have to account for).
 
 ---
 
-## 7. Worked example — futebol-manager
-
-**Setup:** the app is mapped UI-first via `deep-brainstorm`; the developer arrives with **3
-finished UI HTML files** (bring-it references). *(Files live in a separate `futebol-manager`
-Developer folder; path to be supplied when the translate/ground decisions are exercised.)*
-
-Run through the phases:
+## 7. Worked example — futebol-manager, *Squad* feature
 
 1. **brainstorm** — `deep-brainstorm` maps the whole app, bursts specs per surface area.
-2. **plan** — `spec-to-tasks` produces the backlog for, say, the *Squad* screen spec.
-3. **design** — the Squad screen already has a finished HTML reference → **bring-it fast-path**:
-   `prototype` ingests it, the developer approves (hard gate), it's committed to
-   `prototypes/Squad/Squad.html` + a `manifest.md` row + linked from `tasks/ui-alignment/Squad.md`.
-   `align-ui` then resolves only the non-visual gaps: the empty squad state, the loading state
-   while roster fetches, the error/offline state, row-tap navigation, and where the player data
-   comes from (just-in-time model, per Block A).
-4. **execute** — `html-to-swiftui` translates `Squad.html` into SwiftUI (dumb components +
-   `DesignSystem` per Block A/B); `visual-grounding` builds + runs the app, screenshots the Squad
-   screen, diffs it against `Squad.html`, fixes spacing/typography deltas, and converges on the
-   developer's confirmation.
+2. **plan** — `spec-to-tasks` produces the backlog for the *Squad* screen spec.
+3. **design** — `ui-variations` runs the explore round on `SquadListView`: 4 named previews
+   (`#Preview("Cozy")`, `#Preview("Editorial")`, `#Preview("Standings")`, `#Preview("Minimal")`),
+   built from the existing `PlayerRow`/`FormBadge` snippets + `DesignSystem` tokens, each paired
+   with `SquadSampleData.swift` covering an empty squad, a 100+-player roster, and a very long
+   player name. The developer likes the typography from `Editorial` and the standings-board layout
+   from `Standings` → remix round produces 3 hybrids. The developer approves one; it graduates to
+   `Features/Squad/SquadList/SquadListView.swift` (next to `SquadListViewModel.swift`), with
+   `Features/Squad/SquadList/components/PlayerRow/`. The other 6 variations (4 explore + 2 losing
+   remixes) land in `./scratchs/SquadListView-variations.swift`. `align-ui` then resolves the
+   non-visual gaps: empty-squad state, loading state while roster fetches, error/offline state,
+   row-tap navigation, and the JIT DTO shape (`SquadRowData`).
+4. **execute** — make-it-live attaches `SquadListViewModel(playerRepo:)` via `init`, pulls real
+   players JIT. `align-ui`'s post-wiring check confirms the real 150-player roster (once actual
+   data lands) still reads the way the 100+-player mock did — no separate translation or grounding
+   pass needed.
 
-The other two HTML files (e.g. *Match Day*, *Player Detail*) repeat the same `design → execute`
-path. Screens *without* a brought reference (e.g. a future *Settings*) take the **generate**
-branch: `prototype` produces HTML/Tailwind, iterates with the developer, then the same translate +
-ground steps run.
+The other screens (*Match Day*, *Player Detail*) repeat the same `design → execute` path — there is
+no longer a "bring-it vs generate" fork, since every screen is built the same way now.
 
 ---
 
 ## 8. Empty / edge states (of the workflow itself)
 
-- **No reference and generation declined:** the screen cannot enter `execute` for its UI task; the
-  hard gate holds. akios reports the screen is blocked on an approved reference.
-- **Reference approved but app won't build/run:** `visual-grounding` cannot screenshot. The loop
-  reports a build/run failure (routes to `ios-debugger-agent`) rather than falsely converging.
-- **Iteration cap hit without convergence:** the loop stops, records the residual categorized
-  diff, and surfaces it as an open item for the developer — never silently declares "converged."
-- **Bring-it reference is low-fidelity (e.g. a rough screenshot):** ingest still works; the
-  categorized diff is necessarily looser, and `align-ui` carries more of the visual decisions.
+- **No components/snippets exist yet for a genuinely novel screen:** `ui-variations` still
+  generates freeform, but the explore round is lower-confidence with nothing established to draw
+  from — the agent may suggest running snippet/knowledge ingestion first if the developer wants
+  faster convergence (the parked §1 future-work path).
+- **Extreme quantity requested (1 or 100):** warn per §2, then honor the explicit request once
+  confirmed — never silently clamp.
+- **Nothing from either round is liked:** don't force a remix out of parts nobody wanted. Ask the
+  developer for fresh direction in their own words and regenerate the explore round instead.
+- **`./scratchs/` grows stale over many design-phase runs:** no automatic pruning; flagged as an
+  open UX question for a future `init`/hygiene pass (see `G10 init-reliability-and-ux.md` in
+  `akios-backlog-map.md` — same footprint-hygiene concern, different files), not solved here.
+- **Approved variation breaks once real data is wired:** handled as a normal `execute`-phase fix
+  under `align-ui`'s post-wiring check (§5/§6) — not a re-triggered design-phase approval cycle.
+- **Unattended (`just-vibes`):** auto-select-and-graduate from the explore round per §3, `[auto]`
+  marked, rationale recorded in the scratch-file archive.
 
 ---
 
 ## 9. Open / next
 
-- **[OPEN — Block A]** Final `prototypes/` storage location (top-level vs per-feature) — §3.
-- **[OPEN — Block A]** How the `design` phase orders against the UI-first build order
-  (components → dumb screens → viewmodels → JIT models): does `design` produce per-component
-  prototypes or per-screen, and how that maps to the per-feature folder structure.
-- **[CONSEQUENCE — to implement]** `workflow.yml` + `pipeline.md` gain a 4th phase (`design`).
-- **[CONSEQUENCE — to implement]** `align-ui` SKILL.md remodeled: relocates to `design`, scope
-  shrinks to states/interactions/wiring.
-- **[CONSEQUENCE — to implement]** `figma-to-swiftui` Step 7 ("validate on user request only")
-  rewired to route validation through `visual-grounding`.
-- **[CONSEQUENCE — to implement]** `just-vibes` learns the `design` phase + the auto-approval
-  posture (consistent with its existing `align-ui` handling).
-- **[CONSEQUENCE — to implement]** `install-skills.sh` `SKILLS=(...)` array gains `prototype`,
-  `html-to-swiftui`, `visual-grounding`; three new `commands/` wrappers if commands are wanted.
-- **Block B dependency:** the SwiftUI-output discipline both translators rely on is defined there
-  (dumb components via `init`, unified `DesignSystem`, native-first, reusable ViewModifiers,
-  `containerRelativeFrame`).
+- **[OPEN — next block this session] `ui-first-architecture.md` (Block A):** A1/A2 need the nested
+  `Features/<Feature>/<View>/{components/, <View>View.swift}` convention from §3 in place of the
+  current `Features/<Feature>/Components/` + `Screens/<Screen>/` shape; A3's build-order wording
+  ("converges against the approved prototype") needs updating since convergence is now built-in,
+  not a separate step.
+- **[CONSEQUENCE — to implement]** `workflow.yml` / `pipeline.md`: `design` phase description
+  changes (generates/approves via `ui-variations`, not HTML) — phase count stays at 4.
+- **[CONSEQUENCE — to implement]** `align-ui` SKILL.md: add the post-wiring real-data-vs-mock
+  check (§5) alongside its existing states/interactions/navigation/DTO scope.
+- **[CONSEQUENCE — to implement]** `install-skills.sh`: `SKILLS=(...)` array gains `ui-variations`
+  only.
+- **[CONSEQUENCE — to implement]** `/akios:init` + `templates/`: scaffold `./scratchs/` at the
+  project root; note in `Context.md` that it stays out of the Xcode target (same posture as v1.0's
+  `prototypes/` note).
+- **[CONSEQUENCE — to implement]** `ui-overhaul-implementation.md`: Phase 1 rewritten around
+  `ui-variations` only; Phase 2's `align-ui`/`figma-to-swiftui` items adjusted to match; Phase 4
+  scaffolding updated for `./scratchs/` instead of `prototypes/`.
+- **[FUTURE — parked, not scheduled]** `figma-to-swiftui` repurposed as an optional
+  tokens/components/references feeder (prior-session direction, not built this round);
+  `prototype` / `html-to-swiftui` / `visual-grounding` retain documented value if a future session
+  wants a non-Preview-native input path back.
+- **[FUTURE — parked, not scheduled]** Tuning panels for animation/interaction parameter refinement
+  (grounding doc's "Estratégia 3") — not part of this workflow; candidate for its own future
+  micro-spec once interaction/animation work becomes a priority.
+- **Block A dependency:** the folder convention (§3) and the build-order law it feeds are defined
+  in `ui-first-architecture.md` — resolved next.
+- **Block B unaffected:** `swiftui-design-doctrine.md` was audited against this pivot and needs no
+  changes — it's medium-agnostic token/craft doctrine already.
