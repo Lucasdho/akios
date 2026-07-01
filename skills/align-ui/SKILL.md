@@ -44,6 +44,12 @@ genuinely no dependency between them. When in doubt, go sequentially.
 
 ## Conduct
 
+- **`Foundation/Design-tokens/` is the visual leaf source.** Before proposing a color, spacing
+  value, type style, or reusable component, check what already exists there — recommend from it
+  rather than inventing a new literal. A recommendation that introduces a hardcoded literal where
+  a Design-tokens equivalent exists (or should be promoted, per the usage ledger) gets flagged in
+  the alignment doc rather than silently implemented — either reuse the token or note it as a new
+  candidate the component will seed.
 - **One question at a time.** Never ask two things in one turn.
 - **Lead with your recommendation.** For every question, state what you'd implement and why
   (one sentence, grounded in HIG or existing app patterns). Then ask the user to confirm,

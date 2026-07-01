@@ -10,7 +10,7 @@ checkpoint: 5
 
 # T008 — `deep-brainstorm` maps features as ALVA slices
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Whole-app mapping (Phase 2 Cartograph / Phase 4 Spec-burst) emits each identified domain as a

@@ -10,7 +10,7 @@ checkpoint: 5
 
 # T007 — `align-ui` treats Design-tokens as the visual leaf source
 
-> **State:** todo
+> **State:** done
 
 ## Description
 `align-ui` (the pre-implementation UI alignment gate) treats `Foundation/Design-tokens/` as

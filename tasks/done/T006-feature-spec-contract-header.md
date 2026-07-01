@@ -10,7 +10,7 @@ checkpoint: 5
 
 # T006 — Feature-spec contract/Foundation declaration header
 
-> **State:** todo
+> **State:** done
 
 ## Description
 A feature spec declares its `contract/` surface and the Foundation symbols it consumes

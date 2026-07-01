@@ -53,6 +53,27 @@ On updates, bump the version and add a changelog callout right under the header:
   not optional — the UI is built from these states, so an undocumented empty state
   is a missing requirement.
 
+## Feature specs get a contract/Foundation header (ALVA)
+
+Any spec that `spec-to-tasks` will decompose into an ALVA feature slice (i.e. it describes a
+buildable app feature, not a cross-cutting doctrine/process spec) opens with a short declaration
+block right under the header, before §1:
+
+```markdown
+## Contract & Foundation
+
+- **Exports (`contract/`):** what this feature's public surface will be — the protocol +
+  DTOs other features are expected to consume. "None yet" if this is a leaf feature.
+- **Consumes:** which other features' `contract/`, and which `Foundation/Design-tokens` /
+  `Foundation/Code-tokens` symbols, this feature is expected to need.
+```
+
+This is cheap to write (a few bullets, not a design pass) and pays for itself twice: `spec-to-tasks`
+reads it to scope the `contract/` task and the Foundation-consult DoD line, and it doubles as a
+cross-check against the usage-ledger's counted evidence (doctrine §6.4 alternative D) — if the
+ledger later shows heavier cross-feature use than declared here, that divergence is worth a look,
+not silently trusted either way.
+
 ## The worked-example section
 
 Every spec that defines process behavior includes the living example's run through

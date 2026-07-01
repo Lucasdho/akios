@@ -167,6 +167,8 @@ Every closed block becomes (or updates) a versioned markdown spec. Read `referen
 - Updates bump the version and add a one-line changelog at the top.
 - Always include the worked example's run through that block.
 - Always document **empty states** for any UI/data-backed view (empty, first-run, post-clear; plus loading/error where relevant) so the UI can be built properly from them. Mandatory — see `references/spec-format.md`.
+- A spec describing a buildable feature (will decompose into an ALVA slice) opens with the
+  Contract & Foundation header — see `references/spec-format.md`.
 
 ## Turn-by-turn conduct
 
