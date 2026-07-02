@@ -10,7 +10,7 @@ checkpoint: 33
 
 # T054 — `collaboration-autonomy.md` release checkpoint
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Close out the spec: flip its `Roadmap.md` row to `done`, confirm no `{{...}}` placeholders or
