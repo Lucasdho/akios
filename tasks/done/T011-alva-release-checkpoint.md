@@ -10,7 +10,7 @@ checkpoint: 7
 
 # T011 — ALVA-adoption release checkpoint (audit only — version bump deferred)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 alva-adoption.md §7.11 calls this a "Release" step (install-skills.sh + VERSION/CHANGELOG/
