@@ -10,7 +10,7 @@ checkpoint: 19
 
 # T032 — `knowledge-architecture.md` release checkpoint (open items stay open)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Audit-only release checkpoint. Confirm T027–T031's DoDs are green, confirm the spec's own §7
