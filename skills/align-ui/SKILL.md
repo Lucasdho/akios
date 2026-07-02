@@ -98,7 +98,7 @@ sneak past review).
 
 ## Post-wiring check (absorbed from the retired `visual-grounding` skill)
 
-After `execute`'s make-it-live stage wires the real ViewModel and pulls real data, `align-ui`
+After `deliver`'s make-it-live stage wires the real ViewModel and pulls real data, `align-ui`
 runs one more check: does the **real-data render** still hold up against the **mock-data-
 approved** `ui-variations` graduate? (E.g. the mock tested a 100-player roster — does the real
 150-player roster still look right? Does real long-text still truncate the way the sample data
@@ -108,7 +108,7 @@ This is a **same-engine, same-code check** — the graduated screen and the wire
 same SwiftUI, just with real data behind it — not the cross-engine diff `visual-grounding` used
 to run against an HTML/Figma reference (that skill is retired; the *problem* it solved doesn't
 exist anymore since there's no second medium to diff against). A divergence here is a normal
-`execute`-phase fix, not a re-triggered design-phase approval cycle.
+`deliver`-phase fix, not a re-triggered design-phase approval cycle.
 
 ## Posture (learning vs. delivery)
 

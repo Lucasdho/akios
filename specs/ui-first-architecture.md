@@ -105,8 +105,8 @@ as a first-class stop. **This is the precise resolution of the prototype↔compo
 prototype is the *design* unit (per screen); the component is the *build* unit (extracted bottom-up
 during translation). They never conflict.
 
-`spec-to-tasks` emits UI tasks on this shape; the `design→execute` handoff delivers an already-graduated
-per-screen dumb screen — stage 2 is already done by the time `execute` picks it up.
+`spec-to-tasks` emits UI tasks on this shape; the `design→deliver` handoff delivers an already-graduated
+per-screen dumb screen — stage 2 is already done by the time `deliver` picks it up.
 
 ---
 
@@ -217,7 +217,7 @@ an external dependency, against akios's Vision.
   the ALVA slice structure, the dumb-component law, and the factory/router DI shape.
 - **[CONSEQUENCE — to implement]** `swiftui-ui-patterns`: record the narrow "screens get
   ViewModels, components don't; screens are few" override.
-- **[SUPERSEDED — see `alva-adoption.md` §7.9]** `/akios:init` + `templates/`: scaffold the ALVA slice
+- **[SUPERSEDED — see `alva-adoption.md` §7.9]** `/akios:setup` + `templates/`: scaffold the ALVA slice
   tree + top-level `scratchs/`; `Context.md` notes `scratchs/` stays out of the app target.
 - **[CONSEQUENCE — to implement]** `align-ui`: confirmed scope — states/interactions/navigation +
   the per-screen JIT **data-shape (DTO) declaration**.

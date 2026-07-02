@@ -56,7 +56,7 @@ This skill does the one thing that was missing: decompose the spec into runnable
 5b. **UI build-order stage shape.** A screen-touching task decomposes into the A3 stages,
    named explicitly and nested *inside* `presentation/<View>/`:
    `components [P] (swiftui-pro)` → `ui-variations dumb-screen (design phase)` → `make-it-live
-   (wiring, execute phase)`. The middle stage is always `ui-variations` — never a retired skill
+   (wiring, deliver phase)`. The middle stage is always `ui-variations` — never a retired skill
    (`html-to-swiftui`, `visual-grounding`) or the parked `figma-to-swiftui`. Components tagged
    `[P]` within the same checkpoint are independent leaf pieces; the dumb-screen and make-it-live
    stages serialize after them.
@@ -132,8 +132,8 @@ decomposition itself — same tasks, same checkpoints, same tags in both posture
 `AGENTS.md` "Operating posture" / `specs/operating-modes.md` §3.
 
 ## Hand-off
-`tasks/todo/` is the sole input to `task-execution` (`/akios:execute`). Stop after writing the
-files + updating `Roadmap.md`; tell the user the backlog is ready and that `/akios:execute` ships it.
+`tasks/todo/` is the sole input to `task-execution` (`/akios:deliver`). Stop after writing the
+files + updating `Roadmap.md`; tell the user the backlog is ready and that `/akios:deliver` ships it.
 
 ## Anti-patterns
 - Creating `.specify/`, a constitution, or any second formal spec format. Don't.

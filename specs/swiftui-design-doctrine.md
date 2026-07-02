@@ -211,7 +211,7 @@ and an iPad split.
   its "custom view modifiers" guidance.
 - **[CONSEQUENCE — to implement]** `align-ui`: add the 10-heuristic checklist (§3 table) as its
   design-phase backbone; record the native-over-custom flag (B2) as a grounding/align-ui check.
-- **[CONSEQUENCE — to implement]** `/akios:init` + `templates/`: scaffold a starter
+- **[CONSEQUENCE — to implement]** `/akios:setup` + `templates/`: scaffold a starter
   `PresentationLayer/DesignSystem/` (`DesignSystem` token enum stub + `TextStyle`/`ImageStyle`
   role-modifier stubs).
 - **[CONSEQUENCE — to implement]** `swift-dev` architecture reference (the one A8 introduces): note

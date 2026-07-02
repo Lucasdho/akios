@@ -1,12 +1,12 @@
 # akios — Init Reliability & UX
 **Working spec · v1.0 · kit-evolution family · 2026-07-02**
 
-Hardens `/akios:init` against three real onboarding failures reported from a friend's ("Julio")
+Hardens `/akios:setup` against three real onboarding failures reported from a friend's ("Julio")
 first run: it executes its longest steps silently (no narration), it can leave the repo in an
 ambiguous half-materialized state when a tool call it expected to succeed is blocked or errors,
 and its own generated footprint is scattered across the repo root instead of consolidated
 somewhere a user could gitignore in one line. Answers backlog **B33**, **B34**, **B35**.
-Complements `commands/init.md` (the file this spec edits directly), `skeleton-library.md` (the
+Complements `commands/setup.md` (the file this spec edits directly), `skeleton-library.md` (the
 skeleton-copy step this spec's narration/verification rules also cover), and the lived precedent
 of two real near-misses in this very build arc (§7).
 
@@ -23,7 +23,7 @@ of two real near-misses in this very build arc (§7).
 
 ## 1. Narration model (D1) — step headers always, per-file only where steps are long
 
-`/akios:init` already has a named step structure (`commands/init.md` §0 Detect state, §1
+`/akios:setup` already has a named step structure (`commands/setup.md` §0 Detect state, §1
 Interview, §1a Skeleton selection, §2 Scan, §3 Materialize, §4 Wire hooks, §5 Self-check, §6
 Dependencies). **Decided:** every step prints a one-line header as it starts (e.g. "Scanning
 repo…", "Materializing 12 files + folder tree…", "Wiring hooks…", "Self-check…"), and **only** §1a
@@ -47,7 +47,7 @@ answers the complaint at its source without inflating every other step.
 
 ## 2. Verify after every materialization action (D2) — never trust a non-error return
 
-**Decided:** after each copy/write action in §3 (and §1a's skeleton copy), `/akios:init`
+**Decided:** after each copy/write action in §3 (and §1a's skeleton copy), `/akios:setup`
 immediately re-checks the result before moving to the next item, rather than assuming success
 because the tool call didn't raise an error:
 
@@ -79,7 +79,7 @@ fall back to per-file on failure" pattern.
   a reactive recovery path is not a reliable safety net if the recovery path can fail the same way
   the primary path did. Proactively avoiding the batched call removes the failure mode instead of
   adding a second, unproven path to recover from it.
-- **Reason for "always," not "only when the auto-mode classifier is active":** `/akios:init` has
+- **Reason for "always," not "only when the auto-mode classifier is active":** `/akios:setup` has
   no reliable way to detect in advance whether a given environment's permission classifier will
   flag a batched `chmod` as suspicious (the report calls this an "Irreversible Local Destruction"
   -style block, i.e. a heuristic, not a fixed rule) — always issuing per-file calls costs nothing
@@ -122,7 +122,7 @@ in-progress,review,done}/ archive/ code-references/`), the ALVA scaffold
 **Decided — the one real move:** relocate the materialized copy from `scripts/alva-usage-ledger.sh`
 to **`.claude/scripts/alva-usage-ledger.sh`** — namespaced under the already-existing, already-
 committed `.claude/` directory instead of a bare root-level `scripts/` folder, which is a common
-name a real project is likely to already own for its *own* scripts. `commands/init.md`'s
+name a real project is likely to already own for its *own* scripts. `commands/setup.md`'s
 materialize table, the pre-commit hook line it appends, and any doc referencing the old path
 (`skills/task-execution/SKILL.md`, `skills/swift-dev/skills/review-doctrine/GUIDE.md`) move to the
 new location as part of this spec's build.
@@ -157,7 +157,7 @@ record rather than silently left alone (which would look like the spec forgot ab
 ## 6. `.akios/` stays unconditionally gitignored — no prompt (D6)
 
 **Decided:** `.akios/` (runtime journal/trace/claims) remains **always** gitignored by
-`/akios:init` — not offered as a yes/no choice.
+`/akios:setup` — not offered as a yes/no choice.
 
 - **Reason:** B35 asks to "offer the user an option to gitignore" the consolidated folder, but
   there is no legitimate case for *tracking* `.akios/`'s contents (a per-machine journal, trace
@@ -195,7 +195,7 @@ a silent gitignore interaction).
 ## 8. Empty / edge states
 
 - **Fresh repo, zero prior akios footprint:** all of §1–§6 apply as written; nothing to migrate.
-- **Already-initialized repo, `/akios:init` re-run (§0's "Recorded == installed" branch):** only
+- **Already-initialized repo, `/akios:setup` re-run (§0's "Recorded == installed" branch):** only
   the self-check runs — narration/verification (§1–§4) apply to any single-artifact repair it
   performs, at the same granularity as a fresh materialize.
 - **Migrating an older repo** (§0's "Recorded < installed" branch) that already has
@@ -218,12 +218,12 @@ a silent gitignore interaction).
 
 - **No consolidation of root-convention files or content folders** (§5) — covered above with
   reasons, not silently skipped.
-- **No new interactive confirmation step added to `/akios:init`'s overall flow.** Narration (§1)
+- **No new interactive confirmation step added to `/akios:setup`'s overall flow.** Narration (§1)
   is output, not a prompt; verification (§2–§4) is automatic, not a "should I check?" question —
-  adding confirmation steps would slow down the exact "cheap, idempotent re-run" property `init.md`
+  adding confirmation steps would slow down the exact "cheap, idempotent re-run" property `setup.md`
   §0 already optimizes for.
 - **No general-purpose "verify any tool call" framework.** This spec's verification rules are
-  scoped to `/akios:init`'s own materialization actions (§3, §1a) — extending the same discipline
+  scoped to `/akios:setup`'s own materialization actions (§3, §1a) — extending the same discipline
   to `task-execution`'s file writes or other skills is out of scope here; if warranted, it's a
   separate, later spec informed by whether this one's narrower version proves useful first.
 - **No retry-count configuration.** The bounded retry (D4) is fixed at exactly one attempt,
@@ -235,13 +235,13 @@ a silent gitignore interaction).
 ## 10. Backlog placement
 
 Registered as **B33/B34/B35** in `akios-backlog-map.md` §1 (already present, 2026-07-01 addition,
-Julio's first `/akios:init` run). Answers **G10** in §3 (already registered):
+Julio's first `/akios:setup` run). Answers **G10** in §3 (already registered):
 
 | # | New spec | Answers | One-line thesis |
 |---|---|---|---|
-| G10 | `init-reliability-and-ux.md` | B33, B34, B35 | `/akios:init` narrates its steps as it runs, verifies each materialization step actually landed instead of assuming, avoids batched calls that trip the auto-mode classifier, and keeps its footprint in one gitignore-able folder. |
+| G10 | `init-reliability-and-ux.md` | B33, B34, B35 | `/akios:setup` narrates its steps as it runs, verifies each materialization step actually landed instead of assuming, avoids batched calls that trip the auto-mode classifier, and keeps its footprint in one gitignore-able folder. |
 
-`Roadmap.md` gets a new row: `init-reliability-and-ux.md` | domain "`/akios:init` narration,
+`Roadmap.md` gets a new row: `init-reliability-and-ux.md` | domain "`/akios:setup` narration,
 per-action verification, per-file chmod policy, bounded retry, footprint consolidation" | status
 `designed` | notes "backlog B33-B35; two of the failure modes it fixes were observed live in this
 same build arc (§7)."
@@ -250,16 +250,16 @@ same build arc (§7)."
 
 ## 11. Open / next
 
-- **[CONSEQUENCE — to implement]** `commands/init.md` §3 (Materialize) and §1a (skeleton copy)
+- **[CONSEQUENCE — to implement]** `commands/setup.md` §3 (Materialize) and §1a (skeleton copy)
   gain per-item narration (§1), per-action verification (§2), always-per-file `chmod` (§3), and the
   bounded-retry-then-stop-and-report path (§4).
-- **[CONSEQUENCE — to implement]** `commands/init.md`'s materialize table's `alva-usage-ledger.sh`
+- **[CONSEQUENCE — to implement]** `commands/setup.md`'s materialize table's `alva-usage-ledger.sh`
   row destination changes to `.claude/scripts/alva-usage-ledger.sh`; the pre-commit-hook-append
   instruction and §5's self-check both reference the new path.
 - **[CONSEQUENCE — to implement]** Cross-references to the old `scripts/alva-usage-ledger.sh` path
   in `skills/task-execution/SKILL.md` and `skills/swift-dev/skills/review-doctrine/GUIDE.md` update
   to the new location.
-- **[CONSEQUENCE — to implement]** `commands/init.md` §0's migrate-path branch gains the
+- **[CONSEQUENCE — to implement]** `commands/setup.md` §0's migrate-path branch gains the
   copy-then-verify-then-delete-old-file sequence for repos already onboarded before this spec.
 - **[OPEN — revisit after first use]** whether the itemized stop-and-report manifest (§4) should
   also be written to a durable file (e.g. `.claude/init-last-run.log`) rather than only reported in

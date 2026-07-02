@@ -175,7 +175,7 @@ pack is worse than no pack because it *outranks* the baseline.
   guide files stay put; a compatibility note records that `swift-dev` == the ios pack.
 
 **Decision & reason:** a distinct skill+command keeps ingestion off the build spine (it's a *maintenance*
-action, like `/akios:init`, not a phase) and gives `just-vibes` a clean thing to call when it wants to learn
+action, like `/akios:setup`, not a phase) and gives `just-vibes` a clean thing to call when it wants to learn
 before building. Re-manifesting `swift-dev` rather than physically moving it avoids a large, risky file move
 for a naming change — the pack abstraction is about *routing*, which a manifest provides without relocating
 proven guides.

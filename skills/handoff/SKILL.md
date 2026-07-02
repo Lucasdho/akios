@@ -25,7 +25,7 @@ back — write `tasks/handoffs/<topic>-return.md` instead, structured as a resul
 
 ## What to include
 
-- **Current position in the pipeline.** Which phase (brainstorm / plan / design / execute),
+- **Current position in the pipeline.** Which phase (brainstorm / plan / design / deliver),
   which spec, which task, which checkpoint.
 - **Decisions made this session.** Only the ones not already captured in specs, tasks, commits,
   or `MEMORY.md` — reference those by path, don't duplicate content.
@@ -50,7 +50,7 @@ Create `tasks/handoffs/` if it doesn't exist.
 # Handoff — <topic>
 
 > Session: <date + approximate time>
-> Phase: <brainstorm | plan | design | execute>
+> Phase: <brainstorm | plan | design | deliver>
 > Spec: <path or "none">
 > Task: <path or "none">
 
@@ -60,7 +60,7 @@ Create `tasks/handoffs/` if it doesn't exist.
 ## Where we are
 - Last action: <what just happened>
 - Next action: <exactly what the next session should do first>
-- Checkpoint: <which barrier is next, if in execute>
+- Checkpoint: <which barrier is next, if in deliver>
 
 ## Decisions made this session (not yet in artifacts)
 - <decision>: <rationale>

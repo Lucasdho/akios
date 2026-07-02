@@ -58,7 +58,7 @@ when all three that apply are green.
   this spec *names* them as a set and makes the **build/test proof automatic** (§4) rather than reliant on a
   manual `/verify`.
 - **A red proof parks, never ships** — consistent with `task-execution`'s bounded fix loop and `just-vibes`'
-  "park red, never deliver broken."
+  "park red, never ship broken."
 
 **Decision & reason:** the anxiety in B19 is real precisely because "it ran" ≠ "it's right" — separating the
 three proofs makes the vague worry into three things you can actually see go green, and shows *which* one is
@@ -105,10 +105,10 @@ noise out (a single stumble is context, not a rule) and reuses a mechanism the k
 
 ## 4. The auto-build/test hook (D4) — realizes Vision wishlist #3
 
-- **A post-execute hook runs the build + test battery automatically** after a checkpoint/spec, and **parks
+- **A post-deliver hook runs the build + test battery automatically** after a checkpoint/spec, and **parks
   the spec (`Roadmap.md` → `blocked`) if it fails** — without waiting for a manual `/verify`. This is the
   build/test proof (§2) made automatic and the explicit realization of Vision #3 ("Xcode integration hooks —
-  a post-execute hook that runs the build and test suite automatically and parks the spec if CI fails").
+  a post-deliver hook that runs the build and test suite automatically and parks the spec if CI fails").
 - **Degrades gracefully:** if the environment denies `xcodebuild` to a hook/subagent (common in background
   sessions — `task-execution` already handles this), it runs inline in the session instead of failing. The
   hook is an *accelerator*, never a hard dependency (consistent with "never let a dead subagent stall
@@ -174,8 +174,8 @@ gate) — the loop adds *behavior* at existing points rather than new phases, ke
 
 - **[CONSEQUENCE — to implement]** `task-execution`: the `review → done` divergence audit; load `hurdles.md`
   by tag before a domain task; the hurdle-proposal step; wire the three proofs as the `done` bar.
-- **[CONSEQUENCE — to implement]** the post-execute build/test **hook** (Vision #3) + its graceful inline
-  degradation; installed by `/akios:init` into `.claude/hooks/`.
+- **[CONSEQUENCE — to implement]** the post-deliver build/test **hook** (Vision #3) + its graceful inline
+  degradation; installed by `/akios:setup` into `.claude/hooks/`.
 - **[CONSEQUENCE — to implement]** `code-references/hurdles.md` + INDEX row convention; the archive step gains
   the hurdles digest → `MEMORY.md` pointers.
 - **[CONSEQUENCE — to implement]** `just-vibes` gate uses the named three proofs; learning-mode journal

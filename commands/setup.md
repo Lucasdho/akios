@@ -3,7 +3,7 @@ description: Onboard this repo to the akios kit — interview, scan, fill the co
 disable-model-invocation: true
 ---
 
-# /akios:init — Onboard a repo to the kit
+# /akios:setup — Onboard a repo to the kit
 
 You are setting up the akios agentic-kit in the user's repo. A plugin cannot shell-write
 into their repo, so you do this with your own file tools. Work at the **git repo root**
@@ -11,7 +11,7 @@ into their repo, so you do this with your own file tools. Work at the **git repo
 
 Templates live in the installed plugin at `${CLAUDE_PLUGIN_ROOT}/templates/` and
 `${CLAUDE_PLUGIN_ROOT}/scripts/`. Read them from there; do not invent their contents.
-`init` is **bootstrap, not a phase** (see `workflow.yml` `bootstrap`).
+`setup` is **bootstrap, not a phase** (see `workflow.yml` `bootstrap`).
 
 **Narrate as you go (`init-reliability-and-ux.md` §1).** Print a one-line header the moment each
 numbered step below starts (e.g. "Scanning repo…", "Materializing 12 files + folder tree…",
@@ -22,7 +22,7 @@ the long steps that previously ran silently; the short/interactive steps don't n
 narration on top of their header.
 
 ## 0. Detect state (idempotency gate — do this first)
-Don't re-onboard a repo that's already set up; re-running `/akios:init` should be cheap.
+Don't re-onboard a repo that's already set up; re-running `/akios:setup` should be cheap.
 Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's recorded version
 (`<root>/.claude/.agentic-kit-version`, may be absent), then branch:
 
@@ -56,8 +56,8 @@ Ask in one batched pass (skip what the scan in step 2 answers confidently; confi
   single session via a command flag or a spoken switch without rewriting this default. See
   `AGENTS.md` "Operating posture" for what the flag actually changes.
 - **Autonomy** — `manual` (default: just-vibes never pushes/merges/opens a PR on its own, even
-  under `--force`; a finished unit stays local and shows up in the run's "Built (undelivered)"
-  bucket) / `auto` (just-vibes auto-delivers per the `collaboration` answer above — solo merges +
+  under `--force`; a finished unit stays local and shows up in the run's "Built (unshipped)"
+  bucket) / `auto` (just-vibes auto-ships per the `collaboration` answer above — solo merges +
   pushes, team pushes + opens a PR). Written to `Roadmap.md`. **Independent of `collaboration` —
   not inferred from it**: collaboration is about headcount, autonomy is about whether unattended
   delivery is authorized at all. Overridable per run via a command flag or a spoken switch without

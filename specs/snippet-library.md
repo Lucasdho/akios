@@ -32,7 +32,7 @@ The user's original ask bundles two different things:
 - **Snippets** — a reusable *piece* (a card component, a repository template, a use case, a gateway
   protocol, a design-system file). Consumed **during a task**, at whatever point `spec-to-tasks` /
   `task-execution` decide a piece of boilerplate is needed.
-- **Skeletons** — a *whole project* starting tree, consumed **once, at `/akios:init` time**, to give
+- **Skeletons** — a *whole project* starting tree, consumed **once, at `/akios:setup` time**, to give
   a oneshot a solid base instead of an empty scaffold.
 
 **Decision & reason:** these solve problems at different radii (one file vs. an entire tree) and at
@@ -204,7 +204,7 @@ consistent with how `knowledge-architecture.md` itself avoided a bespoke pack fo
 
 ## 7. Skeletons — promoted to their own spec
 
-Skeletons (whole-project starters, chosen once at `/akios:init` time) were sketched here originally,
+Skeletons (whole-project starters, chosen once at `/akios:setup` time) were sketched here originally,
 then promoted to a full spec once discussed enough to warrant one: see **`skeleton-library.md`**
 (backlog B31, `akios-backlog-map.md` G8). Nothing in §1–§6 of this spec depends on it; the two ship
 independently.

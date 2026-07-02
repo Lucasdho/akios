@@ -11,7 +11,7 @@ metadata:
 
 You are running a **whole-product discovery session**. The goal is to map every major surface
 of the app, scope each area, and produce a **complete family of versioned specs** — one per
-identified domain — that future `/akios:plan` + `/akios:execute` runs can build from.
+identified domain — that future `/akios:plan` + `/akios:deliver` runs can build from.
 
 This skill **does not write app code**. It writes specs. Every identified domain becomes a
 `specs/<domain>.md` registered in `Roadmap.md` at status `designed`.
@@ -21,12 +21,12 @@ This skill **does not write app code**. It writes specs. Every identified domain
 - Reads: `Context.md`, `Vision.md` (if present), `Roadmap.md`, `MEMORY.md`, existing `specs/*.md`.
   Nothing else without checking first.
 - Writes: `specs/*.md` (one per identified domain), updates `Roadmap.md`.
-- Does NOT: write app code, task files, or data files — those belong to the execute pipeline.
+- Does NOT: write app code, task files, or data files — those belong to the deliver pipeline.
 
 ## Relation to the existing pipeline
 
 Deep brainstorm is a **pre-execution cartography pass**: it zooms out to the whole product,
-then each spec it produces flows through the normal `plan → execute` pipeline as any
+then each spec it produces flows through the normal `plan → deliver` pipeline as any
 `/akios:brainstorm` spec would. After this session, `/akios:just-vibes --force` can build
 the entire backlog autonomously.
 
@@ -205,7 +205,7 @@ For each spec, fill in:
 - **Status:** `designed`
 - **Priority tier:** `core` / `enhance` / `future` (from Phase 3)
 - **What it covers:** 3–5 bullets naming the screens, models, or concerns in scope.
-- **What it does NOT cover:** explicit out-of-scope items (reduces drift in the execute phase).
+- **What it does NOT cover:** explicit out-of-scope items (reduces drift in the deliver phase).
 - **Key decisions:** any decisions made in Phase 1–3 that directly constrain this spec.
 - **Open questions:** anything genuinely unresolved — better to name them now than hit them
   during task-execution.
@@ -330,5 +330,5 @@ When called under `/akios:just-vibes`:
 - Writing app code mid-session ("I'll just stub the model here") — stay in spec mode.
 - Writing one spec and asking for approval before writing the next — the spec-burst is one pass.
 - Grouping everything into one mega-spec — a domain no one person can hold in their head is too big.
-- Leaving `Open questions` blank to seem decisive — naming the unknowns now is what saves the execute phase.
+- Leaving `Open questions` blank to seem decisive — naming the unknowns now is what saves the deliver phase.
 - Inventing competitor data — web-search and cite, or don't cite.

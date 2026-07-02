@@ -42,8 +42,8 @@ what works). The kit has no external dependency on it; install it for yourself i
 
 ## Operating posture (learning vs. delivery)
 `Roadmap.md` carries a third flag beside `mode`/`collaboration`: `posture: learning | delivery`
-(default `delivery`, written by `/akios:init`, overridable for one session via a command flag —
-`/akios:execute --learning` — or a spoken switch, without rewriting the Roadmap default).
+(default `delivery`, written by `/akios:setup`, overridable for one session via a command flag —
+`/akios:deliver --learning` — or a spoken switch, without rewriting the Roadmap default).
 Posture changes **only** how akios communicates and captures — never what it builds; a learning-
 mode feature and a delivery-mode feature produce identical code.
 
@@ -66,7 +66,7 @@ only. Full detail: `specs/operating-modes.md`.
 
 ## Delivery autonomy (manual vs. auto)
 `Roadmap.md` carries a fourth flag: `autonomy: manual | auto` (default `manual`, written by
-`/akios:init`, overridable for one run via a command flag or a spoken switch, without rewriting
+`/akios:setup`, overridable for one run via a command flag or a spoken switch, without rewriting
 the Roadmap default). **Independent of `collaboration` — not inferred from it**: `collaboration`
 answers "who else runs akios on this repo" (solo/team); `autonomy` answers "is `just-vibes`
 authorized to auto-push/merge at all." Every combination is valid:
@@ -74,10 +74,10 @@ authorized to auto-push/merge at all." Every combination is valid:
 | | `autonomy: manual` | `autonomy: auto` |
 |---|---|---|
 | **`collaboration: solo`** | build + commit locally; never push/merge, even under `--force` | merge + push the default branch (today's documented solo behavior) |
-| **`collaboration: team`** | build + commit; claim-coordination pushes still happen, but no delivery push/PR | push `feature/<spec>` + open a PR (today's documented team behavior) |
+| **`collaboration: team`** | build + commit; claim-coordination pushes still happen, but no shipping push/PR | push `feature/<spec>` + open a PR (today's documented team behavior) |
 
 Under `autonomy: manual`, a green unit's branch stays local and shows up in the `just-vibes` run
-report's **"Built (undelivered)"** bucket — distinct from Parked (red) and Delivered (already
+report's **"Built (unshipped)"** bucket — distinct from Parked (red) and Shipped (already
 shipped) — awaiting a human push/merge. `task-execution`'s hard human gate is waived only when
 **both** `just-vibes` **and** `autonomy: auto` apply; outside `just-vibes`, this flag has no
 effect (a human is already present to answer the gate directly). Full detail:
@@ -105,7 +105,7 @@ without a new tier. See `specs/knowledge-architecture.md` for the pack format an
 
 ## How to execute (orchestration)
 The feature spine's phases are defined in **`workflow.yml`** (the machine-readable contract —
-commands and phase detection read it). `task-execution` owns the *execute* phase loop;
+commands and phase detection read it). `task-execution` owns the *deliver* phase loop;
 `spec-to-tasks` owns *plan*; `idea-to-spec` owns *brainstorm*. For a vague "build X" request,
 **`ios-feature-pipeline`** is the entry point — it reads `workflow.yml` and walks you through
 the phases.
@@ -121,7 +121,7 @@ Match the machinery — and the model — to the size of the job. Two questions 
   one-liner, mirroring an existing screen, a copy tweak). **Do it inline, now** — no spec, no pipeline
   (still on a branch/worktree per the isolation rule below; never edit a building working copy in place).
 - *Real spec* — multi-file, new behavior, a new domain, or anything you'd want reviewed as a unit.
-  Route it through the spine (brainstorm → plan → design → execute) and let `task-execution` own the loop.
+  Route it through the spine (brainstorm → plan → design → deliver) and let `task-execution` own the loop.
 
 Mis-sizing costs both ways: a full pipeline for a one-liner is overhead the user pays for nothing; a
 quick patch for a real feature ships half-baked. When genuinely unsure, ask one sizing question rather
@@ -182,7 +182,7 @@ not from cutting the safety rails.
 
 | Trigger | Skill | When |
 |---|---|---|
-| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → execute | before starting |
+| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → deliver | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → write specs to `specs/` | before building |
 | Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `tasks/todo/` | after the spec |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
@@ -190,12 +190,12 @@ not from cutting the safety rails.
 | Creating / polishing SwiftUI Views | `swift-dev` → `swiftui-pro` (+ design-principles for polish) | before the view |
 | Writing tests | `swift-dev` → `swift-testing-pro` | with the code |
 | Bug, crash, flake, regression | `swift-dev` → `ios-debugger-agent` | before any fix |
-| Executing the backlog | `task-execution` (`/akios:execute`) | to ship |
+| Delivering the backlog | `task-execution` (`/akios:deliver`) | to ship |
 | Running unattended (drive the whole pipeline yourself) | `just-vibes` (`/akios:just-vibes` · `--force` to loop) | hands-off |
 | Claiming "done" | `/verify` + `/code-review` | before finishing |
 
 `swift-dev` uses progressive disclosure — the ~400-word router dispatches to one bundled
-guide on demand, so only the relevant domain loads during long plan/execute sessions.
+guide on demand, so only the relevant domain loads during long plan/deliver sessions.
 
 ### Deepthink (user-triggered)
 Proportionality runs the other way too: when the user flags a decision as high-stakes and wants
@@ -235,7 +235,7 @@ add a row to the `Roadmap.md` `## Specs` table so the next session knows it exis
 ## Specs & Roadmap (idea-to-spec)
 - Store versioned specs in `specs/` — one file per domain.
 - `Roadmap.md` is the orchestration doc: the **mode flag** (`new`/`one-shot`/`feature`, written
-  by `/akios:init`) plus **one line per spec** (spec → domain → status
+  by `/akios:setup`) plus **one line per spec** (spec → domain → status
   `designed/planned/in-progress/done`). Phase detection is per-spec — different specs can be in
   different phases.
 - **Single source of truth.** Spec state lives **only** in `Roadmap.md` — never mirror the `## Specs`
@@ -246,20 +246,20 @@ add a row to the `Roadmap.md` `## Specs` table so the next session knows it exis
 ## Full feature workflow (the spine)
 Defined in `workflow.yml`; entry point is **`ios-feature-pipeline`**. At a glance:
 
-`brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → execute (task-execution)`
+`brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → deliver (task-execution)`
 
 Four phases: `brainstorm` (interactive design → `specs/<feature>.md`) → `plan` (one pass →
 `tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, UI states) → `design` (UI-scoped
 tasks only: `ui-variations` explores + remixes + graduates a screen into
 `presentation/<View>/`, `align-ui` resolves states/interactions/navigation + the Nielsen
-heuristics checklist; non-UI tasks skip straight to `execute`) → `execute` (branch per spec,
+heuristics checklist; non-UI tasks skip straight to `deliver`) → `deliver` (branch per spec,
 folder-state lifecycle, TDD-first, commit at each checkpoint, `/verify` + `/code-review`,
 human gate before push/merge). See `ios-feature-pipeline` for the conduct; `workflow.yml` for the
 contract. No speckit, no `.specify/`, no constitution.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
 **plan mode** (read-only; review the spec/backlog before a single edit lands). `design` and
-`execute` both write real files (graduated SwiftUI previews, then wired code) — switch to
+`deliver` both write real files (graduated SwiftUI previews, then wired code) — switch to
 **accept-edits / auto mode** for both so you're not approving every individual edit while the
 agent works a known plan. `Shift+Tab` cycles modes mid-session. This is workflow economy, not just
 safety: plan mode stops premature writes during design-of-the-spec; accept-edits stops

@@ -24,7 +24,7 @@ metadata:
 Gives akios a first-class path to author its **own** skills and knowledge packs:
 `/akios:new-skill <name> [--pack]` scaffolds a conforming artifact and — critically —
 **self-registers** it everywhere the kit requires. This is a *maintenance* action, like
-`/akios:init`/`/akios:learn` — not a `workflow.yml` phase.
+`/akios:setup`/`/akios:learn` — not a `workflow.yml` phase.
 
 **Why this exists.** `Context.md`'s "Gotchas" section names *"forgetting to update
 install-skills.sh"* as this kit's most common mistake. A kit that builds iOS features from a
@@ -97,7 +97,7 @@ one skill avoids two overlapping creators. Splitting *skeleton* (structural, her
 
 ## Where it sits in the kit (D4)
 
-- **Off the build spine.** Like `/akios:init` and `/akios:learn`, `/akios:new-skill` is a
+- **Off the build spine.** Like `/akios:setup` and `/akios:learn`, `/akios:new-skill` is a
   *maintenance* action — it does not appear in `workflow.yml`'s `phases`. It's how the kit
   *grows*, invoked when extending akios, not when building an app feature.
 - **Available to `just-vibes`.** An autonomous run that discovers it needs a capability that

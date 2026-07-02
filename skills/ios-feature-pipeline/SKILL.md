@@ -14,23 +14,23 @@ is the single source of truth** (the machine-readable contract: each phase's com
 prereqs, outputs). This skill is the *conduct*: it reads `workflow.yml`, figures out where you
 are, and walks you through the phases in order, handing off the right artifact between them.
 
-**Spine (from `workflow.yml`):** `brainstorm → plan → design → execute`
+**Spine (from `workflow.yml`):** `brainstorm → plan → design → deliver`
 
 | Phase | Command | Skill | Mode | Produces |
 |---|---|---|---|---|
 | brainstorm | `/akios:brainstorm` | `idea-to-spec` | **Interactive — user present** | `specs/<feature>.md` |
 | plan | `/akios:plan` | `spec-to-tasks` | One pass, one confirm | `tasks/todo/*.md` |
 | design | `/akios:design` | `ui-variations` (+ `align-ui`) | Explore → remix → graduate; states/interactions/heuristics resolved | A graduated `presentation/<View>/` screen + `tasks/ui-alignment/*.md` |
-| execute | `/akios:execute` | `task-execution` | Branch, folder-state lifecycle, verify+review | Implemented, reviewed feature |
+| deliver | `/akios:deliver` | `task-execution` | Branch, folder-state lifecycle, verify+review | Implemented, reviewed feature |
 
-`design` sits between `plan` and `execute`: no separate approval-gate mechanism exists — a
-screen can't enter `execute`'s make-it-live stage until `ui-variations` has graduated a winner
+`design` sits between `plan` and `deliver`: no separate approval-gate mechanism exists — a
+screen can't enter `deliver`'s make-it-live stage until `ui-variations` has graduated a winner
 into `presentation/<View>/`, which is `alva-adoption.md`'s A3 build-order (components → dumb
 screen → make-it-live) already enforcing the order. Non-UI tasks (domain/data/contract work
-with no screen) skip `design` and go straight from `plan` to `execute`.
+with no screen) skip `design` and go straight from `plan` to `deliver`.
 
 > Bootstrap first: if the repo isn't initialized (`AGENTS.md` + `workflow.yml` + the folder
-> tree), run `/akios:init` — it is **not** a phase (see `workflow.yml` `bootstrap`).
+> tree), run `/akios:setup` — it is **not** a phase (see `workflow.yml` `bootstrap`).
 
 ## How to route
 1. **Read `workflow.yml`.** It defines the phases and their prereqs/outputs.
@@ -46,14 +46,14 @@ with no screen) skip `design` and go straight from `plan` to `execute`.
 3. **Subagents start cold and are opt-in.** When `task-execution` dispatches one, its prompt must
    include the task's `swift-dev` domain sub-skill plus `ponytail` if installed. Execution must
    never *depend* on subagents — this environment can deny them `xcodebuild`.
-4. **No push/merge without the human gate** at the end of execute.
+4. **No push/merge without the human gate** at the end of deliver.
 5. **Stay in the current phase.** A phase ends only at its hand-off artifact (spec → tasks → reviewed
    code). Don't run the next phase's work early — no app code or data files during brainstorm or plan.
 
 ## Staying in flow (anti-drift)
 The pipeline's most common failure is the agent **jumping out of the current phase or spec** when a
 concrete build instruction surfaces mid-design — e.g. during brainstorm the user says "just create the
-seed data / 5 teams / that model" and the agent starts hand-writing files, skipping plan and execute,
+seed data / 5 teams / that model" and the agent starts hand-writing files, skipping plan and deliver,
 often folding a *different* domain into the spec in flight.
 
 Two rules close that gap:
@@ -66,8 +66,8 @@ Two rules close that gap:
      A different domain (its own data, its own DoD) is its **own spec** — register it in
      `Roadmap.md`, don't silently absorb it into the spec in flight.
   3. **Route:** if it's a true blocker, finish the current spec's design, then run that need
-     through its own `brainstorm → plan → execute`. If not a blocker, note it and stay on task.
-  4. Only *then*, when you're legitimately in execute for the right spec, write code or data.
+     through its own `brainstorm → plan → deliver`. If not a blocker, note it and stay on task.
+  4. Only *then*, when you're legitimately in deliver for the right spec, write code or data.
 
 If you catch yourself already mid-drift (writing files in a design phase), name the error, stop,
 and re-route. Recovering is cheap; shipping the wrong thing in the wrong spec is not.

@@ -103,7 +103,7 @@ When a task creates a new file (a view, a test, a resource), don't agonize over 
 in the target — check the project once and act:
 
 - **Check the project's answer first.** `Context.md` should record the target-membership mechanism
-  (the kit's `/akios:init` detects it). Prefer that over re-deriving.
+  (the kit's `/akios:setup` detects it). Prefer that over re-deriving.
 - **Otherwise inspect the `.pbxproj`.** Grep it for `PBXFileSystemSynchronizedRootGroup` (or read
   `objectVersion` — ≥ 77 means Xcode 16+). If present, the project uses **synchronized groups**:
   any file you place on disk under a target's synchronized folder is auto-included — `.swift` gets

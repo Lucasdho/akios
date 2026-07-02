@@ -30,7 +30,7 @@ no Xcode project, and no app to build or run here.
 akios/
 ├── skills/          ← one directory per skill; each has SKILL.md (+ optional references/)
 ├── commands/        ← one .md per /akios:<command>; thin wrappers that load the skill
-├── templates/       ← scaffold files dropped into iOS projects by /akios:init
+├── templates/       ← scaffold files dropped into iOS projects by /akios:setup
 │   └── rules/       ← .claude/rules/ templates (e.g. swift.md gate)
 ├── scripts/         ← install-skills.sh and other maintenance scripts
 ├── specs/           ← design specs for akios itself (same format as any iOS project)

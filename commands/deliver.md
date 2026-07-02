@@ -3,9 +3,9 @@ description: Implement and ship from the task backlog (pipeline Phase 3, task-ex
 disable-model-invocation: true
 ---
 
-# /akios:execute — Execute (workflow.yml: execute)
+# /akios:deliver — Deliver (workflow.yml: deliver)
 
-**Guard (soft).** Confirm the repo is initialized and the `execute` phase's `prereqs` from
+**Guard (soft).** Confirm the repo is initialized and the `deliver` phase's `prereqs` from
 `workflow.yml` exist (`tasks/todo/*.md`). If the backlog is missing, **don't hard-block** — say so
 and **offer** to run `/akios:plan` first.
 

@@ -1,6 +1,6 @@
 ---
 name: task-execution
-description: Drive a tasks/todo/ backlog to implemented, committed, reviewed Swift/iOS code — the kit's execution phase (absorbs the execution discipline once borrowed from superpowers). Use after spec-to-tasks has produced task files, or when a user runs /akios:execute. Works on a per-spec branch, moves task files through folder states, writes tests first, commits at each checkpoint, manages the context window, archives finished specs, and stops at a hard human gate before any push or merge.
+description: Drive a tasks/todo/ backlog to implemented, committed, reviewed Swift/iOS code — the kit's execution phase (absorbs the execution discipline once borrowed from superpowers). Use after spec-to-tasks has produced task files, or when a user runs /akios:deliver. Works on a per-spec branch, moves task files through folder states, writes tests first, commits at each checkpoint, manages the context window, archives finished specs, and stops at a hard human gate before any push or merge.
 license: MIT
 metadata:
   author: Lucas Oliveira
@@ -206,7 +206,7 @@ rewritten because of a general preference.
 
 ## Operating posture (learning vs. delivery)
 Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override — e.g.
-`/akios:execute --learning` — wins for this session only and does not rewrite the Roadmap
+`/akios:deliver --learning` — wins for this session only and does not rewrite the Roadmap
 value). It never changes what gets built, only what gets narrated:
 
 - **Delivery (default):** proceed exactly as documented above — resolve the priority chain, apply
@@ -256,7 +256,7 @@ bounded fix loop and just-vibes' "park red, never deliver broken."
 
 | Proof | What it checks | Mechanism | Applies to |
 |---|---|---|---|
-| Build/test proof | it compiles and tests pass | the auto-build/test hook `.claude/hooks/post-checkpoint-verify.sh` (installed by `/akios:init`) → runs Context.md's `Test:` command or auto-detects `xcodebuild`, writes `.akios/verify-result.json` for you to read; degrades to inline if the hook/tool is unavailable, and to the DoD audit (grep + YAML validation + install smoke-test) in a plugin/docs repo with no build tool | every code task |
+| Build/test proof | it compiles and tests pass | the auto-build/test hook `.claude/hooks/post-checkpoint-verify.sh` (installed by `/akios:setup`) → runs Context.md's `Test:` command or auto-detects `xcodebuild`, writes `.akios/verify-result.json` for you to read; degrades to inline if the hook/tool is unavailable, and to the DoD audit (grep + YAML validation + install smoke-test) in a plugin/docs repo with no build tool | every code task |
 | Spec-conformance proof | it did what the task said + followed the loaded doctrine | the divergence audit above + `/code-review` with `review-doctrine` loaded | every task |
 | Visual proof | it looks like the approved design | `align-ui`'s post-wiring check: real data vs. the `ui-variations`-graduated screen | UI tasks only |
 
@@ -345,9 +345,9 @@ two consecutive cycles make no progress, then **park** the spec — keep the bra
 substance, but it also cannot literally "ask and wait" — no human is present to answer, ever, and
 waiting would stall the run forever (exactly what just-vibes's unattended rules exist to prevent).
 Instead: run the quality gate as above; on green, record the branch as finished-and-ready (do
-**not** push/merge/open a PR) and return control to just-vibes's loop, which defers delivery and
-reports it in the run's "Built (undelivered)" bucket. See `specs/collaboration-autonomy.md`.
-**Outside just-vibes entirely** (an interactive `/akios:execute` session), `autonomy` has no
+**not** push/merge/open a PR) and return control to just-vibes's loop, which defers shipping and
+reports it in the run's "Built (unshipped)" bucket. See `specs/collaboration-autonomy.md`.
+**Outside just-vibes entirely** (an interactive `/akios:deliver` session), `autonomy` has no
 effect — a human is already present to answer "push? merge? where?" directly, per the gate above.
 
 ## Anti-patterns

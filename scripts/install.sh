@@ -2,7 +2,7 @@
 # Plug the agentic-kit meta-system into a target repo.
 # Usage: ./install.sh /path/to/repo
 #
-# No-plugin bootstrap for Claude Code. Prefer the `akios` plugin's `/akios:init`
+# No-plugin bootstrap for Claude Code. Prefer the `akios` plugin's `/akios:setup`
 # (it interviews you and fills the {{...}} placeholders). This script exists for
 # non-plugin setups, which still need the context files dropped — a plugin command
 # can't write into a user's repo. Both paths produce the same files.
@@ -133,4 +133,4 @@ if ! grep -q agentic-kit-inject "$TARGET/.claude/settings.json" 2>/dev/null; the
   echo "  bash \"\$CLAUDE_PROJECT_DIR/.claude/hooks/agentic-kit-inject.sh\"" >&2
 fi
 echo "ok — agentic-kit installed in $TARGET (fill in the {{...}} placeholders)"
-echo "    (Claude Code users: run /akios:init instead to fill them interactively)"
+echo "    (Claude Code users: run /akios:setup instead to fill them interactively)"

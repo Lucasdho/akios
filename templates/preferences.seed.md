@@ -1,6 +1,6 @@
 # akios — User Preferences
 
-> **Seed file.** On `/akios:init` this is copied to `~/.claude/akios/preferences.md`
+> **Seed file.** On `/akios:setup` this is copied to `~/.claude/akios/preferences.md`
 > (user-global, outside any repo, so it survives plugin updates). Edit the copy in
 > your home directory — not this template.
 >

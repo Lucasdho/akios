@@ -12,7 +12,7 @@ metadata:
 Home: `Foundation/Design-tokens/` (ALVA). This guide is the akios-specific realization of
 `swiftui-design-doctrine.md` §1 (B1) and §4 (B4) — read it before creating a new token or a new
 role modifier, and before touching `templates/foundation/DesignSystem.swift` /
-`RoleModifiers.swift` (the `/akios:init` stubs this guide fills in, ui-overhaul-implementation.md
+`RoleModifiers.swift` (the `/akios:setup` stubs this guide fills in, ui-overhaul-implementation.md
 Phase 4.1).
 
 ## The `DesignSystem` struct

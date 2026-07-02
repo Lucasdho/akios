@@ -20,7 +20,7 @@ family that answers the backlog. Read this first; it is the table of contents fo
 Every line of the raw AKIOS backlog, given a stable ID so the rest of the family can reference it.
 **B30–B36 are exceptions** — added in later sessions (2026-07-01), not from the original raw
 list; kept in the same table/ID scheme so the rest of the family can reference them identically.
-B32–B35 come from a friend's ("Julio") first `/akios:init` run — real onboarding friction, not
+B32–B35 come from a friend's ("Julio") first `/akios:setup` run — real onboarding friction, not
 self-generated backlog. B36 comes from a self-audit of the kit's own shipped contract (commands,
 skills, templates, `workflow.yml`) — see `specs-review-2026-07-01.md` on branch
 `claude/inspiring-rubin-3vksm6` (not yet merged into this branch). B37 comes from a live scheduling
@@ -61,9 +61,9 @@ question asked mid-build during the v0.8.0 Session 2 execution itself (2026-07-0
 | **B30** | Load the user's own "factory" Swift code (components, repository CRUD templates, use cases, gateway protocols, design-system files) into akios as copy-and-adapt seed content, separate from skeletons | Knowledge / starter content |
 | **B31** | Architecture-keyed whole-project skeletons — different starter trees for different architectures; the oneshot picks an architecture and gets that architecture's skeleton if one is registered | Knowledge / starter content |
 | **B32** | just-vibes push/merge automation must be asked as its own question, separate from `collaboration: solo/team` — a repo can be worked on by a group while the user is the only one running akios on it | Collaboration & autonomy posture |
-| **B33** | `/akios:init` must narrate what it's doing while it runs, not execute long steps silently | Init UX |
-| **B34** | `/akios:init`'s file-materialization step must survive tool-call errors (failed `cp`, an auto-mode-blocked batched `chmod +x` forcing a fallback to per-file calls that then also error) without leaving the agent stuck in an ambiguous "did it land or not" state | Init reliability |
-| **B35** | Consolidate every akios-generated file under one folder, and offer the user an option to gitignore all of it, so `/akios:init` doesn't pollute the person's repo | Init footprint / repo hygiene |
+| **B33** | `/akios:setup` must narrate what it's doing while it runs, not execute long steps silently | Init UX |
+| **B34** | `/akios:setup`'s file-materialization step must survive tool-call errors (failed `cp`, an auto-mode-blocked batched `chmod +x` forcing a fallback to per-file calls that then also error) without leaving the agent stuck in an ambiguous "did it land or not" state | Init reliability |
+| **B35** | Consolidate every akios-generated file under one folder, and offer the user an option to gitignore all of it, so `/akios:setup` doesn't pollute the person's repo | Init footprint / repo hygiene |
 | **B36** | Self-review of the shipped kit contract found real drift: `align-ui` "skip vs run under just-vibes" stated three contradictory ways, `runner: subagent` per-task routing conflicts with `AGENTS.md`'s session-pressure subagent-economy rule, `AGENTS.md` misquotes task-execution's 110k context-warn line as 120k, plus number/enum drift (`objectVersion` 77 vs 90, two divergent R-W-W rubrics claiming to be the same one, 3 conflicting skill counts, `needs-revision`/`blocked` missing from the status enum) and dangling refs (`specs/pipeline.md`, `founderlens-sim`, `/ios-feature-pipeline` as a command). Needs a reconciliation pass against `workflow.yml` + `AGENTS.md` as the two authorities. Full detail: `specs-review-2026-07-01.md`, branch `claude/inspiring-rubin-3vksm6`. | Kit self-consistency / contract drift |
 | **B37** | Before delegating multiple specs/tasks to concurrent agents (subagents or worktrees), akios has no repeatable way to tell which pairs are safe to parallelize versus which collide on shared kit machinery (`task-execution/SKILL.md`, `spec-to-tasks/SKILL.md`, `Roadmap.md`, `AGENTS.md`, `install-skills.sh`) — worked out by hand, ad hoc, per session today (see this map's own §5). | Execution scheduling / multi-agent orchestration |
 
@@ -135,9 +135,9 @@ What the two families do **not** cover. Each becomes a spec in this family.
 | G5 | `verification-and-learning-loop.md` | B2, B19 | Post-execution: **prove** it works (build/test/spec/visual) and **learn** from divergence (a hurdles ledger the next run reads). |
 | G6 | `code-review-doctrine.md` | B10, B11, B12 | A principled review reference — SOLID/DRY/ACID + ALVA & UI conformance + folder-drift — that the "claiming done" gate loads. |
 | G7 | `snippet-library.md` | B30 | Extend the pack format with literal, copy-and-adapt Swift snippets (components, repository templates, use cases, gateway protocols, design-system files), user-global, separate from skeletons. |
-| G8 | `skeleton-library.md` | B31 | Architecture-keyed whole-project starter trees for `/akios:init`'s greenfield path — user picks an architecture, gets that architecture's skeleton if one is registered, else today's default scaffold. |
+| G8 | `skeleton-library.md` | B31 | Architecture-keyed whole-project starter trees for `/akios:setup`'s greenfield path — user picks an architecture, gets that architecture's skeleton if one is registered, else today's default scaffold. |
 | G9 | `collaboration-autonomy.md` | B32 | Split "who else works on this repo" (`collaboration: solo/team`) from "should just-vibes auto-push/merge" — two independent questions, not one flag standing in for both. |
-| G10 | `init-reliability-and-ux.md` | B33, B34, B35 | `/akios:init` narrates its steps as it runs, verifies each materialization step actually landed instead of assuming, avoids batched calls that trip the auto-mode classifier, and keeps its footprint in one gitignore-able folder. |
+| G10 | `init-reliability-and-ux.md` | B33, B34, B35 | `/akios:setup` narrates its steps as it runs, verifies each materialization step actually landed instead of assuming, avoids batched calls that trip the auto-mode classifier, and keeps its footprint in one gitignore-able folder. |
 | G11 | resolved directly against `workflow.yml`/`AGENTS.md` — no spec file (commit `2bd8393`) | B36 | Reconcile the ~17 drift points from the 2026-07-01 self-review against `workflow.yml`/`AGENTS.md` as the two authorities: fix the 3 outright contradictions first (align-ui skip/run, runner routing vs. subagent economy, 110k/120k), then number/enum drift, then dangling refs. |
 | G12 | `parallel-execution-scheduling.md` | B37 | Generalizes `spec-to-tasks`' intra-checkpoint `[P]` collision check to the spec level, so a multi-spec batch (like this map's own §5) can identify which pairs are safe to delegate to concurrent agents vs. which must serialize on shared kit "spine" files. |
 
@@ -179,7 +179,7 @@ Dependency-ordered. Each phase only depends on earlier ones.
 1. **Decide the fork (§4).** Confirm ALVA-structure-wins (or reopen). One human decision unblocks the rest.
 2. **`alva-adoption.md` → build.** Reconcile + register ALVA, then run its implementation backlog
    (doctrine import → `swift-dev` guide → Foundation ledger PoC → slice-shape in `spec-to-tasks` →
-   ledger read in `task-execution` → scaffold in `/akios:init`). This lands B7–B12 and fixes B10 for real.
+   ledger read in `task-execution` → scaffold in `/akios:setup`). This lands B7–B12 and fixes B10 for real.
 3. **`ui-overhaul-implementation.md` → build**, now re-homed onto ALVA's slice (`presentation/` inside a
    slice instead of a shared `PresentationLayer/`). Lands the entire UI backlog (B13–B29).
 4. **`knowledge-architecture.md` → build (G2).** The foundational extensibility layer; `code-references/`
@@ -188,7 +188,7 @@ Dependency-ordered. Each phase only depends on earlier ones.
    user's own factory code (components, repository templates, use cases, gateways) as a user-global,
    copy-and-adapt pack. Lands B30. Depends only on step 4 existing; independent of steps 6–8 below.
 6. **`skeleton-library.md` → build (G8).** Architecture-keyed whole-project starters for
-   `/akios:init`'s greenfield path. Lands B31. No dependency on step 5 (snippets and skeletons ship
+   `/akios:setup`'s greenfield path. Lands B31. No dependency on step 5 (snippets and skeletons ship
    independently); only needs the user-global storage convention from step 4.
 7. **`skill-authoring.md` → build (G3).** Now that packs exist, one authoring path scaffolds both skills
    and packs. Lands B1.
@@ -199,7 +199,7 @@ Dependency-ordered. Each phase only depends on earlier ones.
 Steps 2–3 are the biggest and highest-value (they discharge ~20 of 29 backlog lines). Steps 4–8 are the
 new capabilities that make akios *extensible and self-correcting* rather than just disciplined.
 
-**G9/G10/G11/G12 — registered, not all sequenced.** G9/G10 surfaced from real `/akios:init` onboarding
+**G9/G10/G11/G12 — registered, not all sequenced.** G9/G10 surfaced from real `/akios:setup` onboarding
 friction (2026-07-01); G11 surfaced from a self-audit of the shipped kit contract (2026-07-01, see
 `specs-review-2026-07-01.md` on branch `claude/inspiring-rubin-3vksm6`); G12 surfaced from a live
 scheduling question asked mid-build during v0.8.0 Session 2 (2026-07-01, see

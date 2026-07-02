@@ -232,7 +232,7 @@ to a decision above or an ALVA principle. Sequenced so each depends only on earl
 - [ ] **7.8 — `deep-brainstorm` slice cartography.** Whole-app mapping emits features *as slices*, marks
   contract boundaries between them, and seeds `Foundation/` candidates (ALVA §11 last row). *DoD:* a mapping
   run produces slice-shaped spec rows with contract-boundary notes.
-- [ ] **7.9 — `/akios:init` + `templates/` scaffold.** Scaffold the reconciled tree (§1): `Router/`,
+- [ ] **7.9 — `/akios:setup` + `templates/` scaffold.** Scaffold the reconciled tree (§1): `Router/`,
   `Container/`, `Foundation/{Design-tokens,Code-tokens,usage-ledger.json}`, `Features/<F>/{domain,data,
   presentation/{<View>/components/, Models/},contract,tests,Feature-spec.md}`, top-level `scratchs/`.
   Include the DesignSystem + role-modifier stubs from `ui-overhaul-implementation` 4.1. `Context.md` notes

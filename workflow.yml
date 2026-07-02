@@ -14,15 +14,15 @@
 
 version: 1
 
-# init writes the active mode into Roadmap.md; brainstorm reads it.
+# setup writes the active mode into Roadmap.md; brainstorm reads it.
 modes: [new, one-shot, feature]
 
-# init also writes the collaboration flag into Roadmap.md. Drives delivery + multi-instance:
+# setup also writes the collaboration flag into Roadmap.md. Drives delivery + multi-instance:
 #   solo -> just-vibes merges + pushes the default branch; no claim etiquette.
 #   team -> just-vibes pushes feature/<spec> + opens a PR; claim-before-work + signatures in force.
 collaboration: [solo, team]
 
-# init also writes the posture flag into Roadmap.md (default: delivery). Orthogonal to mode and
+# setup also writes the posture flag into Roadmap.md (default: delivery). Orthogonal to mode and
 # collaboration — every phase skill reads it and toggles ONLY the teaching surface (never what
 # gets built). Overridable per session (a command flag or spoken switch) without rewriting the
 # Roadmap default. See specs/operating-modes.md.
@@ -32,21 +32,21 @@ collaboration: [solo, team]
 #               section instead of being spoken.
 posture: [learning, delivery]
 
-# init also writes the autonomy flag into Roadmap.md (default: manual). Independent of
+# setup also writes the autonomy flag into Roadmap.md (default: manual). Independent of
 # `collaboration` — NOT inferred from it: collaboration answers "who else works on this repo"
 # (solo/team); autonomy answers "is just-vibes authorized to auto-push/merge at all." Overridable
 # per run (a command flag or spoken switch) without rewriting the Roadmap default. See
 # specs/collaboration-autonomy.md.
 #   manual -> just-vibes never pushes/merges/opens a PR, even under --force; a green unit stays
-#             local, reported in the run's "Built (undelivered)" bucket. Team-mode claim-
-#             coordination pushes are unaffected — only the delivery action is withheld.
-#   auto   -> just-vibes auto-delivers a green unit per `collaboration` (today's documented
+#             local, reported in the run's "Built (unshipped)" bucket. Team-mode claim-
+#             coordination pushes are unaffected — only the shipping action is withheld.
+#   auto   -> just-vibes auto-ships a green unit per `collaboration` (today's documented
 #             solo-merge-push / team-push-PR behavior).
 autonomy: [manual, auto]
 
-# init is bootstrap, NOT a phase (no spec/task prerequisite).
+# setup is bootstrap, NOT a phase (no spec/task prerequisite).
 bootstrap:
-  command: /akios:init
+  command: /akios:setup
   creates:
     - CLAUDE.md
     - AGENTS.md
@@ -78,22 +78,22 @@ phases:
     prereqs: [tasks/todo/*.md]
     outputs: [Features/*/presentation/*/*.swift, tasks/ui-alignment/*.md]
     roadmap: in-progress
-    # design runs BETWEEN plan and execute: ui-variations owns explore -> remix -> graduate;
+    # design runs BETWEEN plan and deliver: ui-variations owns explore -> remix -> graduate;
     # align-ui resolves states/interactions/navigation + the 10 Nielsen heuristics + the
     # native-over-custom flag on the graduated screen. No separate approval-gate mechanism
-    # exists here — a screen can't reach `execute`'s make-it-live until a variation has
+    # exists here — a screen can't reach `deliver`'s make-it-live until a variation has
     # graduated, which is alva-adoption.md's A3 build-order (components -> dumb screen ->
     # make-it-live) already enforcing the order.
 
-  - id: execute
-    command: /akios:execute
+  - id: deliver
+    command: /akios:deliver
     skill: task-execution
     prereqs: [tasks/todo/*.md]
     outputs: [tasks/done/*.md]
     roadmap: done
 
 # deep-brainstorm is a PRE-EXECUTION RUN-STYLE. It does whole-product discovery and cartography,
-# producing a complete spec family. Its output feeds the normal brainstorm→plan→design→execute pipeline.
+# producing a complete spec family. Its output feeds the normal brainstorm→plan→design→deliver pipeline.
 # just-vibes is a RUN-STYLE over the phases above, not a phase. It drives them unattended,
 # picking the next fuel and delivering without the per-spec human gate (the quality gate stays).
 run_styles:
@@ -103,7 +103,7 @@ run_styles:
     default: interactive whole-app discovery → spec family in one session
     unattended: deepthink posture (called under just-vibes); no human input; all decisions recorded
     produces: specs/*.md (one per domain) + Roadmap.md rows at status designed
-    prereqs: [Context.md]             # soft gate — warn if missing, offer /akios:init
+    prereqs: [Context.md]             # soft gate — warn if missing, offer /akios:setup
     outputs: [specs/*.md]
     roadmap: designed (all produced specs)
     founderlens_integration: >
@@ -118,11 +118,11 @@ run_styles:
     force: loop over all fuel until exhausted or interrupted
     fuel_precedence:                # most-ready first — full detail in the just-vibes skill
       - explicit idea (argument)
-      - tasks/todo/*.md             # ready to execute
-      - tasks.md                    # legacy single-file format; execute fuel
-      - specs/*.md @ designed       # plan -> execute (skip @ needs-revision unless --force)
-      - specs/*.md with no Roadmap.md entry  # treat as designed; plan -> execute
-      - Vision.md / Roadmap.md item # brainstorm (unattended deepthink) -> plan -> execute
+      - tasks/todo/*.md             # ready to deliver
+      - tasks.md                    # legacy single-file format; deliver fuel
+      - specs/*.md @ designed       # plan -> deliver (skip @ needs-revision unless --force)
+      - specs/*.md with no Roadmap.md entry  # treat as designed; plan -> deliver
+      - Vision.md / Roadmap.md item # brainstorm (unattended deepthink) -> plan -> deliver
     waives: human push/merge gate (invocation = authorization)
     keeps: quality gate (verify + code-review + bounded fix loop; park red, never deliver broken)
     multi_instance: claim-before-work + Akios-Instance signatures; Roadmap status is monotonic (higher wins)

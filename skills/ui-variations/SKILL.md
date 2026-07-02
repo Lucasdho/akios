@@ -9,7 +9,7 @@ metadata:
 
 # UI Variations — explore, remix, graduate
 
-Runs inside the `design` phase (`workflow.yml`), between `plan` and `execute`. It is the **one
+Runs inside the `design` phase (`workflow.yml`), between `plan` and `deliver`. It is the **one
 skill** that owns the whole prototype-first loop introduced by `prototype-first-workflow.md`
 v2.0: everything happens **directly in SwiftUI**, as named `#Preview` blocks built from what
 already exists in the project (`Foundation/Design-tokens/` tokens, promoted components, and
@@ -65,7 +65,7 @@ is nothing left to converge later.
   (ALVA-reconciled path — components nest **per-view**, not in a flat
   `Features/<Feature>/Components/`.)
 - This *is* `alva-adoption.md`'s A3 build-order (components → dumb screen → make-it-live)
-  already enforcing the order — a screen cannot enter `execute`'s make-it-live stage until a
+  already enforcing the order — a screen cannot enter `deliver`'s make-it-live stage until a
   variation has graduated here. No separate approval-gate mechanism exists.
 
 ### 4. Archive losers to scratch
@@ -101,7 +101,7 @@ When running under `/akios:just-vibes`, there is no one to state taste preferenc
 `ui-variations` produces the graduated, mock-data-approved screen. `align-ui` (also part of the
 `design` phase) then resolves what a static preview can't express: states/interactions/
 navigation, the JIT DTO shape, the 10 Nielsen heuristics checklist, and the native-over-custom
-flag. After `execute`'s make-it-live wires real data, `align-ui`'s **post-wiring check** confirms
+flag. After `deliver`'s make-it-live wires real data, `align-ui`'s **post-wiring check** confirms
 the real-data render still holds up against the mock-data-approved graduate — a same-engine,
 same-code check, not a new grounding pass.
 
@@ -122,9 +122,9 @@ since a static preview has no async lifecycle.
 - **Nothing liked from either round:** ask for fresh direction, regenerate explore — never force
   a remix from unwanted parts.
 - **`scratchs/` grows stale over many runs:** no automatic pruning — an open hygiene question for
-  a future `/akios:init` pass, not solved here.
+  a future `/akios:setup` pass, not solved here.
 - **Approved variation breaks once real data is wired:** handled by `align-ui`'s post-wiring
-  check as a normal `execute`-phase fix, not a re-triggered design-phase approval cycle.
+  check as a normal `deliver`-phase fix, not a re-triggered design-phase approval cycle.
 
 ## Anti-patterns
 

@@ -38,7 +38,7 @@ if command -v jq >/dev/null; then
 else
   echo "warn jq not found — skipping plugin manifest JSON validation"
 fi
-for c in init brainstorm plan execute; do
+for c in setup brainstorm plan deliver; do
   f="$KIT/commands/$c.md"
   if [ ! -f "$f" ]; then
     echo "FAIL: missing command: commands/$c.md"; fail=1

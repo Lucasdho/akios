@@ -2,7 +2,7 @@
 **Working spec · v1.0 · knowledge-architecture family · 2026-07-01**
 
 Promotes the skeleton sketch from `snippet-library.md` §7 into its own spec. A **skeleton** is a
-full starting project tree, keyed by **architecture type**, that `/akios:init` can drop into a
+full starting project tree, keyed by **architecture type**, that `/akios:setup` can drop into a
 brand-new repo instead of an empty scaffold — the oneshot's "solid base" the user asked for. Different
 skeletons exist for different architectures (ALVA, MVVM-C, Clean, or anything else the user names);
 at init time, the user picks an architecture and gets that architecture's skeleton **if one is
@@ -74,17 +74,17 @@ provenance:
 
 ## 3. When the selection step runs (D2, decided autonomously)
 
-**Decided:** the skeleton-selection step runs **only** inside `/akios:init`'s fresh-repo path
-(`commands/init.md` §0, the "no version file → fresh repo" branch) **and only when the resolved
+**Decided:** the skeleton-selection step runs **only** inside `/akios:setup`'s fresh-repo path
+(`commands/setup.md` §0, the "no version file → fresh repo" branch) **and only when the resolved
 `Mode` is `new`** (greenfield). It does not run for `feature` or `one-shot` onto an existing app.
 
 - **Reason:** a skeleton is a whole file tree; offering to drop one into a repo that already has code
-  (`feature`/`one-shot` mode, or a migrate-path re-run per `init.md` §0's "Recorded < installed"
+  (`feature`/`one-shot` mode, or a migrate-path re-run per `setup.md` §0's "Recorded < installed"
   branch) risks clobbering existing files — a hard-to-reverse action presented in a context where it
   never makes sense. Gating on `mode: new` means the option is never even shown where it would be
   destructive.
 - **Rejected alternative:** always ask regardless of mode, with an explicit "repo already has files,
-  skip?" guard at copy time. Rejected as needless risk-surface for a case (`new` vs. not) `init.md`
+  skip?" guard at copy time. Rejected as needless risk-surface for a case (`new` vs. not) `setup.md`
   already resolves cleanly one step earlier — no reason to reopen the danger the mode question already
   closed.
 - **Reversible:** yes, loosening the gate later (e.g. to support "re-scaffold a subfolder") is a small
@@ -94,12 +94,12 @@ provenance:
 
 ## 4. Selection flow — folds into the existing interview, doesn't duplicate it (D3, D3b, decided autonomously)
 
-`commands/init.md` §1 already asks an **"Architecture"** interview question ("one paragraph: entry
+`commands/setup.md` §1 already asks an **"Architecture"** interview question ("one paragraph: entry
 points, key dirs, data flow") — today aimed at describing an *existing* repo's structure for `Context.md`.
 For a fresh `mode: new` repo there is no existing structure to describe yet, so this spec **folds the
 skeleton pick into that same question** instead of adding a second, redundant one:
 
-1. Immediately after `Mode` resolves to `new` (§1 of `init.md`), list the distinct `architecture:`
+1. Immediately after `Mode` resolves to `new` (§1 of `setup.md`), list the distinct `architecture:`
    tags found across `~/.claude/akios/skeletons/*/manifest.yml`, plus an explicit **"none / default
    scaffold"** option.
 2. If exactly one skeleton matches the chosen tag, use it directly. If more than one matches
@@ -119,9 +119,9 @@ redundant prompts, which is the same instinct that made `knowledge-architecture.
 
 ---
 
-## 5. Ordering inside `/akios:init` — copy before scan (D6, decided autonomously)
+## 5. Ordering inside `/akios:setup` — copy before scan (D6, decided autonomously)
 
-**Decided:** if a skeleton is chosen, its file tree is copied into the repo root **before** `init.md`
+**Decided:** if a skeleton is chosen, its file tree is copied into the repo root **before** `setup.md`
 §2 (Scan) runs, and before §3 (Materialize context files) writes `Context.md`/`AGENTS.md`/etc.
 
 - **Reason:** §2's scan inspects the repo (`.xcodeproj`, `Package.swift`, deployment target, top-level
@@ -140,7 +140,7 @@ redundant prompts, which is the same instinct that made `knowledge-architecture.
 **Decided:** a skeleton's tree covers the **app's own source** (Xcode project, `Router/`, `Container/`,
 `Foundation/`, example `Features/` slice, or whatever the architecture calls for) and **never** ships
 its own `AGENTS.md`, `Context.md`, `Roadmap.md`, `Vision.md`, or `.claude/` — those always come from
-the plugin's own templates (`init.md` §3), applied after the skeleton copy (§5).
+the plugin's own templates (`setup.md` §3), applied after the skeleton copy (§5).
 
 **Decision & reason:** keeps exactly one source of truth for the akios meta files regardless of which
 skeleton was chosen — a skeleton that shipped its own `Context.md` would either collide with the
@@ -151,7 +151,7 @@ it case by case.
 
 ## 7. Worked example — futebol-manager, greenfield
 
-User runs `/akios:init` on an empty repo. `Mode` resolves to `new`. Two skeletons exist:
+User runs `/akios:setup` on an empty repo. `Mode` resolves to `new`. Two skeletons exist:
 `alva-minimal` (`architecture: alva`) and `mvvm-c-basic` (`architecture: mvvm-c`). The init flow lists
 `alva` and `mvvm-c` as the two available tags; the user picks `alva`; only one skeleton matches, so
 `alva-minimal` is used directly. Its tree (Xcode project + `Router/`/`Container/`/`Foundation/` stubs +
@@ -203,7 +203,7 @@ as a distinct ID since the user explicitly wants snippets and skeletons tracked 
 
 | # | New spec | Answers | One-line thesis |
 |---|---|---|---|
-| G8 | `skeleton-library.md` | B31 | Architecture-keyed whole-project starter trees for `/akios:init`'s greenfield path — user picks an architecture, gets that architecture's skeleton if one is registered, else today's default scaffold. |
+| G8 | `skeleton-library.md` | B31 | Architecture-keyed whole-project starter trees for `/akios:setup`'s greenfield path — user picks an architecture, gets that architecture's skeleton if one is registered, else today's default scaffold. |
 
 **Sequencing:** depends on nothing new beyond the user-global storage convention `knowledge-architecture.md`
 already establishes (this spec doesn't reuse the pack format itself — skeletons are explicitly outside
@@ -213,14 +213,14 @@ convention). Independent of `snippet-library.md`'s own build (G7); the two can s
 (`skeleton-library.md`, G8), pushing the former steps 6–7 down by one.
 
 `Roadmap.md` gets a new row: `skeleton-library.md` | domain "Architecture-keyed project skeletons for
-`/akios:init` greenfield path" | status `designed` | notes "backlog B31; sibling to snippet-library.md
+`/akios:setup` greenfield path" | status `designed` | notes "backlog B31; sibling to snippet-library.md
 (promoted from its §7 sketch); no shared build dependency between the two."
 
 ---
 
 ## 11. Open / next
 
-- **[CONSEQUENCE — to implement, once built]** `commands/init.md` needs: (a) the tag-listing +
+- **[CONSEQUENCE — to implement, once built]** `commands/setup.md` needs: (a) the tag-listing +
   second-level pick inserted into §1 right after `Mode` resolves `new` (§4); (b) the skeleton copy
   spliced between §2 (Scan) and §1's architecture pre-fill lands before §3 (Materialize) writes
   `Context.md` (§5); (c) the §6 self-check gains one more check — no skeleton-sourced file overwrote

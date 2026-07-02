@@ -22,4 +22,4 @@ the Roadmap default. See `spec-to-tasks`'s "Posture (learning vs. delivery)".
 Spec path or text (pass as `$ARGUMENTS`): `$ARGUMENTS`
 
 Stop when the task files exist in `tasks/todo/`. Tell the user the backlog is ready and that
-`/akios:execute` ships it.
+`/akios:deliver` ships it.

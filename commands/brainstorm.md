@@ -8,7 +8,7 @@ disable-model-invocation: true
 **Guard (soft).** Confirm this repo is initialized: `AGENTS.md` + `workflow.yml` +
 `.claude/.agentic-kit-version` present, and the `brainstorm` phase's `prereqs` from
 `workflow.yml` (`Context.md`, `Roadmap.md`) exist. If something is missing, **don't hard-block** —
-say what's missing and **offer** to run `/akios:init` first.
+say what's missing and **offer** to run `/akios:setup` first.
 
 **Run.** Load the `ios-feature-pipeline` skill for conduct and execute the **`brainstorm`** phase
 (`idea-to-spec`) only — `workflow.yml` is the phase contract; don't re-document the phases here.

@@ -87,7 +87,7 @@ invokes), which "file exists" would rubber-stamp.
 
 ## 4. Where it sits in the kit (D4)
 
-- **Off the build spine.** Like `/akios:init` and `/akios:learn`, `/akios:new-skill` is a *maintenance*
+- **Off the build spine.** Like `/akios:setup` and `/akios:learn`, `/akios:new-skill` is a *maintenance*
   action, not a pipeline phase — it doesn't appear in `workflow.yml`'s `phases`. It's how the kit *grows*,
   invoked when you're extending akios, not when you're building an app feature.
 - **Available to `just-vibes`.** When an autonomous run discovers it needs a capability that doesn't exist

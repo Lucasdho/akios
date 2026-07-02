@@ -138,7 +138,7 @@ from different engines and are never pixel-identical, so convergence needed an a
 structured diff. **That problem no longer exists** — the approved variation *is* SwiftUI, so there
 is nothing to diff it against.
 
-One narrower question survives: after `execute`'s make-it-live stage wires the real ViewModel and
+One narrower question survives: after `deliver`'s make-it-live stage wires the real ViewModel and
 real data, does the **real-data render** still hold up against what the **mock-data-approved**
 variation looked like? (E.g., the mock tested a 100-player roster; does the real 150-player roster
 still look right?) This is a same-engine, same-code check — much lighter than v1.0's cross-engine
@@ -152,7 +152,7 @@ design phase (§6). No new skill for it.
 Pipeline shape is unchanged (still 4 phases):
 
 ```
-brainstorm  →  plan  →  design          →  execute
+brainstorm  →  plan  →  design          →  deliver
 (specs)        (tasks)   (ui-variations:    (make-it-live:
                           explore+remix+     wire ViewModel,
                           graduate,          pull data JIT,
@@ -160,7 +160,7 @@ brainstorm  →  plan  →  design          →  execute
 ```
 
 - **`design` runs per spec/slice**, same as v1.0: it produces approved, graduated screens/
-  components for that spec, then hands off to `execute`.
+  components for that spec, then hands off to `deliver`.
 - **The "hard gate" concept collapses into `ui-first-architecture.md`'s existing build-order law
   (A3: components → dumb screen → make-it-live).** There is no separate approval mechanism to
   implement — a screen simply cannot enter make-it-live until its `ui-variations` round has
@@ -168,13 +168,13 @@ brainstorm  →  plan  →  design          →  execute
 - **`align-ui`** keeps its existing design-phase scope (states / interactions & gestures /
   navigation + JIT DTO shape) and **absorbs** the one surviving question from §5 (does real data
   break the approved look).
-- **`execute`** runs make-it-live directly on the graduated screen — no translation skill, no
+- **`deliver`** runs make-it-live directly on the graduated screen — no translation skill, no
   grounding skill, per feature.
 
 **Decision & reason:** unchanged from v1.0's reasoning for *why* a distinct `design` phase exists
 (makes the UI-approval checkpoint a first-class stop, not interleaved with coding) — only the
 mechanism inside it changed. See prior-session decision record: keeping `design` distinct (chosen)
-over collapsing it into `execute` (rejected — loses the checkpoint) or making it conditional/
+over collapsing it into `deliver` (rejected — loses the checkpoint) or making it conditional/
 optional per screen (rejected — introduces a subjective "does this need it" judgment call other
 specs would have to account for).
 
@@ -195,12 +195,12 @@ specs would have to account for).
    remixes) land in `./scratchs/SquadListView-variations.swift`. `align-ui` then resolves the
    non-visual gaps: empty-squad state, loading state while roster fetches, error/offline state,
    row-tap navigation, and the JIT DTO shape (`SquadRowData`).
-4. **execute** — make-it-live attaches `SquadListViewModel(playerRepo:)` via `init`, pulls real
+4. **deliver** — make-it-live attaches `SquadListViewModel(playerRepo:)` via `init`, pulls real
    players JIT. `align-ui`'s post-wiring check confirms the real 150-player roster (once actual
    data lands) still reads the way the 100+-player mock did — no separate translation or grounding
    pass needed.
 
-The other screens (*Match Day*, *Player Detail*) repeat the same `design → execute` path — there is
+The other screens (*Match Day*, *Player Detail*) repeat the same `design → deliver` path — there is
 no longer a "bring-it vs generate" fork, since every screen is built the same way now.
 
 ---
@@ -218,7 +218,7 @@ no longer a "bring-it vs generate" fork, since every screen is built the same wa
 - **`./scratchs/` grows stale over many design-phase runs:** no automatic pruning; flagged as an
   open UX question for a future `init`/hygiene pass (see `G10 init-reliability-and-ux.md` in
   `akios-backlog-map.md` — same footprint-hygiene concern, different files), not solved here.
-- **Approved variation breaks once real data is wired:** handled as a normal `execute`-phase fix
+- **Approved variation breaks once real data is wired:** handled as a normal `deliver`-phase fix
   under `align-ui`'s post-wiring check (§5/§6) — not a re-triggered design-phase approval cycle.
 - **Unattended (`just-vibes`):** auto-select-and-graduate from the explore round per §3, `[auto]`
   marked, rationale recorded in the scratch-file archive.
@@ -238,7 +238,7 @@ no longer a "bring-it vs generate" fork, since every screen is built the same wa
   check (§5) alongside its existing states/interactions/navigation/DTO scope.
 - **[CONSEQUENCE — to implement]** `install-skills.sh`: `SKILLS=(...)` array gains `ui-variations`
   only.
-- **[CONSEQUENCE — to implement]** `/akios:init` + `templates/`: scaffold `./scratchs/` at the
+- **[CONSEQUENCE — to implement]** `/akios:setup` + `templates/`: scaffold `./scratchs/` at the
   project root; note in `Context.md` that it stays out of the Xcode target (same posture as v1.0's
   `prototypes/` note).
 - **[CONSEQUENCE — to implement]** `ui-overhaul-implementation.md`: Phase 1 rewritten around

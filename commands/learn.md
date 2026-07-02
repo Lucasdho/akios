@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /akios:learn — Ingest a knowledge pack (workflow.yml: knowledge-ingest, maintenance action)
 
-**Not a pipeline phase.** Like `/akios:init`, this is a maintenance action — run it whenever the
+**Not a pipeline phase.** Like `/akios:setup`, this is a maintenance action — run it whenever the
 user wants akios to learn a domain from material they trust.
 
 **Run.** Load the `knowledge-ingest` skill (single source of truth for the pipeline — don't

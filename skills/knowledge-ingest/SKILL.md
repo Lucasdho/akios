@@ -11,7 +11,7 @@ metadata:
 
 Turns material the user already trusts (code they like, a book, a PDF, a design system, a
 company's conventions) into a **knowledge pack** the substrate can route to. This is a
-*maintenance* action, like `/akios:init` — not a pipeline phase. Invocation: `/akios:learn
+*maintenance* action, like `/akios:setup` — not a pipeline phase. Invocation: `/akios:learn
 <source> [--pack <name>] [--global]`, or directly by description when a user wants akios to
 learn a new domain.
 

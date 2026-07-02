@@ -9,8 +9,8 @@
 # park the spec (same "you read the ledger, you never count" discipline as
 # alva-usage-ledger.sh: this script produces a fact, the agent applies judgment).
 #
-# Install: copied by /akios:init into <repo>/.claude/hooks/post-checkpoint-verify.sh
-# (always-copy, executable — see commands/init.md's materialize table). Invoked by
+# Install: copied by /akios:setup into <repo>/.claude/hooks/post-checkpoint-verify.sh
+# (always-copy, executable — see commands/setup.md's materialize table). Invoked by
 # task-execution at each [major] checkpoint barrier and at spec completion; NOT wired to
 # a Claude Code hook event by default (a build+test battery is too slow for a per-tool-call
 # hook) — it's a script task-execution calls explicitly, same posture as alva-usage-ledger.sh

@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 **Guard (soft).** Confirm this repo is initialized: `AGENTS.md` + `workflow.yml` +
 `.claude/.agentic-kit-version` present, and `Context.md` exists. If something is missing,
-**don't hard-block** — say what's missing and **offer** to run `/akios:init` first.
+**don't hard-block** — say what's missing and **offer** to run `/akios:setup` first.
 
 **Run.** Load the `deep-brainstorm` skill and execute the full whole-app mapping session.
 The session is interactive; the user must be present for Discover + Cartograph + Scope.
@@ -27,5 +27,5 @@ App context or focus (optional — narrows the mapping session): `$ARGUMENTS`
 
 **Next steps after this command:**
 - `/akios:just-vibes --force` — build the full backlog autonomously.
-- `/akios:plan <spec>` — pick one spec and proceed through plan → execute interactively.
+- `/akios:plan <spec>` — pick one spec and proceed through plan → deliver interactively.
 - `/akios:brainstorm <idea>` — add a new feature spec on top of the map.

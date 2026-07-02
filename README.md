@@ -1,14 +1,14 @@
 # AKIOS - Agentic Kit for IOS
 
 A Claude Code plugin that gives your agent a structured, repeatable workflow for building
-Swift / iOS apps — design, plan, execute — so features ship clean instead of being improvised
+Swift / iOS apps — design, plan, deliver — so features ship clean instead of being improvised
 session by session.
 
 ## What it does
 
 - **Design** (`/akios:brainstorm`) — turn a rough idea into an approved spec
 - **Plan** (`/akios:plan`) — break the spec into a task backlog with estimates and checkpoints
-- **Execute** (`/akios:execute`) — implement, test, and code-review each task; stop before push/merge
+- **Deliver** (`/akios:deliver`) — implement, test, and code-review each task; stop before push/merge
 - **Autonomous run** (`/akios:just-vibes`) — drive the whole pipeline unattended; quality gate stays on
 
 The kit ships a full skill family (Swift domain knowledge, idea-to-spec, task execution,
@@ -28,21 +28,21 @@ Inside Claude Code:
 Then, inside the repo you want to set up:
 
 ```
-/akios:init
+/akios:setup
 ```
 
-`init` interviews you, scans the repo, fills in templates, creates the folder tree
+`setup` interviews you, scans the repo, fills in templates, creates the folder tree
 (`specs/`, `tasks/`, `archive/`), and wires the hook. No external dependencies required.
 
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `/akios:init` | Onboard a repo — interview → scan → fill templates → wire hook |
+| `/akios:setup` | Onboard a repo — interview → scan → fill templates → wire hook |
 | `/akios:brainstorm "<idea>"` | Idea → approved spec in `specs/` |
 | `/akios:deep-brainstorm [focus]` | Map the whole app → a complete spec family in one session |
 | `/akios:plan <spec>` | Spec → task backlog in `tasks/todo/` |
-| `/akios:execute` | Implement tasks; stop before push/merge |
+| `/akios:deliver` | Implement tasks; stop before push/merge |
 | `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
 | `/akios:handoff` | Write a handoff doc for another agent session, or return results |
 

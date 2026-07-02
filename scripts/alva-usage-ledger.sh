@@ -6,7 +6,7 @@
 # Features/*/ reference which symbol, so task-execution can *read* promotion/demotion
 # candidates instead of the agent guessing by grepping the whole repo (ALVA P6).
 #
-# Install as a git pre-commit hook (wired by /akios:init — see commands/init.md):
+# Install as a git pre-commit hook (wired by /akios:setup — see commands/setup.md):
 #   cp scripts/alva-usage-ledger.sh .git/hooks/pre-commit-alva-ledger   (or call it from
 #   an existing pre-commit hook; don't clobber one the user already has)
 #

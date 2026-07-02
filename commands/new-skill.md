@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /akios:new-skill — Author a skill or knowledge pack (workflow.yml: skill-author, maintenance action)
 
-**Not a pipeline phase.** Like `/akios:init` and `/akios:learn`, this is a maintenance
+**Not a pipeline phase.** Like `/akios:setup` and `/akios:learn`, this is a maintenance
 action — run it whenever you're extending akios itself, not building an app feature.
 
 **Run.** Load the `skill-author` skill (single source of truth for the pipeline — don't

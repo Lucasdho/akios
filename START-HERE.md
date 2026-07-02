@@ -27,7 +27,7 @@ messy, half-finished app.
 /plugin install akios
 ```
 
-Then, with Claude Code open **inside your app project**, type `/akios:init` and answer its
+Then, with Claude Code open **inside your app project**, type `/akios:setup` and answer its
 questions. It sets everything up for you — there are **no other plugins to install** (the kit
 ships everything it needs). When it's done, skip to section 3.
 

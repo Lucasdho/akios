@@ -42,7 +42,7 @@ carry-over table, which this backlog builds against directly.
 ## Phase 0 — Pipeline spine
 
 - [ ] **0.1 — Add the `design` phase.** `workflow.yml` + `pipeline.md`: insert a 4th phase
-  **between `plan` and `execute`**. Per Block C v2.0, `design` runs `ui-variations` (explore + remix +
+  **between `plan` and `deliver`**. Per Block C v2.0, `design` runs `ui-variations` (explore + remix +
   graduate) and the reshaped `align-ui`; there is no separate approval-gate mechanism to build — a
   screen can't reach make-it-live until a variation has graduated, which is `alva-adoption.md`'s A3
   build-order already. *DoD:* `workflow.yml` lists `design`; `pipeline.md` describes its inputs
@@ -70,7 +70,7 @@ Per `alva-adoption.md` §7.1–7.3.
   `Foundation/` symbol occurrences across `Features/*/` into `Foundation/usage-ledger.json`. *DoD:*
   hook runs on commit; ledger regenerates; a seeded 3-feature symbol shows up as a
   `candidates_promote` entry.
-- [ ] **1.4 — `/akios:init` + `templates/` scaffold.** Produce the reconciled tree: `Router/`,
+- [ ] **1.4 — `/akios:setup` + `templates/` scaffold.** Produce the reconciled tree: `Router/`,
   `Container/`, `Foundation/{Design-tokens,Code-tokens,usage-ledger.json}`,
   `Features/<F>/{domain,data,presentation/{<View>/components/, Models/},contract,tests,Feature-spec.md}`,
   top-level `scratchs/`. Include the `DesignSystem` token enum stub + `TextStyle`/`ImageStyle`

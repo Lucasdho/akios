@@ -8,7 +8,7 @@ from **"is `just-vibes` authorized to auto-push/merge at all"** — a fourth ort
 *delivery risk*. A repo can be worked on by a group while the user is the only one running akios
 against it (or vice versa) — headcount and push-safety are independent variables. Answers backlog
 **B32**. Complements `Roadmap.md` (where the flag lives, same lifecycle as `posture`,
-`operating-modes.md`), `just-vibes` (whose DELIVER step this re-gates), and `task-execution`
+`operating-modes.md`), `just-vibes` (whose SHIP step this re-gates), and `task-execution`
 (whose hard human gate this formalizes rather than replaces).
 
 > **State:** designed
@@ -57,7 +57,7 @@ doesn't immediately discover and flip it.
 ## 2. Independence from `collaboration` (D2) — two questions, four combinations
 
 `collaboration` answers *who else runs akios here*; `autonomy` answers *is unattended delivery
-authorized at all*. Both are read at `just-vibes`'s DELIVER step (§3), but they answer different
+authorized at all*. Both are read at `just-vibes`'s SHIP step (§3), but they answer different
 questions and every combination is valid:
 
 | | `autonomy: manual` | `autonomy: auto` |
@@ -74,9 +74,9 @@ was only ever meant to answer "how many people work here."
 
 ---
 
-## 3. What changes in `just-vibes`'s DELIVER step (D3)
+## 3. What changes in `just-vibes`'s SHIP step (D3)
 
-`just-vibes`'s loop step 5 (DELIVER) reads `autonomy` **before** `collaboration`:
+`just-vibes`'s loop step 5 (SHIP) reads `autonomy` **before** `collaboration`:
 
 - **`autonomy: manual`** — skip push/merge/PR entirely. Commits stay local on `feature/<spec>`.
   Roadmap status still moves per the quality gate result (green → `done`, red → `blocked`,
@@ -105,7 +105,7 @@ would waste the rest of a `--force` run's fuel for no safety gain.
 This spec narrows that exception:
 
 - The gate is waived **only when `just-vibes` AND `autonomy: auto`.**
-- **Outside `just-vibes` entirely** (an interactive `/akios:execute` session): unaffected by this
+- **Outside `just-vibes` entirely** (an interactive `/akios:deliver` session): unaffected by this
   flag. A human is already present to answer "push? merge? where?" — `autonomy` has no bearing on
   an interactive ask-and-wait.
 - **Under `just-vibes` + `autonomy: manual`:** the gate's literal "ask and wait" cannot apply (no
@@ -126,14 +126,14 @@ same override from first principles.
 
 ---
 
-## 5. Reporting — a distinct "Built (undelivered)" bucket (D5)
+## 5. Reporting — a distinct "Built (unshipped)" bucket (D5)
 
-`just-vibes`'s end-of-run report gains a bucket alongside the existing Delivered / Parked /
+`just-vibes`'s end-of-run report gains a bucket alongside the existing Shipped / Parked /
 Skipped:
 
-- **Built (undelivered):** units that reached a **green** quality gate under `autonomy: manual` —
-  branch name, spec, and the fact that delivery is a human action away. Distinct from **Parked**
-  (which means *red*, not ready to ship) and from **Delivered** (which means *already pushed/
+- **Built (unshipped):** units that reached a **green** quality gate under `autonomy: manual` —
+  branch name, spec, and the fact that shipping is a human action away. Distinct from **Parked**
+  (which means *red*, not ready to ship) and from **Shipped** (which means *already pushed/
   merged*).
 
 **Decision & reason:** without this bucket, a returning human reading the report can't tell "green
@@ -184,11 +184,11 @@ a discipline each session's author has to remember and reapply.
   `autonomy`.
 - **Session override conflicts with the Roadmap default:** the override wins for that run only and
   does not rewrite `Roadmap.md` — identical rule to `posture`'s session-override (D1).
-- **Interactive `/akios:execute`, any `autonomy` value:** no effect — the flag only changes
+- **Interactive `/akios:deliver`, any `autonomy` value:** no effect — the flag only changes
   behavior where no human is present to ask (`just-vibes`); an interactive session already has a
   human to answer the literal question.
 - **`autonomy: manual` + `--force` exhausts all fuel:** the run ends with a report whose
-  "Built (undelivered)" bucket may be non-empty — that is success, not a stall; nothing was left
+  "Built (unshipped)" bucket may be non-empty — that is success, not a stall; nothing was left
   half-built, only un-pushed.
 
 ---
@@ -212,7 +212,7 @@ a discipline each session's author has to remember and reapply.
 ## 10. Backlog placement
 
 Registered as **B32** in `akios-backlog-map.md` §1 (already present, 2026-07-01 addition, "Julio's
-first `/akios:init` run" batch). Answers **G9** in §3 (already registered):
+first `/akios:setup` run" batch). Answers **G9** in §3 (already registered):
 
 | # | New spec | Answers | One-line thesis |
 |---|---|---|---|
@@ -232,19 +232,19 @@ kept by hand."
   `## Posture` section's shape.
 - **[CONSEQUENCE — to implement]** `workflow.yml` gains `autonomy: [manual, auto]` beside
   `collaboration`/`posture`.
-- **[CONSEQUENCE — to implement]** `commands/init.md` step 1's interview gains the Autonomy
+- **[CONSEQUENCE — to implement]** `commands/setup.md` step 1's interview gains the Autonomy
   question; the materialize table's `Roadmap.md` row and step 5's self-check both mention
   `autonomy:`.
-- **[CONSEQUENCE — to implement]** `skills/just-vibes/SKILL.md` step 5 DELIVER gains the
-  `autonomy`-first gate (§3) and the loop's Reporting section gains the "Built (undelivered)"
+- **[CONSEQUENCE — to implement]** `skills/just-vibes/SKILL.md` step 5 SHIP gains the
+  `autonomy`-first gate (§3) and the loop's Reporting section gains the "Built (unshipped)"
   bucket (§5).
 - **[CONSEQUENCE — to implement]** `skills/task-execution/SKILL.md`'s "Finish — the hard human
   gate" section narrows its just-vibes exception to `just-vibes AND autonomy: auto` (§4), and
   documents the `autonomy: manual` deferred-recording path.
 - **[CONSEQUENCE — to implement]** `templates/AGENTS.md`'s "Working alongside teammates" /
   delivery-behavior sections get a short pointer to this flag alongside `collaboration`.
-- **[OPEN — revisit after first use]** whether `autonomy: manual`'s "Built (undelivered)" queue
-  should also get a lightweight command (`/akios:deliver` or similar) that ships everything in
+- **[OPEN — revisit after first use]** whether `autonomy: manual`'s "Built (unshipped)" queue
+  should also get a lightweight command (`/akios:ship` or similar) that ships everything in
   that bucket in one explicit human-invoked pass, rather than requiring per-spec manual
   push/merge. Deferred — no request for it yet, and the existing hard-gate mechanics
   (`task-execution`'s Finish step, run interactively) already cover the single-spec case.

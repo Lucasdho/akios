@@ -30,7 +30,7 @@ posture: delivery        # learning | delivery  (default: delivery)
 ```
 
 - **Set at `init`** (a one-line interview question) and **overridable per session**: an argument
-  (`/akios:execute --learning`) or a spoken switch ("teach me as you go" / "just ship it"). The Roadmap value
+  (`/akios:deliver --learning`) or a spoken switch ("teach me as you go" / "just ship it"). The Roadmap value
   is the default; a session override wins for that session without rewriting the flag.
 - **Orthogonal to the other flags:** any `mode`×`collaboration`×`posture` combination is valid. Posture
   changes *how akios communicates and captures*, never *what it builds* — a learning-mode feature and a
@@ -76,13 +76,13 @@ surface (§2):
   as it's made (the spec already stores this; learning surfaces it live).
 - **`spec-to-tasks` (plan):** learning mode explains the decomposition — why these checkpoints, why this is
   `[P]`, why this task carries this pack.
-- **`task-execution` (execute):** learning mode annotates each priority-chain resolution and doctrine
+- **`task-execution` (deliver):** learning mode annotates each priority-chain resolution and doctrine
   application inline, and gives the end-of-unit digest. Delivery mode stays quiet and fast.
 - **`align-ui` / `ui-variations` (design):** learning mode explains *which Nielsen heuristic* a state
   satisfies and *why native-over-custom* fired here.
 
 **Decision & reason:** reusing the flag-reading pattern `collaboration` established means threading posture
-costs each skill one small conditional, not a rewrite. Concentrating the visible teaching in `execute` +
+costs each skill one small conditional, not a rewrite. Concentrating the visible teaching in `deliver` +
 `design` (where decisions are densest) rather than spreading equally keeps the volume proportional to where
 learning actually happens.
 
@@ -147,7 +147,7 @@ knob — it becomes the pedagogical face of the whole kit-evolution family. Keep
 
 ## 8. Open / next
 
-- **[CONSEQUENCE — to implement]** `Roadmap.md` template + `/akios:init` interview gain `posture`; `AGENTS.md`
+- **[CONSEQUENCE — to implement]** `Roadmap.md` template + `/akios:setup` interview gain `posture`; `AGENTS.md`
   documents the teaching surface (§2) as a house behavior.
 - **[CONSEQUENCE — to implement]** each phase skill (`idea-to-spec`, `spec-to-tasks`, `task-execution`,
   `align-ui`) reads `posture` and toggles the teaching surface; `just-vibes` gains the journal "Lessons"

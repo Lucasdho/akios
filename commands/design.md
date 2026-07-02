@@ -9,7 +9,7 @@ disable-model-invocation: true
 `workflow.yml` exist (`tasks/todo/*.md`). If the backlog is missing, **don't hard-block** — say
 so and **offer** to run `/akios:plan` first. `design` only applies to UI-scoped tasks (View,
 Screen, SwiftUI, layout) — a non-UI task (domain/data/contract) skips this phase entirely and
-goes straight to `/akios:execute`.
+goes straight to `/akios:deliver`.
 
 **Run.** Load the `ui-variations` skill (single source of truth for the loop — don't
 re-document it) and run it against the UI-scoped task at hand:
@@ -36,5 +36,5 @@ the Roadmap default. See `align-ui`'s "Posture (learning vs. delivery)".
 
 Task or spec (pass as `$ARGUMENTS`): `$ARGUMENTS`
 
-Stop when the screen is graduated and the alignment doc exists. Tell the user `/akios:execute`
+Stop when the screen is graduated and the alignment doc exists. Tell the user `/akios:deliver`
 wires it up next.
