@@ -10,7 +10,7 @@ checkpoint: 6
 
 # T009 — `/akios:init` + templates scaffold the reconciled ALVA tree
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Scaffold the reconciled tree (alva-adoption §1) on init: `Router/`, `Container/`,

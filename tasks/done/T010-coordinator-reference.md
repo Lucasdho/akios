@@ -10,7 +10,7 @@ checkpoint: 6
 
 # T010 — Coordinator reference for multi-step custom flows
 
-> **State:** todo
+> **State:** done
 
 ## Description
 A short reference note on the `Router/`-owned coordinator pattern for multi-step custom flows

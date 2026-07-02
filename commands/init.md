@@ -76,11 +76,22 @@ Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadma
 | `.claude/hooks/skill-trace.sh` | `scripts/hook/skill-trace.sh` | always copy; make executable (optional telemetry) |
 | `.claude/hooks/akios-instance.sh` | `scripts/akios-instance.sh` | always copy; make executable (instance signature for just-vibes + claims) |
 | `.claude/.agentic-kit-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
+| `scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | always copy; make executable |
+| `.git/hooks/pre-commit` | append a call to `scripts/alva-usage-ledger.sh` | if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
 
 **Create the folder tree** (empty, with a `.gitkeep` if your tooling needs it):
 `specs/ tasks/todo/ tasks/in-progress/ tasks/review/ tasks/done/ archive/ code-references/`.
 (`.akios/` is created at runtime for the local journal/trace and stays gitignored — multi-instance
 claims live in **committed** files: task frontmatter `owner:` and the `Roadmap.md` spec line.)
+
+**Scaffold the ALVA composition root** (skip any piece that already exists):
+`Router/ Container/ Foundation/Design-tokens/ Foundation/Code-tokens/ scratchs/`, plus a starter
+`Foundation/usage-ledger.json` (`{"generated": null, "candidates_promote": [], "candidates_demote":
+[]}`) so `scripts/alva-usage-ledger.sh` has a file to overwrite on the first commit. **Do not**
+create `Features/` empty up front — a feature only gets a slice when `spec-to-tasks` decomposes
+its spec; an empty `Features/` folder is dead scaffolding no one asked for yet. `scratchs/` holds
+rejected `ui-variations` rounds and is excluded from the Xcode target (`Context.md` gets a line
+noting this, so a fresh session doesn't have to re-derive it).
 
 **Seed user preferences (user-global, once):** if `~/.claude/akios/preferences.md` does **not**
 exist, create `~/.claude/akios/` and copy `templates/preferences.seed.md` there as
@@ -101,8 +112,11 @@ In `<root>/.claude/settings.json` (create as `{}` if absent; use `jq` if availab
 Confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tree exist;
 `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`; both hooks +
 `.claude/hooks/akios-instance.sh` are present; `Roadmap.md` has a `mode:` **and** a `collaboration:`
-value; `~/.claude/akios/preferences.md` exists; and **no `{{...}}` placeholder remains** in
-`Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`. Report any miss.
+value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
+`Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
+(`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
+`Foundation/usage-ledger.json` + the pre-commit hook calling `scripts/alva-usage-ledger.sh`) is in
+place. Report any miss.
 
 ## 6. Dependencies
 The kit has **no required external plugins** — everything the spine routes to (`swift-dev`,
