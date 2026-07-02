@@ -41,6 +41,13 @@ Ask in one batched pass (skip what the scan in step 2 answers confidently; confi
   quietly, default). Written to `Roadmap.md`. Orthogonal to mode/collaboration; overridable for a
   single session via a command flag or a spoken switch without rewriting this default. See
   `AGENTS.md` "Operating posture" for what the flag actually changes.
+- **Autonomy** — `manual` (default: just-vibes never pushes/merges/opens a PR on its own, even
+  under `--force`; a finished unit stays local and shows up in the run's "Built (undelivered)"
+  bucket) / `auto` (just-vibes auto-delivers per the `collaboration` answer above — solo merges +
+  pushes, team pushes + opens a PR). Written to `Roadmap.md`. **Independent of `collaboration` —
+  not inferred from it**: collaboration is about headcount, autonomy is about whether unattended
+  delivery is authorized at all. Overridable per run via a command flag or a spoken switch without
+  rewriting this default. See `AGENTS.md` "Delivery autonomy" / `specs/collaboration-autonomy.md`.
 - **Stack** — language / framework / runtime / DB (`{{LANGUAGE / FRAMEWORK / RUNTIME / DB}}`)
 - **Commands** — install / run-dev / test / lint / build (`{{install}}` `{{dev}}` `{{test}}` `{{lint}}` `{{build}}`)
 - **Architecture** — one paragraph: entry points, key dirs, data flow
@@ -111,7 +118,7 @@ Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadma
 |---|---|---|
 | `AGENTS.md` | `templates/AGENTS.md` | skip if it already exists |
 | `Context.md` | `templates/Context.md` | skip if it already exists |
-| `Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `collaboration:` + `posture:` lines |
+| `Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `collaboration:` + `posture:` + `autonomy:` lines |
 | `Vision.md` | `templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
 | `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
 | `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@Context.md` imports is missing (Context first so AGENTS ends on top) |
@@ -164,7 +171,7 @@ Confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tre
 `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`; both hooks +
 `.claude/hooks/akios-instance.sh` + `.claude/hooks/post-checkpoint-verify.sh` are present;
 `Roadmap.md` has a `mode:`, a `collaboration:`,
-**and** a `posture:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
+a `posture:`, **and** an `autonomy:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
 `Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
 `Foundation/usage-ledger.json` + the pre-commit hook calling `scripts/alva-usage-ledger.sh`) is in

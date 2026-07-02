@@ -64,6 +64,25 @@ the same way it already reads `collaboration` and toggles only this surface. Und
 `.akios/just-vibes-journal.md` per unit instead of narrating live; delivery journals outcomes
 only. Full detail: `specs/operating-modes.md`.
 
+## Delivery autonomy (manual vs. auto)
+`Roadmap.md` carries a fourth flag: `autonomy: manual | auto` (default `manual`, written by
+`/akios:init`, overridable for one run via a command flag or a spoken switch, without rewriting
+the Roadmap default). **Independent of `collaboration` — not inferred from it**: `collaboration`
+answers "who else runs akios on this repo" (solo/team); `autonomy` answers "is `just-vibes`
+authorized to auto-push/merge at all." Every combination is valid:
+
+| | `autonomy: manual` | `autonomy: auto` |
+|---|---|---|
+| **`collaboration: solo`** | build + commit locally; never push/merge, even under `--force` | merge + push the default branch (today's documented solo behavior) |
+| **`collaboration: team`** | build + commit; claim-coordination pushes still happen, but no delivery push/PR | push `feature/<spec>` + open a PR (today's documented team behavior) |
+
+Under `autonomy: manual`, a green unit's branch stays local and shows up in the `just-vibes` run
+report's **"Built (undelivered)"** bucket — distinct from Parked (red) and Delivered (already
+shipped) — awaiting a human push/merge. `task-execution`'s hard human gate is waived only when
+**both** `just-vibes` **and** `autonomy: auto` apply; outside `just-vibes`, this flag has no
+effect (a human is already present to answer the gate directly). Full detail:
+`specs/collaboration-autonomy.md`.
+
 ## The priority chain (whose answer wins)
 For any code decision (pattern, naming, architecture), resolve **top-down — the first tier
 with a relevant answer wins, lower tiers only fill silence**:

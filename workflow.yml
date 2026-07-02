@@ -32,6 +32,18 @@ collaboration: [solo, team]
 #               section instead of being spoken.
 posture: [learning, delivery]
 
+# init also writes the autonomy flag into Roadmap.md (default: manual). Independent of
+# `collaboration` — NOT inferred from it: collaboration answers "who else works on this repo"
+# (solo/team); autonomy answers "is just-vibes authorized to auto-push/merge at all." Overridable
+# per run (a command flag or spoken switch) without rewriting the Roadmap default. See
+# specs/collaboration-autonomy.md.
+#   manual -> just-vibes never pushes/merges/opens a PR, even under --force; a green unit stays
+#             local, reported in the run's "Built (undelivered)" bucket. Team-mode claim-
+#             coordination pushes are unaffected — only the delivery action is withheld.
+#   auto   -> just-vibes auto-delivers a green unit per `collaboration` (today's documented
+#             solo-merge-push / team-push-PR behavior).
+autonomy: [manual, auto]
+
 # init is bootstrap, NOT a phase (no spec/task prerequisite).
 bootstrap:
   command: /akios:init

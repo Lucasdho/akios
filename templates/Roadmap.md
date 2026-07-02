@@ -29,6 +29,23 @@ collaboration: {{solo | team}}
                  behavior). See AGENTS.md "Operating posture" for the full teaching-surface. -->
 posture: {{learning | delivery}}   # default: delivery
 
+## Autonomy
+<!-- Written by /akios:init (default: manual); overridable per run via a command flag
+     (--autonomy=auto / --autonomy=manual) or a spoken switch — the override wins for that run
+     only and does NOT rewrite this line. Independent of `collaboration` — NOT inferred from it:
+     `collaboration` answers "who else works on this repo" (solo/team); `autonomy` answers "is
+     just-vibes authorized to auto-push/merge at all." Every mode×collaboration×posture×autonomy
+     combination is valid.
+     manual → just-vibes never pushes/merges/opens a PR, even under --force; a green unit's
+              branch stays local and is reported in the run's "Built (undelivered)" bucket,
+              awaiting a human push/merge. Team-mode claim-coordination pushes are unaffected —
+              only the delivery action is withheld.
+     auto   → just-vibes auto-delivers a green unit per `collaboration` (solo → merge + push the
+              default branch; team → push feature/<spec> + open a PR), exactly as documented in
+              task-execution's Finish gate's just-vibes exception.
+     See specs/collaboration-autonomy.md and AGENTS.md "Delivery autonomy" for the full design. -->
+autonomy: {{manual | auto}}   # default: manual
+
 ## Specs
 <!-- status: designed → planned → in-progress → done
      (matches the `roadmap:` field of each phase in workflow.yml)

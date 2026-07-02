@@ -10,7 +10,7 @@ checkpoint: 32
 
 # T052 — `autonomy: manual | auto` — the 4th `Roadmap.md` flag
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Ship the flag itself (`collaboration-autonomy.md` §1, D1): a fourth orthogonal `Roadmap.md`

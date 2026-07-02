@@ -17,6 +17,15 @@ collaboration: solo
 <!-- learning | delivery (default: delivery); see AGENTS.md "Operating posture" / specs/operating-modes.md -->
 posture: delivery
 
+## Autonomy
+
+<!-- manual | auto (default: manual); see AGENTS.md "Delivery autonomy" / specs/collaboration-autonomy.md
+     Independent of `collaboration` above — not inferred from it. This repo has run `collaboration: solo`
+     the whole v0.8.0 arc; every session has built + committed locally and deliberately never pushed
+     (solo + manual in this flag's terms) — autonomy: manual makes that the formal default instead of a
+     discipline each session re-derives by hand. -->
+autonomy: manual
+
 ## Project type
 
 <!-- IMPORTANT for just-vibes and task-execution: this is a PLUGIN/DOCS REPO, not an iOS app.

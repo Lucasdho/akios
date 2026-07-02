@@ -10,7 +10,7 @@ checkpoint: 32
 
 # T053 — Thread `autonomy` through `just-vibes` DELIVER + `task-execution`'s Finish gate
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Wire the flag T052 introduced into actual delivery behavior (`collaboration-autonomy.md` §3, §4,

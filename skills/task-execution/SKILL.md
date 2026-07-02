@@ -332,20 +332,31 @@ When the last checkpoint is green:
 - **Then ask the user two things and wait:** (a) push this branch? (b) merge — and *where*
   (`dev` / `main` / other)? Never assume the target. Act only on their answer.
 
-**Exception — running under `/akios:just-vibes`.** The human push/merge gate is **waived** there: the
-just-vibes invocation *is* the authorization (see the `just-vibes` skill). The **quality gate is not
-waived** — `/verify` + `/code-review` still run, with a bounded **fix loop** on red (diagnose + fix,
-re-verify; stop after two consecutive cycles make no progress, then **park** the spec — keep the
-branch + logs, mark it `blocked` in `Roadmap.md`, never deliver red). Delivery target follows
-`Roadmap.md` `collaboration`: **solo** → merge `feature/<spec>` into the default branch + push it;
-**team** → push `feature/<spec>` + open a PR (`gh`). Commits carry the `Akios-Instance:` trailer.
+**Exception — running under `/akios:just-vibes` AND `Roadmap.md` says `autonomy: auto`.** The human
+push/merge gate is **waived** there: the just-vibes invocation *under `autonomy: auto`* *is* the
+authorization (see the `just-vibes` skill). The **quality gate is not waived** — `/verify` +
+`/code-review` still run, with a bounded **fix loop** on red (diagnose + fix, re-verify; stop after
+two consecutive cycles make no progress, then **park** the spec — keep the branch + logs, mark it
+`blocked` in `Roadmap.md`, never deliver red). Delivery target follows `Roadmap.md` `collaboration`:
+**solo** → merge `feature/<spec>` into the default branch + push it; **team** → push `feature/<spec>`
++ open a PR (`gh`). Commits carry the `Akios-Instance:` trailer.
+
+**Under `/akios:just-vibes` with `autonomy: manual` (the default):** the gate is **not** waived in
+substance, but it also cannot literally "ask and wait" — no human is present to answer, ever, and
+waiting would stall the run forever (exactly what just-vibes's unattended rules exist to prevent).
+Instead: run the quality gate as above; on green, record the branch as finished-and-ready (do
+**not** push/merge/open a PR) and return control to just-vibes's loop, which defers delivery and
+reports it in the run's "Built (undelivered)" bucket. See `specs/collaboration-autonomy.md`.
+**Outside just-vibes entirely** (an interactive `/akios:execute` session), `autonomy` has no
+effect — a human is already present to answer "push? merge? where?" directly, per the gate above.
 
 ## Anti-patterns
 - Starting a new spec without running `/compact` first — no exceptions.
 - Implementing a UI task without running `align-ui` first — interactively, or in auto-decide mode
   under just-vibes; the gate itself never skips, only the grilling does.
-- Pushing or merging without the explicit human gate — **except** under `/akios:just-vibes`, which is
-  itself the authorization. Outside just-vibes, never.
+- Pushing or merging without the explicit human gate — **except** under `/akios:just-vibes` with
+  `autonomy: auto`, which is itself the authorization. Outside that combination, never — including
+  under just-vibes with `autonomy: manual` (the default).
 - Delivering a red spec under just-vibes because the fix loop "gave up" — park it (branch + logs), never ship it.
 - Working a task whose `owner:` is **another** instance's signature (team mode) — yield and pick another.
 - Reordering or demoting the `Roadmap.md` `## Specs` table — edit only your line; status only moves up.
