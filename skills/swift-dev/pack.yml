@@ -1,0 +1,13 @@
+# Compatibility manifest — swift-dev IS the shipped `ios` knowledge pack (baseline: true).
+# Re-manifested per knowledge-architecture.md §5: the router and guides under skills/swift-dev/
+# are NOT moved or rewritten by this manifest — only registered so the substrate's pack
+# discovery (agentic-kit-inject.sh) and pack-tag routing (spec-to-tasks/task-execution,
+# pack:<domain>) can address this skill as a conforming pack, same shape as any future
+# user-ingested pack (knowledge/<name>/pack.yml).
+name: ios
+domain_tags: [swift, ios, ipados, macos, watchos, swiftui, xcode]
+triggers: [swift, swiftui, xcode, ios app, ipados, macos app, watchkit, swift concurrency, swiftdata]
+version: "1.1.0"
+baseline: true
+provenance:
+  - {source: "skills/swift-dev/ (hand-authored + vendored guides)", kind: code, ingested: 2026-07-01}

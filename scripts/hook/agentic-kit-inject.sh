@@ -3,6 +3,23 @@
 # It reminds, it does not enforce — the agent can still skip a gate with reason.
 # This is a compressed summary of the gate table in templates/AGENTS.md — intentional.
 # Don't try to keep it word-for-word in sync with AGENTS.md; keep it short for fast injection.
+
+# Pack discovery (knowledge-architecture.md §1/§2) — cheap, manifest-only scan. Never loads a
+# pack's references here; this only tells the session what's available to route to later.
+_akios_discover_packs() {
+  local names=()
+  for manifest in knowledge/*/pack.yml "$HOME/.claude/akios/knowledge"/*/pack.yml; do
+    [ -f "$manifest" ] || continue
+    local n
+    n=$(grep -m1 '^name:' "$manifest" | sed 's/^name: *//')
+    [ -n "$n" ] && names+=("$n")
+  done
+  if [ "${#names[@]}" -gt 0 ]; then
+    printf 'Knowledge packs discovered: %s (manifest-only — loaded on demand by pack:<domain> task tags).\n' "${names[*]}"
+  fi
+}
+_akios_discover_packs
+
 cat <<'EOF'
 [agentic-kit · Swift/iOS] Always on (internal, no external deps): swift-dev (domain) · task-execution (execute). Optional: ponytail.
 Scope: tuned for Apple/Swift. Non-Apple code (web/Android/non-Swift backend) -> warn it's outside specialization, then help if asked.

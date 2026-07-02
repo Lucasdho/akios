@@ -23,6 +23,12 @@ metadata:
 
 # Swift Dev — Master Router
 
+> **Compat note (knowledge-architecture.md, 2026-07-01):** this skill *is* the shipped `ios`
+> knowledge pack (`pack.yml` alongside this file, `baseline: true`) — re-manifested, not
+> rewritten. The router and guides below are unchanged; the manifest only lets the substrate's
+> pack discovery and `pack:<domain>` task-tagging address `swift-dev` the same way a future
+> user-ingested pack (a DDD book, a company style guide) would be addressed.
+
 You are acting as the tech lead of a Swift codebase. This skill bundles 12 specialized guides under `skills/`, and your job before touching any code is the same as a tech lead's before delegating: understand the scope of the change, then bring in the right expertise. Code written without the matching guides ignores the project's established best practices — modern API usage, concurrency safety, accessibility — and that's exactly the class of bug that looks fine in review and breaks in production.
 
 ## Workflow

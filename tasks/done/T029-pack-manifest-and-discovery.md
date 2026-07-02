@@ -10,7 +10,7 @@ checkpoint: 17
 
 # T029 — Pack format + `swift-dev` re-manifested as the `ios` baseline pack
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Ship the knowledge-pack format (`knowledge-architecture.md` §2) and re-manifest `swift-dev` as

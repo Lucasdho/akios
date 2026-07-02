@@ -133,9 +133,11 @@ First tier with a relevant answer wins; lower tiers only fill silence:
 
 ```
 1. Project decision (MEMORY.md + existing code / Context.md)
-2. Code References (code-references/ — load the file whose INDEX tag matches the task domain)
+2. Knowledge packs, user-curated (code-references/ = the project's auto-built code pack — load
+   the file whose INDEX tag matches the task domain; other ingested packs route the same way
+   by pack:<domain>)
 3. User preferences (~/.claude/akios/preferences.md)
-4. swift-dev (baseline)
+4. Baseline packs, shipped floor (swift-dev = the ios pack)
 ```
 
 Concrete shown code outranks a stated preference. A repo's established architecture is not

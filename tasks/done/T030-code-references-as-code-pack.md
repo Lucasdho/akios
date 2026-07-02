@@ -10,7 +10,7 @@ checkpoint: 17
 
 # T030 — `code-references/` reframed as the project's code pack
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Reframe `code-references/` (the user-uploaded `.swift` + `INDEX.md` mechanism) as "the
