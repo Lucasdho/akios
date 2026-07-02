@@ -119,6 +119,7 @@ Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadma
 | `.claude/hooks/agentic-kit-inject.sh` | `scripts/hook/agentic-kit-inject.sh` | always copy; make executable |
 | `.claude/hooks/skill-trace.sh` | `scripts/hook/skill-trace.sh` | always copy; make executable (optional telemetry) |
 | `.claude/hooks/akios-instance.sh` | `scripts/akios-instance.sh` | always copy; make executable (instance signature for just-vibes + claims) |
+| `.claude/hooks/post-checkpoint-verify.sh` | `scripts/hook/post-checkpoint-verify.sh` | always copy; make executable (the auto-build/test hook — `task-execution` calls it at `[major]` checkpoints; degrades to a graceful no-op if there's no build tool) |
 | `.claude/.agentic-kit-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
 | `scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | always copy; make executable |
 | `.git/hooks/pre-commit` | append a call to `scripts/alva-usage-ledger.sh` | if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
@@ -161,7 +162,8 @@ In `<root>/.claude/settings.json` (create as `{}` if absent; use `jq` if availab
 ## 5. Self-check (fail loudly)
 Confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tree exist;
 `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`; both hooks +
-`.claude/hooks/akios-instance.sh` are present; `Roadmap.md` has a `mode:`, a `collaboration:`,
+`.claude/hooks/akios-instance.sh` + `.claude/hooks/post-checkpoint-verify.sh` are present;
+`Roadmap.md` has a `mode:`, a `collaboration:`,
 **and** a `posture:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
 `Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid

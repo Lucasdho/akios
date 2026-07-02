@@ -53,8 +53,10 @@ These rules override everything in the sub-skills (`idea-to-spec`, `spec-to-task
 - **Human push/merge gate → replaced.** Invoking `/akios:just-vibes` *is* the authorization to
   deliver. You do not stop for per-spec push/merge approval. (`task-execution`'s hard human gate is
   explicitly waived **only** under just-vibes.)
-- **Quality gate → kept, hard.** `/verify` + `/code-review` still run. **Never deliver broken work.**
-  A red spec gets a bounded fix loop, then is parked — not pushed.
+- **Quality gate → kept, hard.** `/verify` + `/code-review` still run — together they realize
+  `task-execution`'s **three proofs** (build/test, spec-conformance, visual; see its "The three
+  proofs" section). **Never deliver broken work.** A red spec gets a bounded fix loop, then is
+  parked — not pushed.
 - **All interactive phases → deepthink.** Every decision in every phase (spec, plan, alignment)
   is made by you — chosen via deepthink, recorded with full rationale, written to disk. The
   human reviews *after* and can override any decision.
@@ -147,7 +149,7 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
               - TDD-first posture, commit at each checkpoint barrier.
               - Human push/merge gate: waived (this skill is the authorization).
 
-4. GATE    /verify + /code-review
+4. GATE    /verify + /code-review — the three proofs (build/test, spec-conformance, visual)
              green → DELIVER (step 5)
              red   → FIX LOOP: diagnose + fix, re-verify. Bound: stop after two consecutive
                      cycles with no measurable progress (same failures). Then PARK.
@@ -188,8 +190,10 @@ redirects the teaching to the journal instead of live narration:
 
 - **Learning:** every unit's journal entry (step 6) gains a **"Lessons"** subsection — the 3–5
   principles the unit exercised, the decisions and their *why* (citing the owning pack/spec), and
-  any hurdle/preference captured this unit. This is the artifact a returning human reads to learn
-  what happened *and why* — the unattended analogue of live narration.
+  any entry auto-appended to the **hurdles ledger** (`code-references/hurdles.md`, see
+  `task-execution`'s "Hurdles ledger" section) or `preferences.md` this unit. This is the artifact
+  a returning human reads to learn what happened *and why* — the unattended analogue of live
+  narration.
 - **Delivery (default):** journal outcomes only, exactly as documented above — no Lessons
   subsection.
 - Both postures keep every other unattended rule unchanged (deepthink decisions, no questions

@@ -4,6 +4,7 @@
 
 .claude/
 /speckit
+.akios/
 
 # Vision.md / Roadmap.md / Context.md are NOT ignored here: this repo dogfoods its own kit on
 # itself (see Context.md "What this repo is"), so its root Vision/Roadmap/Context are the real,

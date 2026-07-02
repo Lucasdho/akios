@@ -68,11 +68,14 @@ for each task (by checkpoint, respecting [P]/area):
     → copy-and-adapt-and-prune (below) instead of writing the pattern from scratch
   [Foundation gate] before writing any new helper/protocol/component → consult ONLY
     Foundation/ (never the whole repo); see "Foundation ledger" below
+  [Hurdles gate] before starting a task in a domain that has one → load the matching-tag slice of
+    code-references/hurdles.md (below) so a known hurdle is avoided by consulting the ledger
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
   TDD  → failing test → implement → green        (see TDD posture)
   move  → tasks/review/
-  /verify (when runnable) + /code-review
-  move  → tasks/done/        (only when the DoD is actually met; failure loops to in-progress)
+  /verify (when runnable) + /code-review (loads `review-doctrine` — see "Code-review doctrine")
+  [Divergence audit] compare planned (Description + DoD + Files) vs. done (actual diff/decisions)
+  move  → tasks/done/        (only when the THREE PROOFS (below) are green; failure loops to in-progress)
 ↳ at each checkpoint barrier: audit EVERY task's DoD + the boundary lint, then commit "checkpoint: <name>"
 ```
 
@@ -159,6 +162,33 @@ is born inside the current feature; it is not shared preemptively.
   P3 (folder-first + lint by default; compiler-enforced local SPM modules only once the app has
   earned it — a recurring violation, or the user asks).
 
+## Hurdles ledger (`code-references/hurdles.md` — tier 2 of the priority chain)
+A solved recurring problem is curated project knowledge, so it lives in the project's **code
+pack** at tier 2 — the same place `code-references/` already sits — not a loose file nobody
+loads. `INDEX.md` carries a row for it with domain tags, same as any other reference.
+
+- **Read, before a domain task.** Load the matching-tag slice of `hurdles.md` before starting a
+  task in that domain (the `[Hurdles gate]` in the lifecycle above) — a known hurdle is avoided by
+  consulting the ledger, exactly as a matching code reference is loaded today.
+- **Entry format** (one per hurdle, deduplicated):
+  ```markdown
+  ### <short symptom>            [tags: swiftdata, concurrency]
+  - **Hit when:** <the situation that triggers it>
+  - **Root cause:** <why it happens>
+  - **Fix:** <the resolution that worked>
+  - **First seen:** <task/spec> · **Times hit:** <n>
+  ```
+- **How it grows (observe → confirm → append).** A hurdle is captured when (a) the divergence
+  audit below taught something reusable, or (b) the **same failure is hit a 2nd time** — the same
+  2nd-occurrence rule that governs `preferences.md`. Attended → **propose** the entry at a pause
+  (delivery posture) or more eagerly with rationale (learning posture, see "Operating posture").
+  `just-vibes` → auto-append with rationale + journal it. Dedup against existing entries; bump
+  `Times hit` instead of duplicating.
+- **Cross-session recall.** A recall-worthy, cross-session hurdle also gets a one-line pointer in
+  native `MEMORY.md` — the full entry stays in `hurdles.md` only, no duplication.
+- **Empty ledger:** absent/empty `hurdles.md` → tier 2 is simply silent for hurdles; behaves as
+  today. First run of any repo starts here.
+
 ## The priority chain (consult before any code decision)
 First tier with a relevant answer wins; lower tiers only fill silence:
 
@@ -203,12 +233,46 @@ its rationale attached — see "Feedback logging" below. See `AGENTS.md` "Operat
   + the **happy / empty / loading / error** states the task's DoD lists + a snapshot test **if** the
   project has the harness. Don't force brittle view tests.
 
+## The divergence audit (`review → done`, the exact moment intent and reality are both in hand)
+Before moving a task `review → done`, compare what it **planned** (`## Description` + `##
+Definition of Done` + planned `## Files`) to what was **actually done** (the diff, files touched,
+decisions taken).
+
+- **Material divergence** = a different approach was taken, files outside the plan were touched,
+  a DoD item was dropped/added, or an open decision got resolved. A rename or an obvious helper is
+  cosmetic, not material — don't flag it.
+- **On material divergence, classify — never auto-fail:**
+  (a) **code is right, plan was stale** → note it on the task, proceed;
+  (b) **code drifted from a correct plan** → loop back to `in-progress` and fix;
+  (c) **genuinely open** → surface it (to the user if attended; as a journaled open risk under
+  `just-vibes`, per its "flag, don't smooth" rule).
+- If the *spec itself* is the source of the staleness (not just the task), flag it for spec
+  revision rather than silently patching around it — specs are the memory.
+
+## The three proofs (the `done` bar)
+"Did it implement it right?" decomposes into three checkable proofs. A task/spec is *proven* only
+when every proof that applies is green — **a red proof parks, never ships**, consistent with the
+bounded fix loop and just-vibes' "park red, never deliver broken."
+
+| Proof | What it checks | Mechanism | Applies to |
+|---|---|---|---|
+| Build/test proof | it compiles and tests pass | the auto-build/test hook `.claude/hooks/post-checkpoint-verify.sh` (installed by `/akios:init`) → runs Context.md's `Test:` command or auto-detects `xcodebuild`, writes `.akios/verify-result.json` for you to read; degrades to inline if the hook/tool is unavailable, and to the DoD audit (grep + YAML validation + install smoke-test) in a plugin/docs repo with no build tool | every code task |
+| Spec-conformance proof | it did what the task said + followed the loaded doctrine | the divergence audit above + `/code-review` with `review-doctrine` loaded | every task |
+| Visual proof | it looks like the approved design | `align-ui`'s post-wiring check: real data vs. the `ui-variations`-graduated screen | UI tasks only |
+
+`/verify` + `/code-review` already realize most of this; naming the three proofs as a set makes
+"did I ship it right" a checklist instead of a vague worry, and shows *which* axis is red when
+something's off.
+
 ## Barrier = audit + commit
 At each `↳ barrier`: verify **every** task's DoD is met (not "code exists" — DoD met), **and** run
 the boundary lint (no slice importing another slice's internals instead of its `contract/`). Then
 `git commit -m "checkpoint: <name>"`. A failing DoD or a boundary violation blocks the commit; fix
 or split, don't paper over it. At a `[major]` checkpoint, run the unit + integration battery first —
-a red battery blocks the next checkpoint.
+call `.claude/hooks/post-checkpoint-verify.sh` (the build/test proof's hook) and read
+`.akios/verify-result.json` for the outcome rather than parsing build output yourself; if it
+reports `ran:false` (no build tool reachable), fall back to running the battery inline, or — in a
+plugin/docs repo with no build tool at all — to the DoD audit. A red battery blocks the next checkpoint.
 
 ## Feedback logging (preferences)
 While executing, watch for preference signals — an explicit statement ("prefiro X") or a repeated
@@ -244,6 +308,9 @@ When a spec's last checkpoint is green and all its tasks are `done`:
 3. Clear that spec's `tasks/done/` files (captured in the summary + git).
 4. Record the **durable decisions** into native `MEMORY.md` (the spec-level what/where stays in
    `Archive.md`; recall-worthy decisions go to `MEMORY.md` — no duplication).
+5. **Hurdles digest.** Any hurdle captured during this spec (see "Hurdles ledger" above) gets a
+   one-line `MEMORY.md` pointer alongside the durable decisions — the full entry stays only in
+   `code-references/hurdles.md`.
 
 Future sessions read `archive/Archive.md` first and open a full archived file only on demand.
 
@@ -283,6 +350,9 @@ branch + logs, mark it `blocked` in `Roadmap.md`, never deliver red). Delivery t
   snippet's pattern from scratch instead of copying and adapting it.
 - Committing a checkpoint whose DoDs aren't actually met.
 - Compressing context mid-spec.
+- Treating every material divergence as an automatic failure, or ignoring one instead of
+  classifying it — both defeat the point of the divergence audit.
+- Moving `review → done` on a red proof (build/test, spec-conformance, or visual) — park it.
 - Writing to `preferences.md` silently, or recording project-specific facts there (those go to `MEMORY.md`).
 - Mirroring spec state outside `Roadmap.md` (e.g. duplicating the `## Specs` table into `CLAUDE.md`) — one source, no duplicates.
 - Cloning your full context into a subagent, or dispatching a model more capable than the subtask needs.
