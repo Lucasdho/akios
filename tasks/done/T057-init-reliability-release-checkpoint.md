@@ -10,7 +10,7 @@ checkpoint: 35
 
 # T057 — `init-reliability-and-ux.md` release checkpoint
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Close out the spec: flip its `Roadmap.md` row to `done`, confirm no dangling references to the
