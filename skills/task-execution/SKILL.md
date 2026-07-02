@@ -80,6 +80,14 @@ for each task (by checkpoint, respecting [P]/area):
   Under just-vibes the **interactive grilling** is skipped — `align-ui` still runs, in auto-decide
   mode, and writes the alignment doc unattended (every auto-decision marked `[auto]`).
 
+- **Make-it-live is one pass, not two.** The third A3 stage (after components and the
+  `ui-variations`-graduated dumb screen already exist at `presentation/<View>/<View>View.swift`)
+  attaches the real ViewModel via `init` **and** pulls real data just-in-time in the **same
+  pass** — there is no separate translation/grounding step, because the graduated screen is
+  already the target SwiftUI code. `align-ui`'s post-wiring check runs right after: does the
+  real-data render still hold up against the mock-data-approved graduate (same-engine, same-code
+  — not a cross-engine diff against a retired `visual-grounding` reference).
+
 - **Runner routing + model tier.** Read the task's `runner`: `≤20k → orchestrator` (always run inline);
   `>20k → subagent-eligible` — **eligibility, not a mandate**: dispatch only when `AGENTS.md`'s
   subagent-economy rule also says yes (driving session **≥120k tokens** *and* the task is heavy and

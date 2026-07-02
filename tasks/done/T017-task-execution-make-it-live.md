@@ -10,7 +10,7 @@ checkpoint: 11
 
 # T017 — `task-execution`: "make-it-live" merges ViewModel wiring + JIT data in one pass
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Session 1's T005 already made `task-execution` read the Foundation ledger and run the boundary

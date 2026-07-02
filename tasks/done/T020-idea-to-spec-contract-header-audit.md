@@ -10,7 +10,7 @@ checkpoint: 11
 
 # T020 — `idea-to-spec` / `Feature-spec.md` contract header — audit only (satisfied by T006)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 `ui-overhaul-implementation.md` §3.6's DoD is identical in substance to `alva-adoption.md`

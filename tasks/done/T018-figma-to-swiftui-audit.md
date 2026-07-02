@@ -10,7 +10,7 @@ checkpoint: 11
 
 # T018 — `figma-to-swiftui` — audit only, confirm parked (no change)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Per `ui-overhaul-implementation.md` §3.4, `figma-to-swiftui` stays exactly as shipped and is

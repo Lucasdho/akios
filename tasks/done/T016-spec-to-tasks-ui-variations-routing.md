@@ -10,7 +10,7 @@ checkpoint: 11
 
 # T016 — `spec-to-tasks`: name `ui-variations` in the UI build-order stage shape
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Session 1's T004 already made `spec-to-tasks` emit ALVA slice-shaped tasks with the

@@ -65,6 +65,51 @@ genuinely no dependency between them. When in doubt, go sequentially.
   it: "This deviates from HIG's expected pattern for X — worth noting for App Review."
   Then implement their direction anyway.
 
+## Nielsen heuristics checklist (design-phase backbone)
+
+Fired for every screen this gate touches — a static `ui-variations` preview can't express
+interaction/flow completeness, so `align-ui` is where these get resolved:
+
+| Heuristic | Concrete check |
+|---|---|
+| Visibility of system status | loading / progress / refresh states exist (not a frozen screen) |
+| Match system & real world | domain language in copy; SF Symbols that mean what they show |
+| User control & freedom | back / cancel / undo paths; non-trapping flows; `.sheet` dismissal |
+| Consistency & standards | native components + `DesignSystem` tokens (no bespoke one-offs) |
+| Error prevention | destructive actions confirmed; `.sheet(item:)` from payload state (not `Bool`+data) |
+| Recognition over recall | no hidden gestures without an affordance; visible options |
+| Flexibility & efficiency | sensible defaults; shortcuts (swipe actions, `Menu`) where they help |
+| Aesthetic & minimalist | the restraint rule — cross-refs `swiftui-design-principles` Core Philosophy |
+| Help users with errors | plain-language error states with a recovery action |
+| Help & documentation | empty-state guidance where a screen needs orientation |
+
+Walk this table after the decision tree's "States" branch — it's the acceptance bar for that
+branch, not a separate pass.
+
+## Native-over-custom flag
+
+Before or alongside recommending a component, check: **did this try the native control first?**
+A hand-rolled toggle, a `GeometryReader` progress bar where `Gauge` fits, a custom divider where
+`Divider()` works — these get flagged, not silently accepted. A justified exception carries a
+one-line comment at the component (`// custom: native <X> can't do <Y>`); an unjustified one is a
+finding in the alignment doc, fired **twice**: once during the `ui-variations` explore round
+review, and again at the post-wiring check below (the two moments a custom control tends to
+sneak past review).
+
+## Post-wiring check (absorbed from the retired `visual-grounding` skill)
+
+After `execute`'s make-it-live stage wires the real ViewModel and pulls real data, `align-ui`
+runs one more check: does the **real-data render** still hold up against the **mock-data-
+approved** `ui-variations` graduate? (E.g. the mock tested a 100-player roster — does the real
+150-player roster still look right? Does real long-text still truncate the way the sample data
+suggested it would?)
+
+This is a **same-engine, same-code check** — the graduated screen and the wired screen are the
+same SwiftUI, just with real data behind it — not the cross-engine diff `visual-grounding` used
+to run against an HTML/Figma reference (that skill is retired; the *problem* it solved doesn't
+exist anymore since there's no second medium to diff against). A divergence here is a normal
+`execute`-phase fix, not a re-triggered design-phase approval cycle.
+
 ## Completion criterion
 
 The grilling ends when every branch of the tree has a concrete, unambiguous answer —

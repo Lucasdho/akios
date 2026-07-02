@@ -10,7 +10,7 @@ checkpoint: 11
 
 # T019 — `deep-brainstorm` slice cartography — audit only (satisfied by T008)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 `ui-overhaul-implementation.md` §3.5's DoD is identical in substance to `alva-adoption.md`

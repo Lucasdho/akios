@@ -10,7 +10,7 @@ checkpoint: 11
 
 # T015 — `align-ui` remodel: Nielsen checklist + native-over-custom flag + post-wiring check
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Session 1's T007 already made `align-ui` treat `Foundation/Design-tokens/` as the visual leaf

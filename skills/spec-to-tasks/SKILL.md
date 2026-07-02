@@ -53,6 +53,13 @@ This skill does the one thing that was missing: decompose the spec into runnable
    point where all its in-flight `[P]` tasks must finish before continuing; each carries an
    **audit** (verify every DoD). Mark `[major]` when it completes a vertical slice — `[major]`
    runs the unit + integration test battery before advancing.
+5b. **UI build-order stage shape.** A screen-touching task decomposes into the A3 stages,
+   named explicitly and nested *inside* `presentation/<View>/`:
+   `components [P] (swiftui-pro)` → `ui-variations dumb-screen (design phase)` → `make-it-live
+   (wiring, execute phase)`. The middle stage is always `ui-variations` — never a retired skill
+   (`html-to-swiftui`, `visual-grounding`) or the parked `figma-to-swiftui`. Components tagged
+   `[P]` within the same checkpoint are independent leaf pieces; the dumb-screen and make-it-live
+   stages serialize after them.
 6. **Designer's-eye (mandatory for any UI- or data-backed task).** Translate the spec's empty
    states into per-task acceptance criteria: every screen-touching task's DoD covers **happy ·
    empty · loading/in-flight · error/offline**. A UI task whose DoD omits these is incomplete.
