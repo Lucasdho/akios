@@ -10,7 +10,7 @@ checkpoint: 15
 
 # T026 — UI-overhaul release checkpoint: Roadmap flips (version bump deferred)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 `ui-overhaul-implementation.md` §6.4 calls for a version/CHANGELOG/plugin.json bump. **Per the
