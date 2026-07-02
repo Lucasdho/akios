@@ -46,14 +46,19 @@ with a relevant answer wins, lower tiers only fill silence**:
 
 ```
 1. Project decision already made   (MEMORY.md + existing code / Context.md)
-2. Sample code / Code References    (code-references/ — your uploaded patterns)
+2. Knowledge packs, user-curated   (code-references/ = the project's auto-built code pack;
+                                     other ingested packs — a DDD book, a design system — route
+                                     here too, by domain-tag match)
 3. Global user preference           (~/.claude/akios/preferences.md)
-4. swift-dev                        (best-practice baseline / floor)
+4. Baseline packs, shipped floor    (swift-dev = the `ios` pack; other baseline packs land here)
 ```
 
 A repo's established architecture isn't rewritten because of a general preference (project
-on top). Concrete code you've shown outranks a stated preference (Code References above
-preferences). `swift-dev` is the floor that always answers.
+on top). Concrete code you've shown outranks a stated preference (a curated knowledge pack
+above preferences). `swift-dev` (the `ios` baseline pack) is the floor that always answers.
+The chain itself is unchanged — tiers 2 and 4 just widened from "code-references / swift-dev"
+specifically to "knowledge packs" generally, so a user-ingested pack (`/akios:learn`) slots in
+without a new tier. See `specs/knowledge-architecture.md` for the pack format and ingestion path.
 
 ## How to execute (orchestration)
 The feature spine's phases are defined in **`workflow.yml`** (the machine-readable contract —

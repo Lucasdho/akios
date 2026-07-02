@@ -65,9 +65,9 @@ For any code decision, resolve top-down (first tier with an answer wins):
 
 ```
 1. Project decision (MEMORY.md + existing code/Context.md)
-2. Code References (code-references/ — your uploaded patterns)
+2. Knowledge packs, user-curated (code-references/ = the code pack; other ingested packs too)
 3. User preferences (~/.claude/akios/preferences.md)
-4. swift-dev (baseline)
+4. Baseline packs, shipped floor (swift-dev = the `ios` pack; other baseline packs)
 ```
 
 ## How it's invoked

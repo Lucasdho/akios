@@ -6,7 +6,7 @@
 cat <<'EOF'
 [agentic-kit · Swift/iOS] Always on (internal, no external deps): swift-dev (domain) · task-execution (execute). Optional: ponytail.
 Scope: tuned for Apple/Swift. Non-Apple code (web/Android/non-Swift backend) -> warn it's outside specialization, then help if asked.
-Priority chain (first tier with an answer wins): project (MEMORY.md+code) -> code-references/ -> ~/.claude/akios/preferences.md -> swift-dev.
+Priority chain (first tier with an answer wins): project (MEMORY.md+code) -> knowledge packs, curated (code-references/ = code pack) -> ~/.claude/akios/preferences.md -> baseline packs (swift-dev = ios pack).
 Proportionality: gates are a map to knowledge you lack, not a toll on every file. Mechanical
 pattern-copy from an existing repo file (mirror a screen/VM, rename, obvious one-liner) -> just
 do it; the precedent is the routing. Load a guide only when it would change what you ship.
@@ -24,7 +24,7 @@ loop). It waives the human push/merge gate (invocation = authorization) but KEEP
 Team mode (Roadmap collaboration: team): claim a unit before working it (committed owner: in task/Roadmap),
 respect teammate Akios-Instance signatures, edit only your Roadmap line (status monotonic, higher wins).
 Default gates (reminder, not enforced — consult when you need the knowledge):
-- Full feature (idea to code) -> ios-feature-pipeline (reads workflow.yml: brainstorm -> plan -> execute)
+- Full feature (idea to code) -> ios-feature-pipeline (reads workflow.yml: brainstorm -> plan -> design -> execute)
 - Idea -> spec           -> idea-to-spec (/akios:brainstorm; write to specs/, register in Roadmap.md)
 - Spec -> tasks          -> spec-to-tasks (/akios:plan; writes tasks/todo/)
 - Before hand-writing    -> oss-first (is there a mature tool/lib first?)

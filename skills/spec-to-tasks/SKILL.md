@@ -73,10 +73,14 @@ This skill does the one thing that was missing: decompose the spec into runnable
    code — reused if found, else born inside this feature." This is the executable form of ALVA
    P6 (`swift-dev`'s `alva-architecture` guide) — the task, not the agent's judgment, is what
    carries the reminder forward into execution.
-9. **Tag each task with its `swift-dev` domain sub-skill** (routing below) — the executor's
-   subagent starts cold and must load it. A task that scaffolds a new feature/slice, or touches
-   `Router/`/`Container/`, is tagged `alva-architecture` first, alongside whatever code-level
-   guide also applies.
+9. **Tag each task with its knowledge pack + domain sub-skill** (routing below) — the executor's
+   subagent starts cold and must load it. Every task carries a `pack:<domain>` tag, defaulting to
+   `pack:ios` for a Swift repo; a task also touching a second domain (e.g. a DDD-modeled feature)
+   carries both (`pack:ios` + `pack:ddd`). For the `ios` pack, the concrete reference is
+   `swift-dev`'s bundled guide — tag the `swift_dev:` sub-skill exactly as before; a non-`ios`
+   pack's concrete reference is its own `INDEX.md`-selected file (`knowledge-architecture.md`
+   §1/§2). A task that scaffolds a new feature/slice, or touches `Router/`/`Container/`, is
+   tagged `alva-architecture` first, alongside whatever code-level guide also applies.
 10. **One interactive confirm.** Show the checkpoint/task graph + est_tokens/runner + designer's-eye
     coverage compactly. Get a yes or adjustments. *Then* write the task files into `tasks/todo/`.
 

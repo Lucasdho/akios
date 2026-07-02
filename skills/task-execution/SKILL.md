@@ -61,7 +61,9 @@ when subagents are available and cheap; otherwise sequentially in-session — sa
 for each task (by checkpoint, respecting [P]/area):
   move  tasks/todo/<T>.md → tasks/in-progress/
   consult the PRIORITY CHAIN (below) before choosing any pattern
-  load the task's swift-dev domain sub-skill by scope
+  load the task's pack reference by scope, per its `pack:<domain>` tag (default `pack:ios` for a
+    Swift repo — its realization is swift-dev's bundled domain sub-skill; a non-ios pack's
+    realization is its own INDEX.md-selected reference)
   [Foundation gate] before writing any new helper/protocol/component → consult ONLY
     Foundation/ (never the whole repo); see "Foundation ledger" below
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
