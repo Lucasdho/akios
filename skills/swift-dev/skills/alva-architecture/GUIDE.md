@@ -111,6 +111,12 @@ Only the top of the project knows more than one feature.
   composition-root citizen, so it's the one place allowed to know several slices. It still
   only *consumes* those slices through their `contract/`. Reach for a coordinator only for
   genuinely multi-step custom flows; plain Router navigation is the default.
+- **DI/coordination never bypasses the design-token rule.** A view or component a coordinator
+  draws through the Container's factories still consumes `Foundation/Design-tokens/` statically
+  (`.textStyle`/`.imageStyle`, `DesignSystem.*`) — never through `@Environment` or a service the
+  coordinator injects. See `skills/swift-dev/skills/swiftui-design-system/GUIDE.md` for the
+  token/role-modifier convention; multi-step flow orchestration and visual-leaf consumption are
+  orthogonal concerns.
 
 ## Worked example — Squad slice (futebol-manager)
 

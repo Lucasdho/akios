@@ -10,7 +10,7 @@ checkpoint: 13
 
 # T024 — Coordinator reference — audit + cross-link to the new design-system guide
 
-> **State:** todo
+> **State:** done
 
 ## Description
 `ui-overhaul-implementation.md` §5.1's DoD is identical in substance to `alva-adoption.md`
