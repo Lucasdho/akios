@@ -46,6 +46,46 @@ Ask in one batched pass (skip what the scan in step 2 answers confidently; confi
 - **House rule** (AGENTS.md `{{PROJECT_RULE}}`) — a project-specific must/never
 - **Claude note** (CLAUDE.md) — any Claude-specific instruction, or drop the section
 
+## 1a. Skeleton selection (`mode: new` only — folds into the Architecture question, no duplicate)
+Architecture-keyed whole-project starters (`skeleton-library.md`). Runs **only** immediately
+after `Mode` resolves to `new` in step 1 above — never for `feature`/`one-shot`, and never on a
+migrate-path re-run (step 0's "Recorded < installed" branch). A skeleton is a whole file tree;
+offering to drop one into a repo that may already have code risks clobbering existing files, so
+the option is never even shown outside `mode: new`.
+
+1. List the distinct `architecture:` tags found across `~/.claude/akios/skeletons/*/manifest.yml`
+   (user-global only — there is no repo-local skeleton convention), plus an explicit **"none /
+   default scaffold"** option. **If zero skeletons are registered anywhere, skip this entire
+   step** — the free-text "Architecture" question in step 1 runs exactly as it does today, zero
+   regression.
+2. If exactly one skeleton matches the chosen tag, use it directly. If more than one match
+   (variants, e.g. `alva-minimal` + `alva-with-supabase`), show just those by `name` for a
+   second, narrower pick.
+3. If the user explicitly picks **"none / default scaffold"** (even though skeletons exist),
+   proceed exactly as today — a skeleton is never forced.
+4. **Pre-fill, don't duplicate.** The chosen skeleton's `description:` + `stack:` pre-fill step
+   1's existing "Architecture" interview answer (still user-editable) — this is not a second
+   question.
+5. **Copy before scan.** If a skeleton was chosen, copy its full file tree into the repo root
+   **now**, before step 2 (Scan) runs and before step 3 (Materialize) writes `Context.md` /
+   `AGENTS.md` / etc. Copying first means the scan sees the real, chosen starting structure
+   (a real `.xcodeproj`, real source dirs) instead of an empty repo — scanning after the copy
+   would produce a `Context.md` that describes nothing.
+6. **A skeleton never ships akios's own meta files.** Its tree covers only the app's own source
+   (Xcode project, `Router/`, `Container/`, `Foundation/`, an example `Features/` slice, or
+   whatever its architecture calls for) — never `AGENTS.md`, `Context.md`, `Roadmap.md`,
+   `Vision.md`, or `.claude/`. Those always come from step 3's templates, applied after this
+   copy; step 3's own skip-if-exists/always-write rules remain the single source of truth for
+   those five names regardless of what a skeleton's tree happens to contain.
+
+This step does not change or duplicate the existing ALVA scaffold instructions in step 3
+(`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/`, `usage-ledger.json`) —
+those run unconditionally either way; a chosen skeleton's own tree may itself already contain an
+ALVA shape (if tagged `architecture: alva`), and step 3's skip-if-exists rules cover the overlap.
+
+No ingestion path exists yet for skeletons (unlike snippets' `/akios:learn --kind snippet`) —
+`~/.claude/akios/skeletons/<name>/manifest.yml` + tree is hand-assembled, manual work today.
+
 ## 2. Scan (facts win over interview; surface contradictions)
 Inspect the repo to fill/verify command + stack + architecture: `.xcodeproj`/`.xcworkspace`
 + scheme, `Package.swift` (SPM deps), the `xcodebuild` test/build invocation (quote any
@@ -122,7 +162,9 @@ value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remai
 `Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
 `Foundation/usage-ledger.json` + the pre-commit hook calling `scripts/alva-usage-ledger.sh`) is in
-place. Report any miss.
+place. **If a skeleton was copied (step 1a):** confirm it did not overwrite `AGENTS.md`,
+`Context.md`, `Roadmap.md`, `Vision.md`, or `.claude/` — those must still be the plugin's own
+templates, not skeleton-sourced files. Report any miss.
 
 ## 6. Dependencies
 The kit has **no required external plugins** — everything the spine routes to (`swift-dev`,
