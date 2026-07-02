@@ -10,7 +10,7 @@ checkpoint: 14
 
 # T025 — Plumbing: `install-skills.sh` + `commands/design.md` wrapper
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Register the new `ui-variations` skill in the installer array (not the three retired skills —
