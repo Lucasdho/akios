@@ -64,6 +64,8 @@ for each task (by checkpoint, respecting [P]/area):
   load the task's pack reference by scope, per its `pack:<domain>` tag (default `pack:ios` for a
     Swift repo — its realization is swift-dev's bundled domain sub-skill; a non-ios pack's
     realization is its own INDEX.md-selected reference)
+  [Snippet gate] if the pack lookup resolves to a `kind: snippet` entry (not `kind: reference`)
+    → copy-and-adapt-and-prune (below) instead of writing the pattern from scratch
   [Foundation gate] before writing any new helper/protocol/component → consult ONLY
     Foundation/ (never the whole repo); see "Foundation ledger" below
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
@@ -107,6 +109,35 @@ for each task (by checkpoint, respecting [P]/area):
   gates — it inherits nothing. **Never clone your context window into it:** a subagent is billed for
   every token you hand it, so pasting the whole conversation is the most expensive mistake here — send
   the slice, not the session.
+
+## Snippet consumption — copy, adapt, prune (`kind: snippet`, `snippet-library.md`)
+A pack lookup can resolve to a `kind: snippet` entry — literal, field-tested Swift code (a card
+component, a repository template, a use case, a gateway protocol) — instead of a `kind:
+reference` (prose). A snippet is **never** read as inspiration and rewritten from scratch; the
+entire point of registering one is to skip re-deriving boilerplate that already exists:
+
+1. **Copy** the snippet's file(s) into the target location (below decides where).
+2. **Adapt** placeholder names (e.g. `EntityName` → the task's real entity) per the snippet's
+   own `usage.md`.
+3. **Prune** anything the task doesn't need (an unused CRUD method, an unused field) — this is a
+   **required DoD step**, not optional cleanup. A copied snippet is never accepted as-is.
+
+**Target resolution.** Read the snippet's declared `target:` (its `usage.md` or `INDEX.md` row):
+- **`Foundation/Design-tokens`** — already shared by design. If it's already present there from
+  an earlier task, don't recopy — just import and use it. If not yet present, copy it there
+  directly.
+- **`Features/<F>/data`** or **`.../domain`** — feature-local by design. Copy it **fresh** into
+  the current feature's slice, with entity names adapted for that feature, even if the same
+  snippet was already copied into a different feature earlier.
+
+This target split is a **human decision made at snippet-registration time**
+(`knowledge-ingest`'s confirm-before-live gate) — it does not bypass or shortcut the Foundation
+ledger's own evidence-based promotion/demotion rules below, which still govern everything that
+is **not** a registered snippet.
+
+**No match, no problem.** If a task could plausibly use a snippet but none matches, write fresh
+code as the pipeline does today — no error, no forced match; same graceful degradation as "no
+user packs" (`knowledge-architecture.md` §7).
 
 ## Foundation ledger (ALVA — read, never count)
 Before creating any new helper, protocol, or shared component, consult **only**
@@ -223,6 +254,8 @@ branch + logs, mark it `blocked` in `Roadmap.md`, never deliver red). Delivery t
   promotion is suggested, not automatic.
 - A slice importing another slice's `domain/`/`data/` instead of its `contract/` — boundary
   violation, blocks the checkpoint.
+- Accepting a copied `kind: snippet` as-is without a prune pass, or re-deriving a registered
+  snippet's pattern from scratch instead of copying and adapting it.
 - Committing a checkpoint whose DoDs aren't actually met.
 - Compressing context mid-spec.
 - Writing to `preferences.md` silently, or recording project-specific facts there (those go to `MEMORY.md`).

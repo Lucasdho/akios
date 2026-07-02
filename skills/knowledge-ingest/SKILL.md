@@ -25,7 +25,11 @@ predates that tool. Nothing here depends on it existing.
 knowledge/<pack-name>/
   pack.yml            → manifest: name, domain_tags, triggers, version, provenance, baseline: false
   INDEX.md             → one line per reference: "<file> — what it teaches [tags]" (progressive disclosure)
-  references/*.md      → the distilled knowledge, one concern per file
+  references/*.md      → the distilled knowledge, one concern per file (kind: reference)
+  snippets/<name>/      → OPTIONAL: literal, copy-and-adapt code (kind: snippet — see below).
+                          Always a folder, even for a single-file entry: one or more `.swift`
+                          files + a mandatory `usage.md`. One shape for every entry, no branching
+                          between "simple" and "bundle" snippets.
   skills/               → OPTIONAL: behavior skills this pack ships
   sources/              → OPTIONAL: the raw ingested material, kept for re-distillation + audit
 ```
@@ -45,6 +49,49 @@ instead of the repo-local `knowledge/<pack-name>/`.
 
 Always run `oss-first` before hand-writing an extractor for a source type not listed above — a
 mature tool almost certainly exists.
+
+## `kind: snippet` — literal code, copied and adapted, not read and re-derived (B30)
+
+Everything above produces `kind: reference` entries (prose the pipeline reads as guidance). A
+second asset kind, `kind: snippet`, carries **literal, ready-to-use Swift code** — a card
+component, a repository CRUD template, a use case, a gateway protocol, a design-system file —
+the user has already field-tested and trusts as a starting point. Invoked with:
+
+```
+/akios:learn <file-or-folder> --pack <name> --kind snippet [--global]
+```
+
+Behavior, layered on top of the same pipeline (§ above), diverges at two points:
+
+1. **Skips distillation.** Unlike a `kind: reference` ingest (which chunks and distills into
+   prose), a snippet **copies the source file(s) verbatim** into `snippets/<derived-name>/` —
+   the whole point is to preserve the field-tested original, not paraphrase it.
+2. **Drafts, doesn't finalize.** Writes a **draft** `INDEX.md` row (name, tags guessed from
+   path/filename) and a **stub** `usage.md` — the user fills in the adaptation notes (what to
+   rename, what to wire — DI registration, Router entry, etc.) and the `target:` field before
+   confirming.
+
+Everything else is unchanged: the **same propose-before-live confirm gate** from step 4 above
+(a wrong `target:` can misplace behavior into `Foundation/`, so it is never auto-adopted
+attended; under `just-vibes`, auto-adopt with the rationale journaled, same as any pack). The
+**same provenance retention** (`pack.yml` + optional `sources/`) applies unchanged.
+
+**The `target:` field.** Each snippet's `usage.md` (or an `INDEX.md` row field) declares one of:
+- **`Foundation/Design-tokens`** — visual, meant to be shared from day one (a card component, a
+  design-system template). `task-execution` copies it once and reuses it thereafter.
+- **`Features/<F>/data`** or **`.../domain`** — behavior, inherently per-feature (a repository
+  template, a use case, a gateway protocol). `task-execution` copies it fresh into each feature
+  that needs one, with entity names adapted per feature.
+
+This is a **human decision made at registration time** (this confirm-before-live step) — it does
+not bypass or mutate the ALVA usage-ledger's own evidence-based Foundation-promotion rules
+(`task-execution`'s Foundation ledger governs everything that is **not** a registered snippet).
+
+A snippet that isn't valid/parseable Swift (wrong path, a non-code file dropped by mistake) is
+**declined** — ingestion never writes a broken file into `snippets/`.
+
+Consumption (the copy-and-adapt-and-prune step at task time) is `task-execution`'s job, not
+this skill's — see its "copy-and-adapt-and-prune" step.
 
 ## The pipeline
 
@@ -101,6 +148,11 @@ the `ios` pack teaches.
 - **Ingesting into a pack that doesn't exist yet:** create it; `--pack` both targets and creates.
 - **`--global` and `--pack` on an existing repo-local pack of the same name:** these are
   different packs (different install location) — don't merge; note the ambiguity to the user.
+- **`--kind snippet` source isn't valid/parseable Swift:** decline the entry rather than write a
+  broken file into `snippets/`.
+- **Declared `target:` folder doesn't exist yet in the consuming project** (e.g.
+  `Foundation/Design-tokens` not scaffolded): created as part of the copy at task-execution time,
+  same as any first-file-in-a-folder case — not this skill's concern at ingestion time.
 
 ## Anti-patterns
 

@@ -23,8 +23,13 @@ re-document it) against `<source>`:
 
 `--pack <name>` targets or creates a named pack (repeatable ingestion into the same pack).
 `--global` writes to `~/.claude/akios/knowledge/<name>/` instead of the repo-local `knowledge/`.
+`--kind <reference|snippet>` (default `reference`) — `snippet` skips distillation and copies the
+source verbatim into `snippets/<derived-name>/` as a literal, copy-and-adapt code bundle (a
+component, a repository template, a use case, a gateway protocol) instead of prose guidance; see
+`knowledge-ingest`'s `kind: snippet` section.
 
-Arguments (`<source> [--pack <name>] [--global]`), pass as `$ARGUMENTS`: `$ARGUMENTS`
+Arguments (`<source> [--pack <name>] [--kind reference|snippet] [--global]`), pass as
+`$ARGUMENTS`: `$ARGUMENTS`
 
 Stop when the pack exists and (attended) the user has confirmed it. Tell the user the pack is
 live and which triggers route tasks to it.
