@@ -53,6 +53,12 @@ control of every decision that matters and out of the loop for everything that d
    and `code-review-doctrine.md` (principled, ALVA-aware review).
 4. **`just-vibes` team mode polish** — multi-instance claim + signature etiquette hardened with real
    concurrent runs; Roadmap.md conflict resolution documented. *(Still spec-less — genuine wishlist item.)*
+5. **Rename the `execute` phase to `deliver`.** The 4-phase pipeline (`brainstorm → plan → design →
+   execute`) already maps to the Double Diamond (Discover → Define → Develop → Deliver) — `execute`
+   is the one phase name that doesn't match. Touches `workflow.yml`, `pipeline.md`,
+   `commands/execute.md`, `AGENTS.md`, `README.md`, and every `/akios:execute` reference. Small,
+   spine-touching, do as its own isolated pass (see `parallel-execution-scheduling.md` — don't run
+   it alongside other spine-editing work). *(Spec-less — a naming nit, not new capability.)*
 
 > **Was wishlist #3 (Xcode integration hooks)** — now designed in `verification-and-learning-loop.md` §4
 > (post-execute auto build/test hook that parks on red). Tracked there, not here.
