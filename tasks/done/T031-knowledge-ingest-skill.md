@@ -10,7 +10,7 @@ checkpoint: 18
 
 # T031 — `knowledge-ingest` skill + `/akios:learn` command
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Hand-author the `knowledge-ingest` skill (per the handoff decision: `skill-authoring.md`'s
