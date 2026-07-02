@@ -28,6 +28,10 @@ Choose a track based on your goal:
 ## General rules to follow
 
 - Use modern SwiftUI state (`@State`, `@Binding`, `@Observable`, `@Environment`) and avoid unnecessary view models.
+  **Screens vs. components:** this is about *components*, not screens — a screen gets its own
+  ViewModel (VM-per-screen; ALVA's carry-over law, "few screens, many components"); a dumb
+  component never does. Reusable UI comes from breaking out components, not from sharing
+  ViewModels — the two rules aren't in tension, they're scoped to different things.
 - If the deployment target includes iOS 16 or earlier and cannot use the Observation API introduced in iOS 17, fall back to `ObservableObject` with `@StateObject` for root ownership, `@ObservedObject` for injected observation, and `@EnvironmentObject` only for truly shared app-level state.
 - Prefer composition; keep views small and focused.
 - Use async/await with `.task` and explicit loading/error states. For restart, cancellation, and debouncing guidance, read `references/async-state.md`.
@@ -55,6 +59,10 @@ Choose the ownership location first, then pick the wrapper. Do not introduce a r
 
 ## Cross-cutting references
 
+- **Custom view modifiers (text/image treatments):** don't invent a freeform parameterized
+  modifier (`.appText(size:weight:)`) for a text or image treatment — use the closed
+  `.textStyle`/`.imageStyle` role-modifier convention instead. See
+  `skills/swift-dev/skills/swiftui-design-system/GUIDE.md`.
 - `references/navigationstack.md`: navigation ownership, per-tab history, and enum routing.
 - `references/sheets.md`: centralized modal presentation and enum-driven sheets.
 - `references/deeplinks.md`: URL handling and routing external links into app destinations.

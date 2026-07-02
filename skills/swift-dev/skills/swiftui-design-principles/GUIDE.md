@@ -11,6 +11,13 @@ This skill encodes design principles derived from comparing polished, production
 
 Apply these principles whenever building or modifying SwiftUI interfaces, WidgetKit widgets, or any native Apple UI.
 
+> **Token/role convention (2026-07-01, ui-overhaul-implementation.md Phase 4.2):** this guide
+> remains the *source* of every rule value below (the spacing grid, the type scale, the color
+> semantics) — nothing here changed. Once a project has adopted `Foundation/Design-tokens/`,
+> the preferred **call-site** form is `DesignSystem.*` token refs and `.textStyle`/`.imageStyle`
+> role modifiers instead of a re-typed inline literal — see
+> `skills/swift-dev/skills/swiftui-design-system/GUIDE.md` for the full convention.
+
 ## Core Philosophy
 
 **Restraint over decoration.** Every pixel must earn its place. A polished app uses fewer colors, fewer font sizes, fewer spacing values, and fewer words — but uses them consistently. Over-engineering visual elements (custom gradients, decorative borders, bespoke dividers) creates visual noise. Native components and system colors create harmony.
@@ -92,6 +99,26 @@ Use **fewer font sizes** with **clear weight differentiation**. Lighter weights 
 .font(.system(size: 14, weight: .regular, design: .monospaced))  // secondary
 .font(.system(size: 11, weight: .medium, design: .monospaced))   // label
 ```
+
+### Preferred call-site form: token + role modifier
+
+The 5-size table above is the **rule** — this guide stays its source of truth. Once a project
+has adopted `Foundation/Design-tokens/` (`swift-dev`'s `swiftui-design-system` guide), the same
+5 sizes are named once as `DesignSystem.Typography` and consumed through the closed
+`.textStyle`/`.imageStyle` role vocabulary — never re-typed as a raw `.font(.system(size:…))`
+literal at each call site:
+
+```swift
+// Same 5 values, referenced by role instead of by inline literal:
+Text(viewModel.total).textStyle(.hero)        // was .font(.system(size: 42, weight: .light, design: .monospaced))
+Text(viewModel.stat).textStyle(.statValue)    // was .font(.system(size: 24, weight: .light, design: .monospaced))
+Text(viewModel.detail).textStyle(.body)       // was .font(.system(size: 15, weight: .regular, design: .monospaced))
+```
+
+The numeric values don't change — only where they're declared (once, in `DesignSystem`) and how
+a view refers to them (`.textStyle(.hero)`, not a re-typed literal). See
+`skills/swift-dev/skills/swiftui-design-system/GUIDE.md` for the full role set and the
+`DesignSystem` struct shape.
 
 ### Font design consistency
 Pick ONE font design and use it everywhere -- app AND widgets:

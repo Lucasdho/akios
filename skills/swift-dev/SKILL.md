@@ -44,6 +44,7 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 | Any SwiftUI view code — writing, editing, or reviewing | `skills/swiftui-pro/GUIDE.md` |
 | Building NEW UI: screens, navigation, TabView, stacks/grids, custom modifiers, @State/@Binding design | `skills/swiftui-ui-patterns/GUIDE.md` |
 | Native polish: spacing/typography/semantic-color systems, component sizing, grouped content, WidgetKit, or UI that "looks AI-generated" | `skills/swiftui-design-principles/GUIDE.md` |
+| Design tokens, `.textStyle`/`.imageStyle` role modifiers, the `DesignSystem` struct, or deciding whether a value belongs in `Foundation/Design-tokens/` | `skills/swiftui-design-system/GUIDE.md` |
 | Refactoring EXISTING views: splitting long bodies, extracting subviews, MV vs MVVM, @Observable patterns | `skills/swiftui-view-refactor/GUIDE.md` |
 | Concurrency: async/await, actors, Task, Sendable, @MainActor, data races, structured concurrency | `skills/swift-concurrency-pro/GUIDE.md` |
 | Tests: writing or editing Swift Testing code (@Test, #expect, suites) | `skills/swift-testing-pro/GUIDE.md` |

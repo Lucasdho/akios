@@ -1,10 +1,9 @@
-// DesignSystem.swift — starter stub, scaffolded by /akios:init into Foundation/Design-tokens/.
+// DesignSystem.swift — starter scaffold, copied by /akios:init into Foundation/Design-tokens/.
 //
-// This is a MINIMAL placeholder (ui-overhaul-implementation.md Phase 1.4): it exists so a
-// fresh repo has a `Foundation/Design-tokens/` symbol to import from day one. The real shape
-// (Spacing/Radius/Typography/Color, semantic-vs-asset-catalog color rules, the static->instance
-// upgrade path) is defined in full by `swift-dev`'s `swiftui-design-system` guide
-// (skills/swift-dev/skills/swiftui-design-system/GUIDE.md) — read it before extending this file.
+// Shape defined by `swift-dev`'s `swiftui-design-system` guide
+// (skills/swift-dev/skills/swiftui-design-system/GUIDE.md, ui-overhaul-implementation.md Phase
+// 4.1) and by `swiftui-design-doctrine.md` §1 (B1). Extend the enums as the app grows — never
+// add a raw literal at a call site where one of these tokens (or a new one added here) applies.
 //
 // Static namespace only. Do NOT make this an `@Environment`-injected instance until a second
 // theme actually exists (see the guide's upgrade rule) — that is a deliberate, documented
@@ -26,10 +25,16 @@ enum DesignSystem {
     }
 
     enum Typography {
-        // Filled in by swiftui-design-system (Phase 4.1) with the full role table.
+        // size + weight + design + tracking per role — consumed only via .textStyle(_:)
+        // (RoleModifiers.swift), never referenced directly at a view call site.
+        static let hero: Font = .system(size: 34, weight: .bold, design: .rounded)
+        static let body: Font = .system(size: 17, weight: .regular, design: .default)
     }
 
     enum Color {
+        // Semantic system colors adapt to light/dark/accessibility for free.
         static let cardBackground = SwiftUI.Color(.secondarySystemBackground)
+        // Brand colors come from the asset catalog, not an inline hex/RGB literal.
+        // static let brandPrimary = SwiftUI.Color("BrandPrimary")
     }
 }
