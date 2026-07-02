@@ -163,6 +163,7 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
              - key decisions made (with reasoning) per phase
              - gate result (green/red), delivery outcome or park reason
              - branch / PR link
+             - under posture: learning — also append a "Lessons" subsection (see below)
 7. NEXT    default → STOP + report.  --force → loop to step 1.
 ```
 
@@ -179,6 +180,22 @@ just-vibes is the most likely place two akios instances collide, so it is **clai
   table — edit only your unit's row.
 
 ---
+
+## Posture under just-vibes (learning vs. delivery)
+
+No human is present to narrate to, so `posture: learning` (`Roadmap.md`, default `delivery`)
+redirects the teaching to the journal instead of live narration:
+
+- **Learning:** every unit's journal entry (step 6) gains a **"Lessons"** subsection — the 3–5
+  principles the unit exercised, the decisions and their *why* (citing the owning pack/spec), and
+  any hurdle/preference captured this unit. This is the artifact a returning human reads to learn
+  what happened *and why* — the unattended analogue of live narration.
+- **Delivery (default):** journal outcomes only, exactly as documented above — no Lessons
+  subsection.
+- Both postures keep every other unattended rule unchanged (deepthink decisions, no questions
+  asked, quality gate not relaxed) — posture only ever adds or omits the Lessons subsection.
+
+See `specs/operating-modes.md` §4 (D4) for the source design.
 
 ## Reporting (every time you stop)
 

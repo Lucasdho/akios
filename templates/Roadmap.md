@@ -17,6 +17,18 @@ mode: {{new | one-shot | feature}}
             signatures are in force (see AGENTS.md "Working alongside teammates"). -->
 collaboration: {{solo | team}}
 
+## Posture
+<!-- Written by /akios:init (default: delivery); overridable per session via a command flag
+     (--learning / --delivery) or a spoken switch — the override wins for that session only and
+     does NOT rewrite this line. Orthogonal to mode/collaboration — any combination is valid.
+     learning  → akios narrates the *why* behind decisions as it builds (principle citations,
+                 alternatives shown, eager capture proposals, an end-of-unit "what you learned"
+                 digest); under just-vibes the digest is written to the journal's Lessons
+                 section instead of spoken.
+     delivery  → decisions are recorded to the artifact but not narrated live (today's default
+                 behavior). See AGENTS.md "Operating posture" for the full teaching-surface. -->
+posture: {{learning | delivery}}   # default: delivery
+
 ## Specs
 <!-- status: designed → planned → in-progress → done
      (matches the `roadmap:` field of each phase in workflow.yml)

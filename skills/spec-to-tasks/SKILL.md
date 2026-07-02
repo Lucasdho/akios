@@ -122,6 +122,15 @@ State is the **containing folder**; `task-execution` moves the file `todo → in
 | UI polish, widgets, design | `swiftui-design-principles` |
 | Figma → SwiftUI | `figma-to-swiftui` |
 
+## Posture (learning vs. delivery)
+Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for this session
+without rewriting the Roadmap value — same rule as `collaboration`). In **learning** mode, the
+step-10 confirm also states *why* the graph came out this way: why these checkpoint boundaries,
+why a task is `[P]` (or isn't), why a task carries the `pack:<domain>` tag it does. **Delivery**
+(default) shows the graph without the running commentary, as documented above. Never changes the
+decomposition itself — same tasks, same checkpoints, same tags in both postures. See
+`AGENTS.md` "Operating posture" / `specs/operating-modes.md` §3.
+
 ## Hand-off
 `tasks/todo/` is the sole input to `task-execution` (`/akios:execute`). Stop after writing the
 files + updating `Roadmap.md`; tell the user the backlog is ready and that `/akios:execute` ships it.

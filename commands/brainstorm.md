@@ -20,6 +20,10 @@ X" mid-session. If a build/data need surfaces, apply the pipeline's *anti-drift*
 decide whether it's this spec or its own, register a new spec in `Roadmap.md` if distinct, and
 route it through the full pipeline — don't execute it inline.
 
+**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
+`Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
+the Roadmap default. See `idea-to-spec`'s "Posture (learning vs. delivery)".
+
 Feature idea (pass as the spec input): `$ARGUMENTS`
 
 **If the idea is really several specs**, run `idea-to-spec`'s *Intake* triage first: split them,

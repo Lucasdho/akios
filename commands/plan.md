@@ -15,6 +15,10 @@ run it against the spec: one pass, one human confirm, producing **task files und
 definitions of done, and per-task UI-state coverage. Set the spec's status to `planned` in
 `Roadmap.md`. No `.specify/`, no constitution, no speckit.
 
+**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
+`Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
+the Roadmap default. See `spec-to-tasks`'s "Posture (learning vs. delivery)".
+
 Spec path or text (pass as `$ARGUMENTS`): `$ARGUMENTS`
 
 Stop when the task files exist in `tasks/todo/`. Tell the user the backlog is ready and that

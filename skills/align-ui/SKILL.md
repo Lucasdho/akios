@@ -110,6 +110,16 @@ to run against an HTML/Figma reference (that skill is retired; the *problem* it 
 exist anymore since there's no second medium to diff against). A divergence here is a normal
 `execute`-phase fix, not a re-triggered design-phase approval cycle.
 
+## Posture (learning vs. delivery)
+
+Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for the session
+without rewriting it). **Learning** mode adds, at each decision: *which* Nielsen heuristic (table
+above) the resolved state satisfies, and *why* native-over-custom fired (or didn't) for a given
+component — one line each, grounded in the table/flag already in this skill, not new judgment.
+**Delivery** (default) resolves the same decisions silently, exactly as documented above. Neither
+posture changes the resulting alignment doc's decisions — only whether the reasoning is voiced
+during the walk. See `AGENTS.md` "Operating posture" / `specs/operating-modes.md` §3.
+
 ## Completion criterion
 
 The grilling ends when every branch of the tree has a concrete, unambiguous answer —

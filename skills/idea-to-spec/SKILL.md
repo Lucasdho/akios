@@ -23,6 +23,23 @@ The core bet: **specs emerge from accumulated decisions, not from a single gener
 6. **Dependency-aware changes.** When a decision is reopened, identify everything downstream that depended on it, remodel it, and show a "what changed" delta. Never leave the system silently inconsistent.
 7. **Mirror the user's language.** The skill is written in English; the session runs in whatever language the user speaks (including mid-conversation switches).
 
+## Posture (learning vs. delivery)
+
+Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override — a command flag or
+spoken switch — wins for this session without rewriting the Roadmap value). It changes only how
+decisions are narrated, never the design itself:
+
+- **Delivery (default):** the decision loop runs exactly as documented above — recommendation,
+  reason, decide, move on. The spec already records the alternatives and reasoning; nothing extra
+  is spoken.
+- **Learning:** as each decision closes, add one line surfacing *why* the winning position beats
+  the others — the same reasoning that's going into the spec anyway, said aloud instead of left
+  silent. No new step, no extra ceremony — the teaching is the existing "Pre-mark the recommendation
+  and give the reason" instruction, simply voiced rather than only written.
+
+See `AGENTS.md` "Operating posture" for the full teaching-surface this flag controls across every
+phase; `specs/operating-modes.md` for the source design.
+
 ## Intake — one prompt may be many specs (do this first)
 
 Before the macro loop, triage the raw idea. A single prompt often describes **several distinct

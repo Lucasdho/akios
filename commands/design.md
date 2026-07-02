@@ -30,6 +30,10 @@ flag. Write `tasks/ui-alignment/<ScreenName>.md`.
 **Just-vibes posture:** auto-select-and-graduate from the explore round (no remix round), every
 auto-decision marked `[auto]` with rationale recorded.
 
+**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
+`Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
+the Roadmap default. See `align-ui`'s "Posture (learning vs. delivery)".
+
 Task or spec (pass as `$ARGUMENTS`): `$ARGUMENTS`
 
 Stop when the screen is graduated and the alignment doc exists. Tell the user `/akios:execute`

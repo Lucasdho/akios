@@ -37,6 +37,10 @@ Ask in one batched pass (skip what the scan in step 2 answers confidently; confi
   run akios against this repo). Written to `Roadmap.md`. Drives delivery: **solo** → just-vibes merges
   + pushes the default branch; **team** → just-vibes pushes `feature/<spec>` + opens a PR, and the
   multi-instance claim/signature etiquette is in force.
+- **Posture** — `learning` (narrate the *why* behind decisions as you build) / `delivery` (ship
+  quietly, default). Written to `Roadmap.md`. Orthogonal to mode/collaboration; overridable for a
+  single session via a command flag or a spoken switch without rewriting this default. See
+  `AGENTS.md` "Operating posture" for what the flag actually changes.
 - **Stack** — language / framework / runtime / DB (`{{LANGUAGE / FRAMEWORK / RUNTIME / DB}}`)
 - **Commands** — install / run-dev / test / lint / build (`{{install}}` `{{dev}}` `{{test}}` `{{lint}}` `{{build}}`)
 - **Architecture** — one paragraph: entry points, key dirs, data flow
@@ -107,7 +111,7 @@ Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadma
 |---|---|---|
 | `AGENTS.md` | `templates/AGENTS.md` | skip if it already exists |
 | `Context.md` | `templates/Context.md` | skip if it already exists |
-| `Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `collaboration:` lines |
+| `Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `collaboration:` + `posture:` lines |
 | `Vision.md` | `templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
 | `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
 | `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@Context.md` imports is missing (Context first so AGENTS ends on top) |
@@ -157,8 +161,8 @@ In `<root>/.claude/settings.json` (create as `{}` if absent; use `jq` if availab
 ## 5. Self-check (fail loudly)
 Confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tree exist;
 `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`; both hooks +
-`.claude/hooks/akios-instance.sh` are present; `Roadmap.md` has a `mode:` **and** a `collaboration:`
-value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
+`.claude/hooks/akios-instance.sh` are present; `Roadmap.md` has a `mode:`, a `collaboration:`,
+**and** a `posture:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
 `Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
 `Foundation/usage-ledger.json` + the pre-commit hook calling `scripts/alva-usage-ledger.sh`) is in

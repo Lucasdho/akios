@@ -40,6 +40,30 @@ ground-truth reference, publishable standalone from the akios-specific realizati
 **Optional (not required):** `ponytail` — efficiency overlay (no over-building, no rewriting
 what works). The kit has no external dependency on it; install it for yourself if you like.
 
+## Operating posture (learning vs. delivery)
+`Roadmap.md` carries a third flag beside `mode`/`collaboration`: `posture: learning | delivery`
+(default `delivery`, written by `/akios:init`, overridable for one session via a command flag —
+`/akios:execute --learning` — or a spoken switch, without rewriting the Roadmap default).
+Posture changes **only** how akios communicates and captures — never what it builds; a learning-
+mode feature and a delivery-mode feature produce identical code.
+
+A closed, named **teaching surface** — everything else is identical between postures:
+
+| Behavior | Delivery (default) | Learning |
+|---|---|---|
+| Decision annotation | recorded to the artifact, no narration | inline one-liner: what, the principle, the tradeoff |
+| Principle citation | none | names the doctrine + the owning pack/spec |
+| Alternatives shown | in the artifact only | surfaced briefly at the decision point |
+| Capture eagerness (prefs/hurdles) | propose at natural pauses, 2nd-occurrence rule | propose more eagerly + explain why it's worth remembering |
+| End-of-unit digest | outcome report only | a short "what you learned" recap (3–5 principles) |
+| Pace / checkpoints | as planned | may add a soft pause after a teachable checkpoint (never a hard gate) |
+
+Every phase skill (`idea-to-spec`, `spec-to-tasks`, `task-execution`, `align-ui`) reads `posture`
+the same way it already reads `collaboration` and toggles only this surface. Under `just-vibes`
+(no human present), learning posture writes a **"Lessons"** section to
+`.akios/just-vibes-journal.md` per unit instead of narrating live; delivery journals outcomes
+only. Full detail: `specs/operating-modes.md`.
+
 ## The priority chain (whose answer wins)
 For any code decision (pattern, naming, architecture), resolve **top-down — the first tier
 with a relevant answer wins, lower tiers only fill silence**:

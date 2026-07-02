@@ -23,4 +23,8 @@ run it against the backlog in `tasks/todo/`:
 - `/verify` and `/code-review` before claiming done.
 - Stop at the **hard human gate**: ask whether to push and where to merge. Never push or merge on your own.
 
+**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
+`Roadmap.md`'s `posture` for this session only — it does not rewrite the Roadmap value. Absent a
+flag, use the Roadmap default (`delivery` if unset). See `task-execution`'s "Operating posture".
+
 Backlog (pass as `$ARGUMENTS`): `$ARGUMENTS`  (defaults to `tasks/todo/`)

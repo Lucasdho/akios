@@ -22,6 +22,16 @@ modes: [new, one-shot, feature]
 #   team -> just-vibes pushes feature/<spec> + opens a PR; claim-before-work + signatures in force.
 collaboration: [solo, team]
 
+# init also writes the posture flag into Roadmap.md (default: delivery). Orthogonal to mode and
+# collaboration — every phase skill reads it and toggles ONLY the teaching surface (never what
+# gets built). Overridable per session (a command flag or spoken switch) without rewriting the
+# Roadmap default. See specs/operating-modes.md.
+#   delivery -> decisions recorded to the artifact, not narrated live (today's behavior).
+#   learning -> inline principle citations + alternatives + eager capture proposals + an
+#               end-of-unit digest; under just-vibes the digest lands in the journal's Lessons
+#               section instead of being spoken.
+posture: [learning, delivery]
+
 # init is bootstrap, NOT a phase (no spec/task prerequisite).
 bootstrap:
   command: /akios:init

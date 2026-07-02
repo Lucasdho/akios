@@ -12,6 +12,11 @@ mode: feature
 
 collaboration: solo
 
+## Posture
+
+<!-- learning | delivery (default: delivery); see AGENTS.md "Operating posture" / specs/operating-modes.md -->
+posture: delivery
+
 ## Project type
 
 <!-- IMPORTANT for just-vibes and task-execution: this is a PLUGIN/DOCS REPO, not an iOS app.

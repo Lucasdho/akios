@@ -174,6 +174,28 @@ First tier with a relevant answer wins; lower tiers only fill silence:
 Concrete shown code outranks a stated preference. A repo's established architecture is not
 rewritten because of a general preference.
 
+## Operating posture (learning vs. delivery)
+Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override — e.g.
+`/akios:execute --learning` — wins for this session only and does not rewrite the Roadmap
+value). It never changes what gets built, only what gets narrated:
+
+- **Delivery (default):** proceed exactly as documented above — resolve the priority chain, apply
+  the pattern, move on. No inline narration beyond what's already recorded on the task/spec.
+- **Learning:** each time the priority chain resolves to a non-obvious tier (a project decision or
+  a pack overriding the baseline) or a doctrine gets applied (ALVA boundary, dumb-component law,
+  a snippet's `target:` split), add a one-line note: *what* was chosen, the *principle* behind it,
+  and the tradeoff — citing the owning pack/spec (e.g. "dumb-component law — `alva-adoption` §2").
+  At the **end of each unit** (checkpoint or spec), add a short **"what you learned"** digest: the
+  3–5 principles this unit exercised. If nothing teachable happened (a routine mechanical task),
+  say so plainly rather than manufacture a lesson.
+- **Under `just-vibes`:** no one is present to narrate to — learning posture instead appends the
+  same digest as a **"Lessons"** section to `.akios/just-vibes-journal.md` per unit (see
+  `just-vibes`'s own posture note). Delivery journals outcomes only, as today.
+
+Learning posture is also where a hurdle/preference capture gets **proposed more eagerly**, with
+its rationale attached — see "Feedback logging" below. See `AGENTS.md` "Operating posture" /
+`specs/operating-modes.md` §3–§4 for the full design.
+
 ## TDD posture (tests-first where meaningful)
 - **Logic / data / concurrency** → write the failing test first (Swift Testing /
   `swift-dev:swift-testing-pro`), then implement to green, then refactor.
@@ -192,6 +214,9 @@ a red battery blocks the next checkpoint.
 While executing, watch for preference signals — an explicit statement ("prefiro X") or a repeated
 correction (the 2nd time the user undoes the same kind of change). At a natural pause, **propose**
 appending it to `~/.claude/akios/preferences.md` (dedup, append-only). Never write silently.
+**Delivery** proposes at natural pauses per the 2nd-occurrence rule, as above. **Learning** posture
+proposes more eagerly and explains *why the signal is worth remembering* — same dedup, append-only
+discipline, just surfaced sooner and with the reasoning attached (`operating-modes.md` §5).
 
 ## Context management — MANDATORY compact between specs
 
