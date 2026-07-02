@@ -12,7 +12,7 @@ SRC="$KIT/skills"
 DEST="$HOME/.claude/skills"
 mkdir -p "$DEST"
 
-SKILLS=(idea-to-spec oss-first ios-feature-pipeline ios-agentic-kit spec-to-tasks task-execution swift-dev deep-brainstorm founderlens-behavior align-ui ui-variations knowledge-ingest just-vibes handoff)
+SKILLS=(idea-to-spec oss-first ios-feature-pipeline ios-agentic-kit spec-to-tasks task-execution swift-dev deep-brainstorm founderlens-behavior align-ui ui-variations knowledge-ingest just-vibes handoff skill-author)
 
 for s in "${SKILLS[@]}"; do
   if [ -d "$SRC/$s" ]; then
