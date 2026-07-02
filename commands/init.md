@@ -93,6 +93,12 @@ its spec; an empty `Features/` folder is dead scaffolding no one asked for yet. 
 rejected `ui-variations` rounds and is excluded from the Xcode target (`Context.md` gets a line
 noting this, so a fresh session doesn't have to re-derive it).
 
+Also copy the two design-token stubs into `Foundation/Design-tokens/` (skip if either already
+exists): `templates/foundation/DesignSystem.swift` and `templates/foundation/RoleModifiers.swift`
+— a minimal `DesignSystem` token enum + `.textStyle`/`.imageStyle` role-modifier placeholder, so
+the folder isn't empty on day one. Both point back at `swift-dev`'s `swiftui-design-system` guide
+for the full shape (ui-overhaul-implementation.md Phase 1.4 / Phase 4.1).
+
 **Seed user preferences (user-global, once):** if `~/.claude/akios/preferences.md` does **not**
 exist, create `~/.claude/akios/` and copy `templates/preferences.seed.md` there as
 `preferences.md`. If it already exists, leave it untouched (it survives plugin updates).

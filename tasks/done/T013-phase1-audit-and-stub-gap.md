@@ -10,7 +10,7 @@ checkpoint: 9
 
 # T013 — Phase 1 audit (largely pre-satisfied by Session 1) + close the stub gap
 
-> **State:** todo
+> **State:** done
 
 ## Description
 `ui-overhaul-implementation.md` Phase 1 (1.1–1.4) is largely already satisfied by Session 1's
