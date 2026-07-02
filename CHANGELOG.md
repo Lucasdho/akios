@@ -1,5 +1,84 @@
 # Changelog
 
+## 0.8.0 (2026-07-02)
+
+### Added — Architecture
+- **ALVA (Agent-Legible Vertical Architecture)** adopted as the kit's default architectural
+  doctrine (`alva-architecture-doctrine.md`, `alva-adoption.md`). Vertical slices
+  (`Features/<F>/{domain,data,presentation,contract,tests}`), a graduated
+  `Foundation/{Design-tokens,Code-tokens}` promoted by an evidence ledger
+  (`usage-ledger.json`), `Router/`/`Container/` composition root. Imported into `AGENTS.md`,
+  `swift-dev`'s `alva-architecture` guide, `spec-to-tasks`, `task-execution`, `idea-to-spec`,
+  `align-ui`, `deep-brainstorm`, and `/akios:init`'s scaffold. Resolves the ALVA-vs-layer-first
+  architectural fork in ALVA's favor; `ui-first-architecture.md`'s folder shape is superseded
+  (its behavioral laws survive, re-homed into `presentation/<View>/`).
+
+### Added — UI overhaul
+- **`design` phase** added to the pipeline (`brainstorm → plan → design → execute`), between
+  `plan` and `execute`.
+- **`ui-variations` skill** — the design phase's explore/remix/graduate/scratch-archive loop
+  for multi-variant SwiftUI `#Preview` generation (`prototype-first-workflow.md`).
+- **`swiftui-design-system` guide** + retrofit of `swiftui-design-principles`/
+  `swiftui-ui-patterns` — unified `DesignSystem` token struct, native-over-custom budget,
+  Nielsen heuristics, text/image role modifiers, `containerRelativeFrame` adaptivity
+  (`swiftui-design-doctrine.md`).
+- Reshaped `align-ui`, `spec-to-tasks`, `task-execution` for design-phase consumption; new
+  `commands/design.md`.
+
+### Added — Knowledge architecture
+- **Knowledge packs** (`knowledge-architecture.md`): meta-prompt/knowledge split;
+  `pack.yml`/`INDEX.md` format; `swift-dev` re-manifested as the `ios` baseline pack;
+  `code-references/` reframed as the project's code pack; priority-chain tiers 2/4 widened from
+  "swift-dev" to "packs" generally.
+- **`knowledge-ingest` skill + `/akios:learn`** — ingest code/PDF/image/book/doc sources into a
+  pack.
+- **`kind: snippet`** (`snippet-library.md`) — copy-and-adapt Swift code bundles in a
+  user-global pack (`ios-factory`), consumed via a copy-adapt-prune step in `task-execution`.
+- **Skeleton library** (`skeleton-library.md`) — architecture-keyed whole-project starters for
+  `/akios:init`'s greenfield path; folds into the existing Architecture interview question.
+- **`skill-author` skill + `/akios:new-skill`** (`skill-authoring.md`) — scaffolds a behavior
+  skill or knowledge-pack skeleton and self-registers (`scripts/register-skill.sh`),
+  eliminating the install-skills.sh gotcha.
+
+### Added — Operating discipline
+- **`posture: learning | delivery`** — 3rd Roadmap flag (`operating-modes.md`); learning mode
+  narrates the *why* behind each significant decision inline and gives an end-of-unit digest;
+  delivery mode stays quiet. Threaded through `idea-to-spec`, `spec-to-tasks`, `task-execution`,
+  `align-ui`; `just-vibes` gains a written "Lessons" journal section under learning.
+- **Divergence audit + three proofs + hurdles ledger** (`verification-and-learning-loop.md`):
+  `task-execution`'s `review → done` seam now compares planned vs. actual and classifies
+  material divergence; the three proofs (build/test, spec-conformance, visual) are the `done`
+  bar; `code-references/hurdles.md` (tier 2) captures recurring failures. New
+  `scripts/hook/post-checkpoint-verify.sh` — the post-execute auto build/test hook (realizes
+  Vision wishlist #3), degrades gracefully when no build tool is present.
+- **`review-doctrine` guide** (`code-review-doctrine.md`) — SOLID applied honestly, DRY
+  deferred to the usage ledger (never eager), ACID scoped to persistence, a 7-check ALVA/UI
+  conformance table. Loaded by `task-execution`'s review step and `just-vibes`' GATE; optional
+  `/akios:review` wrapper.
+- **`autonomy: manual | auto`** — 4th Roadmap flag (`collaboration-autonomy.md`), splitting
+  "who else works on this repo" (`collaboration`) from "is unattended push/merge authorized"
+  (`autonomy`, default `manual`). `just-vibes`' DELIVER step and `task-execution`'s hard human
+  gate both read it; a new "Built (undelivered)" report bucket distinguishes policy-withheld
+  work from parked/red work.
+- **`/akios:init` reliability** (`init-reliability-and-ux.md`): per-step and per-item narration
+  during long steps; every materialization action is verified rather than trusted from a clean
+  tool-call return; `chmod +x` always issued per-file (never batched); bounded retry-then-stop-
+  with-manifest on a confirmed miss; the consumer-repo `alva-usage-ledger.sh` copy relocates to
+  `.claude/scripts/`.
+
+### Fixed
+- **Contract-consistency reconciliation** (backlog B36): fixed the ~17 drift points a
+  self-review found against `workflow.yml`/`AGENTS.md` — 3 outright contradictions (align-ui
+  skip-vs-run under just-vibes, `runner: subagent` routing vs. the subagent-economy rule, the
+  110k/120k context-warn mismatch), enum/number drift (`objectVersion`, the R-W-W rubric, skill
+  counts, the `needs-revision`/`blocked` status states), and dangling references
+  (`specs/pipeline.md`, `founderlens-sim`, `/ios-feature-pipeline`).
+
+### Not included
+- **`parallel-execution-scheduling.md`** (backlog B37) ships `designed`, not built — it's
+  self-referential (the tool this backlog itself would use to compute build order) and
+  non-blocking; rolls to a future release whenever a multi-spec batch would benefit from it.
+
 ## 0.7.4 (2026-06-24)
 
 ### Housekeeping
