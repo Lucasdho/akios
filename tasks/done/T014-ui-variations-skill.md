@@ -10,7 +10,7 @@ checkpoint: 10
 
 # T014 — New `ui-variations` skill (the design phase's one skill)
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Author the whole design-phase loop as one new skill, per `prototype-first-workflow.md` v2.0
