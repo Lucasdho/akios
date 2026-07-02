@@ -88,6 +88,11 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 | WidgetKit widget | swiftui-design-principles (+ swiftui-pro if it shares view code) |
 | "Run the app, button doesn't work" | ios-debugger-agent first; code guides once the cause is found |
 
+**Review doctrine is loaded at the gate, not by this table.** `skills/review-doctrine/GUIDE.md` —
+SOLID/DRY/ACID applied honestly + ALVA/UI conformance — isn't selected by Phase 2's classify step;
+`task-execution`'s finish step and `just-vibes`' GATE step load it directly before `/code-review`.
+See `specs/code-review-doctrine.md`.
+
 ### Phase 3 — Do the work
 
 Follow the loaded guides. Each guide points to extra files under its own folder (e.g., `references/api.md`) — resolve those paths relative to that guide's folder and read them when the guide says to. The references are the depth; the GUIDE.md is just the map.

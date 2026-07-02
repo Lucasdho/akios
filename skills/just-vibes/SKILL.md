@@ -149,7 +149,9 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
               - TDD-first posture, commit at each checkpoint barrier.
               - Human push/merge gate: waived (this skill is the authorization).
 
-4. GATE    /verify + /code-review — the three proofs (build/test, spec-conformance, visual)
+4. GATE    /verify + /code-review (load `skills/review-doctrine/GUIDE.md` first, same as
+           task-execution's own gate — see its "Code-review doctrine" section) — the three
+           proofs (build/test, spec-conformance, visual)
              green → DELIVER (step 5)
              red   → FIX LOOP: diagnose + fix, re-verify. Bound: stop after two consecutive
                      cycles with no measurable progress (same failures). Then PARK.

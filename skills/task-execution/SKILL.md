@@ -314,10 +314,21 @@ When a spec's last checkpoint is green and all its tasks are `done`:
 
 Future sessions read `archive/Archive.md` first and open a full archived file only on demand.
 
+## Code-review doctrine (loaded at the gate)
+Before running `/code-review` — at a task's review step and again at `Finish` below — load
+`skills/review-doctrine/GUIDE.md` (`swift-dev`'s bundled doctrine reference) as context and apply
+its checklist (SOLID/DRY-via-ledger/ACID-scoped-to-persistence + ALVA/UI conformance + folder/SRP
+drift) against the diff. This doesn't replace the built-in `/code-review` — it feeds it the
+akios-specific doctrine the built-in has no reason to know. Findings are **graduated**: block on
+correctness + boundary violations, warn on style/DRY/structure. A **repeated** finding is a
+2nd-occurrence signal — route it to the hurdles ledger above. Full doctrine + worked example:
+`specs/code-review-doctrine.md`.
+
 ## Finish — the hard human gate
 When the last checkpoint is green:
 - Commits exist on `feature/<spec>`. **Nothing is pushed. Nothing is merged.**
-- Run `/verify` and `/code-review`; report failures honestly with output — don't claim done on a red.
+- Run `/verify` and `/code-review` (with `review-doctrine` loaded, per above); report failures
+  honestly with output — don't claim done on a red.
 - **Then ask the user two things and wait:** (a) push this branch? (b) merge — and *where*
   (`dev` / `main` / other)? Never assume the target. Act only on their answer.
 
