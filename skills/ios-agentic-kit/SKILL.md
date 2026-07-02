@@ -29,8 +29,12 @@ defined in **`workflow.yml`** (the machine-readable contract); the commands are 
 that read it:
 
 ```
-brainstorm (idea-to-spec) → plan (spec-to-tasks) → execute (task-execution)
+brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → execute (task-execution)
 ```
+
+`design` fires for UI-scoped tasks (explore/remix/graduate a screen, resolve states/
+interactions/heuristics); non-UI tasks (domain/data/contract) skip straight from `plan` to
+`execute`.
 
 For any end-to-end feature, **start with `ios-feature-pipeline`** (a skill, invoked by description
 or by name — not a `/akios:*` slash command) — the entry point that reads
@@ -85,7 +89,7 @@ session); this is the portable version for repos without the kit installed.
 
 | Trigger | Skill | When |
 |---|---|---|
-| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → execute | before starting |
+| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → execute | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → specs to `specs/` | before building |
 | Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `tasks/todo/` | after the spec |
 | Hand-writing complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |

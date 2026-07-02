@@ -96,7 +96,8 @@ Whenever you make a decision unattended:
    - **Skip `needs-revision` specs** (R-W-W audit flagged them weak) unless `--force` is passed.
      Log each skipped spec in the journal with reason "audit: needs-revision".
 5. **`specs/*.md` present but no `Roadmap.md`** — treat each spec as `designed`, run plan → execute.
-6. **`Vision.md` / `Roadmap.md` items with no spec** — needs full brainstorm → plan → execute.
+6. **`Vision.md` / `Roadmap.md` items with no spec** — needs full brainstorm → plan → execute
+   (with `design` between plan and execute for any UI-scoped task the plan produces).
 
 > **`needs-revision` specs:** Roadmap status set by the deep-brainstorm R-W-W audit when a spec
 > scores below 41/100. Skipped in default mode — the spec needs revision before it's

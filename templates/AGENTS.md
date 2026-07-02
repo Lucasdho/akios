@@ -73,7 +73,7 @@ Match the machinery — and the model — to the size of the job. Two questions 
   one-liner, mirroring an existing screen, a copy tweak). **Do it inline, now** — no spec, no pipeline
   (still on a branch/worktree per the isolation rule below; never edit a building working copy in place).
 - *Real spec* — multi-file, new behavior, a new domain, or anything you'd want reviewed as a unit.
-  Route it through the spine (brainstorm → plan → execute) and let `task-execution` own the loop.
+  Route it through the spine (brainstorm → plan → design → execute) and let `task-execution` own the loop.
 
 Mis-sizing costs both ways: a full pipeline for a one-liner is overhead the user pays for nothing; a
 quick patch for a real feature ships half-baked. When genuinely unsure, ask one sizing question rather
@@ -134,7 +134,7 @@ not from cutting the safety rails.
 
 | Trigger | Skill | When |
 |---|---|---|
-| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → execute | before starting |
+| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → execute | before starting |
 | Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → write specs to `specs/` | before building |
 | Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `tasks/todo/` | after the spec |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
@@ -198,21 +198,25 @@ add a row to the `Roadmap.md` `## Specs` table so the next session knows it exis
 ## Full feature workflow (the spine)
 Defined in `workflow.yml`; entry point is **`ios-feature-pipeline`**. At a glance:
 
-`brainstorm (idea-to-spec) → plan (spec-to-tasks) → execute (task-execution)`
+`brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → execute (task-execution)`
 
-Three phases: `brainstorm` (interactive design → `specs/<feature>.md`) → `plan` (one pass →
-`tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, UI states) → `execute` (branch
-per spec, folder-state lifecycle, TDD-first, commit at each checkpoint, `/verify` + `/code-review`,
+Four phases: `brainstorm` (interactive design → `specs/<feature>.md`) → `plan` (one pass →
+`tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, UI states) → `design` (UI-scoped
+tasks only: `ui-variations` explores + remixes + graduates a screen into
+`presentation/<View>/`, `align-ui` resolves states/interactions/navigation + the Nielsen
+heuristics checklist; non-UI tasks skip straight to `execute`) → `execute` (branch per spec,
+folder-state lifecycle, TDD-first, commit at each checkpoint, `/verify` + `/code-review`,
 human gate before push/merge). See `ios-feature-pipeline` for the conduct; `workflow.yml` for the
 contract. No speckit, no `.specify/`, no constitution.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
-**plan mode** (read-only; review the spec/backlog before a single edit lands). `execute` is a long
-implementation loop — switch to **accept-edits / auto mode** so you're not approving every individual
-edit while the agent works a known plan. `Shift+Tab` cycles modes mid-session. This is workflow
-economy, not just safety: plan mode stops premature writes during design; accept-edits stops
-death-by-prompt during execution. (For the sandbox/security angle, see `ios-agentic-kit`'s
-`references/sandbox.md`.)
+**plan mode** (read-only; review the spec/backlog before a single edit lands). `design` and
+`execute` both write real files (graduated SwiftUI previews, then wired code) — switch to
+**accept-edits / auto mode** for both so you're not approving every individual edit while the
+agent works a known plan. `Shift+Tab` cycles modes mid-session. This is workflow economy, not just
+safety: plan mode stops premature writes during design-of-the-spec; accept-edits stops
+death-by-prompt once code (prototype or final) starts landing. (For the sandbox/security angle,
+see `ios-agentic-kit`'s `references/sandbox.md`.)
 
 ### Autonomous run (just-vibes) — driving the spine yourself
 `/akios:just-vibes` runs the whole spine **unattended**: it picks the next fuel (a submitted idea →

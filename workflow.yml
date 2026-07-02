@@ -50,6 +50,19 @@ phases:
     outputs: [tasks/todo/*.md]
     roadmap: planned
 
+  - id: design
+    command: /akios:design
+    skill: ui-variations
+    prereqs: [tasks/todo/*.md]
+    outputs: [Features/*/presentation/*/*.swift, tasks/ui-alignment/*.md]
+    roadmap: in-progress
+    # design runs BETWEEN plan and execute: ui-variations owns explore -> remix -> graduate;
+    # align-ui resolves states/interactions/navigation + the 10 Nielsen heuristics + the
+    # native-over-custom flag on the graduated screen. No separate approval-gate mechanism
+    # exists here — a screen can't reach `execute`'s make-it-live until a variation has
+    # graduated, which is alva-adoption.md's A3 build-order (components -> dumb screen ->
+    # make-it-live) already enforcing the order.
+
   - id: execute
     command: /akios:execute
     skill: task-execution
@@ -58,7 +71,7 @@ phases:
     roadmap: done
 
 # deep-brainstorm is a PRE-EXECUTION RUN-STYLE. It does whole-product discovery and cartography,
-# producing a complete spec family. Its output feeds the normal brainstorm→plan→execute pipeline.
+# producing a complete spec family. Its output feeds the normal brainstorm→plan→design→execute pipeline.
 # just-vibes is a RUN-STYLE over the phases above, not a phase. It drives them unattended,
 # picking the next fuel and delivering without the per-spec human gate (the quality gate stays).
 run_styles:
