@@ -23,7 +23,9 @@ list; kept in the same table/ID scheme so the rest of the family can reference t
 B32–B35 come from a friend's ("Julio") first `/akios:init` run — real onboarding friction, not
 self-generated backlog. B36 comes from a self-audit of the kit's own shipped contract (commands,
 skills, templates, `workflow.yml`) — see `specs-review-2026-07-01.md` on branch
-`claude/inspiring-rubin-3vksm6` (not yet merged into this branch).
+`claude/inspiring-rubin-3vksm6` (not yet merged into this branch). B37 comes from a live scheduling
+question asked mid-build during the v0.8.0 Session 2 execution itself (2026-07-01) — this map's own
+§5 "Recommended build order" was already doing that reasoning by hand.
 
 | ID | Demand (raw) | Theme |
 |---|---|---|
@@ -63,6 +65,7 @@ skills, templates, `workflow.yml`) — see `specs-review-2026-07-01.md` on branc
 | **B34** | `/akios:init`'s file-materialization step must survive tool-call errors (failed `cp`, an auto-mode-blocked batched `chmod +x` forcing a fallback to per-file calls that then also error) without leaving the agent stuck in an ambiguous "did it land or not" state | Init reliability |
 | **B35** | Consolidate every akios-generated file under one folder, and offer the user an option to gitignore all of it, so `/akios:init` doesn't pollute the person's repo | Init footprint / repo hygiene |
 | **B36** | Self-review of the shipped kit contract found real drift: `align-ui` "skip vs run under just-vibes" stated three contradictory ways, `runner: subagent` per-task routing conflicts with `AGENTS.md`'s session-pressure subagent-economy rule, `AGENTS.md` misquotes task-execution's 110k context-warn line as 120k, plus number/enum drift (`objectVersion` 77 vs 90, two divergent R-W-W rubrics claiming to be the same one, 3 conflicting skill counts, `needs-revision`/`blocked` missing from the status enum) and dangling refs (`specs/pipeline.md`, `founderlens-sim`, `/ios-feature-pipeline` as a command). Needs a reconciliation pass against `workflow.yml` + `AGENTS.md` as the two authorities. Full detail: `specs-review-2026-07-01.md`, branch `claude/inspiring-rubin-3vksm6`. | Kit self-consistency / contract drift |
+| **B37** | Before delegating multiple specs/tasks to concurrent agents (subagents or worktrees), akios has no repeatable way to tell which pairs are safe to parallelize versus which collide on shared kit machinery (`task-execution/SKILL.md`, `spec-to-tasks/SKILL.md`, `Roadmap.md`, `AGENTS.md`, `install-skills.sh`) — worked out by hand, ad hoc, per session today (see this map's own §5). | Execution scheduling / multi-agent orchestration |
 
 ---
 
@@ -136,6 +139,7 @@ What the two families do **not** cover. Each becomes a spec in this family.
 | G9 | `collaboration-autonomy.md` *(not yet written)* | B32 | Split "who else works on this repo" (`collaboration: solo/team`) from "should just-vibes auto-push/merge" — two independent questions, not one flag standing in for both. |
 | G10 | `init-reliability-and-ux.md` *(not yet written)* | B33, B34, B35 | `/akios:init` narrates its steps as it runs, verifies each materialization step actually landed instead of assuming, avoids batched calls that trip the auto-mode classifier, and keeps its footprint in one gitignore-able folder. |
 | G11 | `contract-consistency-reconciliation.md` *(not yet written)* | B36 | Reconcile the ~17 drift points from the 2026-07-01 self-review against `workflow.yml`/`AGENTS.md` as the two authorities: fix the 3 outright contradictions first (align-ui skip/run, runner routing vs. subagent economy, 110k/120k), then number/enum drift, then dangling refs. |
+| G12 | `parallel-execution-scheduling.md` | B37 | Generalizes `spec-to-tasks`' intra-checkpoint `[P]` collision check to the spec level, so a multi-spec batch (like this map's own §5) can identify which pairs are safe to delegate to concurrent agents vs. which must serialize on shared kit "spine" files. |
 
 ---
 
@@ -195,13 +199,19 @@ Dependency-ordered. Each phase only depends on earlier ones.
 Steps 2–3 are the biggest and highest-value (they discharge ~20 of 29 backlog lines). Steps 4–8 are the
 new capabilities that make akios *extensible and self-correcting* rather than just disciplined.
 
-**G9/G10/G11 — registered, not yet sequenced.** G9/G10 surfaced from real `/akios:init` onboarding
+**G9/G10/G11/G12 — registered, not all sequenced.** G9/G10 surfaced from real `/akios:init` onboarding
 friction (2026-07-01); G11 surfaced from a self-audit of the shipped kit contract (2026-07-01, see
-`specs-review-2026-07-01.md` on branch `claude/inspiring-rubin-3vksm6`). None are yet designed or
-placed in the ordering above. G11 is a special case worth flagging: unlike G1–G10, it isn't new
-surface area — it's **fixing drift in what's already shipped**, so it could reasonably jump the queue
-(cheap, no design phase needed for most items — mostly find-and-replace against `workflow.yml`/
-`AGENTS.md`) rather than wait its turn behind the build-order above.
+`specs-review-2026-07-01.md` on branch `claude/inspiring-rubin-3vksm6`); G12 surfaced from a live
+scheduling question asked mid-build during v0.8.0 Session 2 (2026-07-01, see
+`parallel-execution-scheduling.md`). G9/G10/G11 are not yet designed or placed in the ordering above.
+G11 is a special case worth flagging: unlike G1–G10, it isn't new surface area — it's **fixing drift
+in what's already shipped**, so it could reasonably jump the queue (cheap, no design phase needed for
+most items — mostly find-and-replace against `workflow.yml`/`AGENTS.md`) rather than wait its turn
+behind the build-order above. G12 is already `designed` (unlike G9–G11) but deliberately
+**self-referential**: it's the tool this map's own §5 should eventually use to *compute* build order
+rather than hand-derive it, so its own placement in the sequence is not urgent — nothing else in this
+backlog blocks on it, and it can be built whenever a future multi-spec batch would benefit from the
+graph being checked instead of reasoned by hand.
 
 ---
 

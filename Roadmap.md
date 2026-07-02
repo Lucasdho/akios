@@ -54,3 +54,4 @@ type: plugin-docs
 | operating-modes.md | Learning vs delivery posture — 3rd Roadmap flag | designed | backlog B3; teaches the *why* as it builds |
 | verification-and-learning-loop.md | Post-exec divergence audit + three proofs + hurdles ledger | designed | backlog B2,B19; realizes Vision wishlist #3 (auto build/test hook) |
 | code-review-doctrine.md | Principled review: SOLID/DRY/ACID (honest) + ALVA/UI conformance + folder drift | designed | backlog B10,B11,B12; DRY defers to ledger, ACID scoped to persistence |
+| parallel-execution-scheduling.md | Cross-spec parallel/sequential scheduling — generalizes spec-to-tasks' `[P]` collision check to whole specs, so multi-spec batches know which pairs are safe for concurrent agent delegation | designed | backlog B37; self-surfaced during v0.8.0 Session 2; self-referential — not on the critical path, build whenever a future multi-spec batch benefits |
