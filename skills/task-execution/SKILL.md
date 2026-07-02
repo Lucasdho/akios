@@ -149,7 +149,7 @@ whole repo (`swift-dev`'s `alva-architecture` guide, doctrine P6). If nothing th
 is born inside the current feature; it is not shared preemptively.
 
 - **You read `Foundation/usage-ledger.json`; you never count.** The count is produced by a
-  deterministic tool (`scripts/alva-usage-ledger.sh` or its consumer-repo git-hook installation) —
+  deterministic tool (`.claude/scripts/alva-usage-ledger.sh` or its consumer-repo git-hook installation) —
   investigating usage across features is not something you do by grepping the repo per-run.
 - **Each ledger entry becomes a task, not a silent move.** Every `candidates_promote` /
   `candidates_demote` entry in the ledger gets written as a new `tasks/todo/T<NNN>-*.md` (promote:

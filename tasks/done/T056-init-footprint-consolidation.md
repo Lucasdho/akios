@@ -10,7 +10,7 @@ checkpoint: 34
 
 # T056 — Footprint consolidation: `alva-usage-ledger.sh` moves under `.claude/scripts/`
 
-> **State:** todo
+> **State:** done
 
 ## Description
 The one real footprint move from `init-reliability-and-ux.md` §5 (D5): relocate the

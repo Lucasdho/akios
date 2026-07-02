@@ -32,7 +32,7 @@ is a hard stop.
 Never demand extraction on sight. ALVA's thesis is *locality > DRY for agent-maintained code* —
 consistent repetition is cheaper for an agent than an abstraction it must chase across files.
 
-- **Read `Foundation/usage-ledger.json`** (produced by `scripts/alva-usage-ledger.sh`; you read
+- **Read `Foundation/usage-ledger.json`** (produced by `.claude/scripts/alva-usage-ledger.sh`; you read
   it, you never count usage yourself by grepping the repo). Flag a DRY candidate **only** when the
   ledger's `candidates_promote` says a symbol crossed the rule-of-three threshold
   (`alva-adoption.md` §3) — and even then it's a *promotion task suggestion*, never a review block.

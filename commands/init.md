@@ -13,6 +13,14 @@ Templates live in the installed plugin at `${CLAUDE_PLUGIN_ROOT}/templates/` and
 `${CLAUDE_PLUGIN_ROOT}/scripts/`. Read them from there; do not invent their contents.
 `init` is **bootstrap, not a phase** (see `workflow.yml` `bootstrap`).
 
+**Narrate as you go (`init-reliability-and-ux.md` §1).** Print a one-line header the moment each
+numbered step below starts (e.g. "Scanning repo…", "Materializing 12 files + folder tree…",
+"Wiring hooks…", "Self-check…") — a step should never run silently. Steps §1a (skeleton copy) and
+§3 (Materialize) additionally narrate **per item** as each file/action completes (e.g.
+"✓ `AGENTS.md` written", "✓ `.claude/hooks/agentic-kit-inject.sh` copied + executable") — those are
+the long steps that previously ran silently; the short/interactive steps don't need per-item
+narration on top of their header.
+
 ## 0. Detect state (idempotency gate — do this first)
 Don't re-onboard a repo that's already set up; re-running `/akios:init` should be cheap.
 Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's recorded version
@@ -28,6 +36,12 @@ Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's reco
   untouched. Re-verify wiring (steps 4–5). Write the new version, then **report the diff** from
   `${CLAUDE_PLUGIN_ROOT}/CHANGELOG.md` in two or three lines, flagging anything needing a manual touch.
   Detect the **mode** here too: if the user has feature work in mind, ask `new`/`one-shot`/`feature`.
+  **If a repo already onboarded before this footprint move still has a root-level
+  `scripts/alva-usage-ledger.sh`** (`init-reliability-and-ux.md` §5, §8): copy it to
+  `.claude/scripts/alva-usage-ledger.sh`, verify the copy landed (§3's verification discipline),
+  re-point the pre-commit hook's call to the new path, and **only then** remove the old root-level
+  file — never delete-then-copy. This targets that one named file only; never touch anything else
+  the user may have in their own `scripts/` folder.
 
 ## 1. Interview (short — map answers to the placeholders)
 Ask in one batched pass (skip what the scan in step 2 answers confidently; confirm rather than re-ask):
@@ -81,7 +95,12 @@ the option is never even shown outside `mode: new`.
    **now**, before step 2 (Scan) runs and before step 3 (Materialize) writes `Context.md` /
    `AGENTS.md` / etc. Copying first means the scan sees the real, chosen starting structure
    (a real `.xcodeproj`, real source dirs) instead of an empty repo — scanning after the copy
-   would produce a `Context.md` that describes nothing.
+   would produce a `Context.md` that describes nothing. **Narrate + verify per file
+   (`init-reliability-and-ux.md` §1, §2, §4):** as each file/dir lands, print "✓ `<path>` copied"
+   and re-check the destination actually exists (non-empty) before moving to the next item — don't
+   assume success from a clean tool-call return. On a confirmed miss, retry that one item once;
+   if the retry also fails, **stop the skeleton copy immediately** and report exactly which paths
+   landed vs. which didn't, rather than continuing into the scan with a half-copied tree.
 6. **A skeleton never ships akios's own meta files.** Its tree covers only the app's own source
    (Xcode project, `Router/`, `Container/`, `Foundation/`, an example `Features/` slice, or
    whatever its architecture calls for) — never `AGENTS.md`, `Context.md`, `Roadmap.md`,
@@ -114,6 +133,20 @@ on every new file.
 Copy each template into the repo, replacing every `{{...}}` token with the resolved value.
 Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadmap.md` (mode).
 
+**Narrate + verify per row, always-per-file `chmod` (`init-reliability-and-ux.md` §1-§4).** As
+each row below is applied, print "✓ `<File>` written/copied" (or "skipped — already exists" per
+the row's rule), then immediately re-check the result before moving to the next row: for a
+copy/write, re-read/stat the destination (exists, non-empty, or content-matches-source for an
+exact copy); for a "make executable" row, re-stat the permission bits to confirm the executable
+bit is actually set. **Never trust a clean tool-call return as proof.** Issue every `chmod +x`
+below as **one call per file, always** — never batch multiple files into a single `chmod` call,
+even though they're listed together here; batching this cheap, five-file operation has no real
+benefit and is a known trigger for auto-mode permission classifiers to block the call. On a
+confirmed miss (verification fails after the action), retry that single action exactly once; if
+the retry also fails, **stop this step immediately** — do not proceed to step 4 or step 5 — and
+report an itemized manifest (confirmed landed / confirmed missing / never attempted) rather than
+continuing or guessing at the repo's state.
+
 | File | Source | Rule |
 |---|---|---|
 | `AGENTS.md` | `templates/AGENTS.md` | skip if it already exists |
@@ -123,23 +156,37 @@ Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadma
 | `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
 | `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@Context.md` imports is missing (Context first so AGENTS ends on top) |
 | `.claude/rules/swift.md` | `templates/rules/swift.md` | skip if it already exists |
-| `.claude/hooks/agentic-kit-inject.sh` | `scripts/hook/agentic-kit-inject.sh` | always copy; make executable |
-| `.claude/hooks/skill-trace.sh` | `scripts/hook/skill-trace.sh` | always copy; make executable (optional telemetry) |
-| `.claude/hooks/akios-instance.sh` | `scripts/akios-instance.sh` | always copy; make executable (instance signature for just-vibes + claims) |
-| `.claude/hooks/post-checkpoint-verify.sh` | `scripts/hook/post-checkpoint-verify.sh` | always copy; make executable (the auto-build/test hook — `task-execution` calls it at `[major]` checkpoints; degrades to a graceful no-op if there's no build tool) |
+| `.claude/hooks/agentic-kit-inject.sh` | `scripts/hook/agentic-kit-inject.sh` | always copy; make executable (per-file `chmod`) |
+| `.claude/hooks/skill-trace.sh` | `scripts/hook/skill-trace.sh` | always copy; make executable (per-file `chmod`, optional telemetry) |
+| `.claude/hooks/akios-instance.sh` | `scripts/akios-instance.sh` | always copy; make executable (per-file `chmod`; instance signature for just-vibes + claims) |
+| `.claude/hooks/post-checkpoint-verify.sh` | `scripts/hook/post-checkpoint-verify.sh` | always copy; make executable (per-file `chmod`; the auto-build/test hook — `task-execution` calls it at `[major]` checkpoints; degrades to a graceful no-op if there's no build tool) |
 | `.claude/.agentic-kit-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
-| `scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | always copy; make executable |
-| `.git/hooks/pre-commit` | append a call to `scripts/alva-usage-ledger.sh` | if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
+| `.claude/scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | always copy; make executable (per-file `chmod`). **Namespaced under `.claude/` (`init-reliability-and-ux.md` §5) — not a bare root-level `scripts/` folder**, which a consumer repo is likely to already own for its own scripts. |
+| `.git/hooks/pre-commit` | append a call to `.claude/scripts/alva-usage-ledger.sh` | if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
+
+**Footprint — what's consolidated and what deliberately isn't (`init-reliability-and-ux.md` §5).**
+Beyond the `alva-usage-ledger.sh` move above, this repo's other akios-generated artifacts are
+**not** further consolidated, on purpose: the five root-convention files (`AGENTS.md`,
+`CLAUDE.md`, `Context.md`, `Roadmap.md`, `Vision.md`) stay at repo root because `CLAUDE.md` is
+where Claude Code itself looks and `AGENTS.md`/`Context.md` are pulled in via its root-relative
+`@AGENTS.md`/`@Context.md` imports; the content folders (`specs/ tasks/ archive/
+code-references/`) stay at root because they hold work product the user browses directly, not
+generated housekeeping; the ALVA scaffold (`Router/ Container/ Foundation/ scratchs/`) stays at
+root because it's the user's own application source. `.claude/` (this step's hooks/rules/version
+marker) is already one directory and needs no further consolidation.
 
 **Create the folder tree** (empty, with a `.gitkeep` if your tooling needs it):
 `specs/ tasks/todo/ tasks/in-progress/ tasks/review/ tasks/done/ archive/ code-references/`.
-(`.akios/` is created at runtime for the local journal/trace and stays gitignored — multi-instance
-claims live in **committed** files: task frontmatter `owner:` and the `Roadmap.md` spec line.)
+(`.akios/` is created at runtime for the local journal/trace and stays **unconditionally**
+gitignored — no yes/no prompt (`init-reliability-and-ux.md` §6): there's no legitimate case for
+tracking a per-machine journal/trace/claims-cache, so a forced default beats asking a question
+with only one sane answer. Multi-instance claims live in **committed** files instead: task
+frontmatter `owner:` and the `Roadmap.md` spec line.)
 
 **Scaffold the ALVA composition root** (skip any piece that already exists):
 `Router/ Container/ Foundation/Design-tokens/ Foundation/Code-tokens/ scratchs/`, plus a starter
 `Foundation/usage-ledger.json` (`{"generated": null, "candidates_promote": [], "candidates_demote":
-[]}`) so `scripts/alva-usage-ledger.sh` has a file to overwrite on the first commit. **Do not**
+[]}`) so `.claude/scripts/alva-usage-ledger.sh` has a file to overwrite on the first commit. **Do not**
 create `Features/` empty up front — a feature only gets a slice when `spec-to-tasks` decomposes
 its spec; an empty `Features/` folder is dead scaffolding no one asked for yet. `scratchs/` holds
 rejected `ui-variations` rounds and is excluded from the Xcode target (`Context.md` gets a line
@@ -167,15 +214,20 @@ In `<root>/.claude/settings.json` (create as `{}` if absent; use `jq` if availab
   `{ "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-trace.sh\"" } ] }`
 
 ## 5. Self-check (fail loudly)
-Confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tree exist;
+**If step 3 (or step 1a) stopped early on a confirmed miss (§3's retry-then-stop path):** don't
+run a fresh self-check as if nothing happened — report the itemized manifest that step already
+produced (confirmed landed / confirmed missing / never attempted) as the result, so the state is
+explicit rather than re-derived or assumed complete.
+
+Otherwise, confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tree exist;
 `CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`; both hooks +
 `.claude/hooks/akios-instance.sh` + `.claude/hooks/post-checkpoint-verify.sh` are present;
 `Roadmap.md` has a `mode:`, a `collaboration:`,
 a `posture:`, **and** an `autonomy:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
 `Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
-`Foundation/usage-ledger.json` + the pre-commit hook calling `scripts/alva-usage-ledger.sh`) is in
-place. **If a skeleton was copied (step 1a):** confirm it did not overwrite `AGENTS.md`,
+`Foundation/usage-ledger.json` + the pre-commit hook calling `.claude/scripts/alva-usage-ledger.sh`)
+is in place. **If a skeleton was copied (step 1a):** confirm it did not overwrite `AGENTS.md`,
 `Context.md`, `Roadmap.md`, `Vision.md`, or `.claude/` — those must still be the plugin's own
 templates, not skeleton-sourced files. Report any miss.
 

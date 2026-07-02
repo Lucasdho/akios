@@ -10,7 +10,7 @@ checkpoint: 34
 
 # T055 — `/akios:init` narration, per-action verification, per-file chmod, bounded retry
 
-> **State:** todo
+> **State:** done
 
 ## Description
 Harden `commands/init.md`'s Materialize step (§3) and skeleton-copy step (§1a) per
