@@ -10,8 +10,6 @@ factory/router dependency-injection shape. Second of the 3-spec UI overhaul fami
 (which defines the `DesignSystem` struct this spec gives a home to). Everything here is settled
 unless marked *open*.
 
-> **State:** designed
-
 > **[SUPERSEDED 2026-07-01 — see `alva-adoption.md` D1/D2]** §1 (A1, the shared
 > `DomainLayer/DataLayer/PresentationLayer` folder shape) and §2 (A2, the flat rule-of-two promotion
 > table) are subsumed by ALVA's vertical-slice structure — the human fork this spec assumed is now

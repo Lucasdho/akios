@@ -5,8 +5,6 @@ This is the **reading of the AKIOS backlog** — every demand from the raw list,
 what already covers it and what still needs designing. It is the orientation document for the spec
 family that answers the backlog. Read this first; it is the table of contents for everything else.
 
-> **State:** designed (index — never planned/executed directly; it routes to the specs that are)
-
 > **The finding:** roughly 60% of the backlog is *already designed* in two in-flight families (the
 > UI overhaul and ALVA) that are `designed` but unbuilt. The remaining ~40% is genuine new surface
 > area — knowledge extensibility, skill authoring, operating modes, a verification/learning loop, and
