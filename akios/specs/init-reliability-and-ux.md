@@ -10,8 +10,6 @@ Complements `commands/setup.md` (the file this spec edits directly), `skeleton-l
 skeleton-copy step this spec's narration/verification rules also cover), and the lived precedent
 of two real near-misses in this very build arc (§7).
 
-> **State:** designed
-
 > **Autonomous decision pass:** because no human was present overnight, the remaining open
 > decisions in this spec were resolved **autonomously**, `/akios:just-vibes`-style — the
 > recommended position was taken for each, alternatives are recorded with why they were rejected,

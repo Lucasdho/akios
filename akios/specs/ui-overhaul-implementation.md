@@ -7,7 +7,6 @@ v2.0 (Block C), `alva-adoption.md` v1.1 (Block A — supersedes `ui-first-archit
 It is not a new design; every item traces to a decision already settled. Read the three specs for the
 *why*; read this for the *what, in what order*.
 
-> **Status:** not started — all design locked, no implementation yet.
 > **v2.0 changelog (2026-07-01):** full rewrite. The old v1.0 backlog built 3 skills
 > (`prototype`/`html-to-swiftui`/`visual-grounding`) onto a shared `DomainLayer/DataLayer/PresentationLayer`
 > tree — both are retired. This version builds **one skill** (`ui-variations`) onto **ALVA's vertical-slice

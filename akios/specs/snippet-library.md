@@ -8,12 +8,11 @@ a gateway protocol, a design-system token file — copied into a project and ada
 re-derived from scratch. Lives as a **user-global pack** (`~/.claude/akios/knowledge/ios-factory/`),
 not the shipped `ios` baseline, because this is the user's own curated "factory" code, not something
 akios ships to everyone. Answers a new backlog item (**B30**, registered in `akios-backlog-map.md`
-§11 of this spec). Complements `knowledge-architecture.md` (whose pack format, `--global` flag, and
-priority-chain placement this reuses verbatim) and `alva-architecture-doctrine.md` /
-`alva-adoption.md` (whose Design-tokens/Code-tokens split decides where a copied snippet lands).
-
-> **State:** designed — mechanism only. Populating actual snippet content (which card, which
-> repository pattern, etc.) is explicitly deferred; see §10.
+§1 — see §11 of this spec for the full backlog placement notes). Complements
+`knowledge-architecture.md` (whose pack format, `--global` flag, and priority-chain placement this
+reuses verbatim) and `alva-architecture-doctrine.md` / `alva-adoption.md` (whose Design-tokens/
+Code-tokens split decides where a copied snippet lands). Mechanism only — populating actual snippet
+content (which card, which repository pattern, etc.) is explicitly deferred; see §10.
 
 > **The shift:** akios can already load *advice* about Swift/iOS (the `ios` pack's `references/*.md`,
 > and any user pack ingested via `/akios:learn`). It cannot yet load *code the user already trusts* as
@@ -132,7 +131,7 @@ single-file-per-entry format can't represent that without an artificial split.
 **Decision & reason:** `snippets/<name>/` is always a folder, even for a single-file case (a lone
 card component still gets its own folder with one `.swift` + `usage.md`) — one shape for every entry,
 no branching between "simple" and "bundle" snippets. This is the same "convention as compression"
-instinct ALVA already uses for feature slices (§103 of `alva-architecture-doctrine.md`): the agent
+instinct ALVA already uses for feature slices (ALVA P2, `alva-architecture-doctrine.md`): the agent
 learns one shape and reproduces it, instead of two.
 
 `usage.md` is mandatory per snippet and covers: what to rename/adapt, what to wire (DI registration,

@@ -8,10 +8,8 @@ subordinates DRY to the evidence ledger (so it never nags "extract this" against
 and scopes ACID to persistence (so it never cargo-cults transactions onto a view). Answers backlog **B11**
 (ACID/DRY/SOLID in review), **B10** (files with >1 responsibility; no domain/feature folders), and **B12**
 (feed the repo good practices). Complements `alva-adoption.md` (whose boundaries it enforces),
-`swiftui-design-doctrine.md` (whose native/token rules it checks), and `task-execution.md` (the gate that
-loads it). See `akios-backlog-map.md` (G6).
-
-> **State:** designed
+`swiftui-design-doctrine.md` (whose native/token rules it checks), and the `task-execution` skill
+(the gate that loads it). See `akios-backlog-map.md` (G6).
 
 > **The shift:** the kit's "Claiming done" step calls the built-in `/code-review`, but with no akios-specific
 > doctrine — so it can't catch a file doing three jobs, a slice reaching into another's internals, or an
@@ -90,7 +88,7 @@ Beyond the classics, the review enforces the doctrines akios ships. These are th
 
 | Check | Rule | Source | Class |
 |---|---|---|---|
-| **Slice shape** | a feature has `domain/data/presentation/contract/tests`; files sit in the right layer | `alva-adoption` §1 | warn→block on drift |
+| **Slice shape** | a feature has `domain/data/presentation/contract/tests`; files sit in the right layer; components nest per-view (`presentation/<View>/components/<Component>/`), never a flat `presentation/Components/` | `alva-adoption` §1/§2 | warn→block on drift |
 | **Boundary** | a slice imports only another slice's `contract/`, never its `domain/`/`data/` internals | ALVA §5, `alva-adoption` §4 | **block** |
 | **Folder / SRP drift (B10)** | no file with multiple models/components/responsibilities; domain/feature folders used, not a flat dump | B10 | block (multi-responsibility) |
 | **Dumb-component law** | a component takes data + closures via `init`; no `@Environment`/service/global inside it | UI A4 | block |
@@ -131,7 +129,8 @@ breaking.
 - **Blocks:** `Purchase` imports `Squad`'s internal `PlayerRepository` → boundary violation (§3) → must import
   `Squad.contract`. A `SquadTypes.swift` holding `Player`, `SquadRowData`, *and* `PlayerRow` → multi-
   responsibility (B10) → split into `domain/Player.swift`, `presentation/Models/SquadRowData.swift`,
-  `presentation/Components/PlayerRow.swift`.
+  `presentation/SquadList/components/PlayerRow/PlayerRow.swift` (per-view nesting, not a flat
+  `presentation/Components/` — see `alva-adoption.md` §1/§2).
 - **Warns:** `PlayerDetail` uses `Text(...).font(.system(size: 28, weight: .bold))` → DesignSystem-token
   warning → `.textStyle(.hero)`. A hand-rolled toggle with no `// custom:` note → native-over-custom warning.
 - **DRY (ledger, not eyeball):** `FormatCurrency` appears in Squad + Wallet + Invoice → the ledger flags it at

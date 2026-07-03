@@ -8,8 +8,6 @@ routing through an external visual medium and translating it. Introduces one new
 overhaul family: **`prototype-first-workflow` → `ui-first-architecture` → `swiftui-design-doctrine`**
 (designed in order C → A → B). Everything here is settled unless marked *open*.
 
-> **State:** designed
-
 > **v2.0 changelog:** full pivot, replacing v1.0's HTML/Tailwind-first loop. Xcode 27's agent +
 > Preview tooling makes SwiftUI itself the cheap, live-iterable medium — so there is no longer a
 > reason to detour through HTML and translate back. `prototype`, `html-to-swiftui`, and
@@ -29,9 +27,9 @@ loop below (no external HTML/Figma files this time).
 ## 1. The medium (C1) — SwiftUI `#Preview`, generated in place; Figma/Stitch/HTML parked
 
 **Decision:** the design phase generates prototypes **directly in SwiftUI**, as named `#Preview`
-blocks, built from what already exists in the project: `PresentationLayer/DesignSystem/` tokens,
-promoted `PresentationLayer/Components/`, and copy-and-adapt snippets from `snippet-library.md`
-(`Foundation/Design-tokens`, per ALVA). The **primary** way a `DesignSystem` or a component comes
+blocks, built from what already exists in the project: `Foundation/Design-tokens/` tokens, promoted
+per-view `presentation/<View>/components/`, and copy-and-adapt snippets from `snippet-library.md`
+(per ALVA — see `alva-adoption.md` §1/§2). The **primary** way a `DesignSystem` or a component comes
 into being is direct agent-assisted code generation — conversation in the Xcode chat / terminal —
 not an external design tool.
 
@@ -232,7 +230,7 @@ no longer a "bring-it vs generate" fork, since every screen is built the same wa
   current `Features/<Feature>/Components/` + `Screens/<Screen>/` shape; A3's build-order wording
   ("converges against the approved prototype") needs updating since convergence is now built-in,
   not a separate step.
-- **[CONSEQUENCE — to implement]** `workflow.yml` / `pipeline.md`: `design` phase description
+- **[CONSEQUENCE — to implement]** `akios/workflow.yml`: `design` phase description
   changes (generates/approves via `ui-variations`, not HTML) — phase count stays at 4.
 - **[CONSEQUENCE — to implement]** `align-ui` SKILL.md: add the post-wiring real-data-vs-mock
   check (§5) alongside its existing states/interactions/navigation/DTO scope.
@@ -253,5 +251,7 @@ no longer a "bring-it vs generate" fork, since every screen is built the same wa
   micro-spec once interaction/animation work becomes a priority.
 - **Block A dependency:** the folder convention (§3) and the build-order law it feeds are defined
   in `ui-first-architecture.md` — resolved next.
-- **Block B unaffected:** `swiftui-design-doctrine.md` was audited against this pivot and needs no
-  changes — it's medium-agnostic token/craft doctrine already.
+- **Block B unaffected by *this* pivot:** `swiftui-design-doctrine.md` was audited against the v2.0
+  medium pivot and needed no changes there — it's medium-agnostic token/craft doctrine already. It
+  *did* need the later ALVA folder-home retrofit (`Foundation/Design-tokens/`, per-view
+  `presentation/<View>/components/`), now applied — see its own SUPERSEDED note.

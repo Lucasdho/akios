@@ -4,11 +4,9 @@
 Adds a **posture** to akios — a third orthogonal flag (beside `mode` and `collaboration` in `Roadmap.md`)
 that selects whether the kit **teaches the *why*** as it builds (**learning**) or **just ships** with
 decisions recorded but not explained (**delivery**, the default). Answers backlog **B3**. Complements
-`pipeline.md`/`Roadmap.md` (where the flag lives), `knowledge-architecture.md` (G2 — learning mode teaches
+`Roadmap.md` (where the flag lives), `knowledge-architecture.md` (G2 — learning mode teaches
 *from* the packs), and `verification-and-learning-loop.md` (G5 — learning mode is where captures are
 proposed eagerly). See `akios-backlog-map.md` (G4).
-
-> **State:** designed
 
 > **The shift:** the backlog notes these practices "carry good habits the LLM/user doesn't know." akios
 > already *records* its decisions (specs, task files, MEMORY) but it doesn't *teach* them — a developer can

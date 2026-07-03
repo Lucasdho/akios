@@ -6,13 +6,18 @@ token struct, the native-over-custom budget, Nielsen's heuristics as the interac
 text/image treatment as reusable ViewModifiers, and the `containerRelativeFrame` adaptivity rule.
 Third and final of the 3-spec UI overhaul family
 (**`prototype-first-workflow` → `ui-first-architecture` → `swiftui-design-doctrine`**). Closes the
-loop: `ui-first-architecture.md` gave the `DesignSystem` a home (`PresentationLayer/DesignSystem/`)
-and a dumb-component law; this spec defines what lives there and how components consume it without
+loop: `ui-first-architecture.md` gave the `DesignSystem` a home (`Foundation/Design-tokens/`, per the
+ALVA retrofit — see the SUPERSEDED note below) and a dumb-component law; this spec defines what lives there and how components consume it without
 breaking that law. Mostly *adds connective doctrine* and lightly retrofits the two existing guides
 (`swiftui-design-principles`, `swiftui-ui-patterns`) to consume it. Everything here is settled
 unless marked *open*.
 
-> **State:** designed
+> **[SUPERSEDED 2026-07-01 — see `alva-adoption.md` D1/D2]** Every `PresentationLayer/DesignSystem/`
+> reference below is the pre-ALVA home. The DesignSystem token home moved to
+> `Foundation/Design-tokens/`, and components nest **per-view**
+> (`presentation/<View>/components/<Component>/`), not a flat `PresentationLayer/Components/`. The
+> doctrine below (what lives in the struct, how components consume it) is unchanged — only the paths
+> are stale; read `alva-adoption.md` §1/§2 for the current folder shape.
 
 > **The shift (visual layer):** agents can build complex logic but cannot *infer* what a beautiful
 > interface is. The remedy is twofold — the prototype-first loop (Block C) makes humans the taste
@@ -27,7 +32,7 @@ Worked example: **futebol-manager** (football-manager iOS app; `Squad` feature s
 
 ## 1. The `DesignSystem` struct (B1) — static token namespace
 
-A single `enum DesignSystem` of `static let` constants, in `PresentationLayer/DesignSystem/`:
+A single `enum DesignSystem` of `static let` constants, in `Foundation/Design-tokens/`:
 
 ```
 enum DesignSystem {
@@ -115,7 +120,7 @@ completeness, so they'd sit unread.
 ## 4. Text/image treatment (B4) — semantic role modifiers over the tokens
 
 A small, **closed set of role-named modifiers** that read B1 tokens internally, exposed as `View`
-extensions wrapping a `ViewModifier`, living in `PresentationLayer/DesignSystem/`:
+extensions wrapping a `ViewModifier`, living in `Foundation/Design-tokens/`:
 
 - **Text:** `.textStyle(.hero / .statValue / .body / .sectionLabel / .caption)` — each maps to one
   `DesignSystem.Typography` token (size + weight + design + tracking). The inline
@@ -212,7 +217,7 @@ and an iPad split.
 - **[CONSEQUENCE — to implement]** `align-ui`: add the 10-heuristic checklist (§3 table) as its
   design-phase backbone; record the native-over-custom flag (B2) as a grounding/align-ui check.
 - **[CONSEQUENCE — to implement]** `/akios:setup` + `templates/`: scaffold a starter
-  `PresentationLayer/DesignSystem/` (`DesignSystem` token enum stub + `TextStyle`/`ImageStyle`
+  `Foundation/Design-tokens/` (`DesignSystem` token enum stub + `TextStyle`/`ImageStyle`
   role-modifier stubs).
 - **[CONSEQUENCE — to implement]** `swift-dev` architecture reference (the one A8 introduces): note
   that components consume `DesignSystem` static tokens — never `@Environment` — preserving the

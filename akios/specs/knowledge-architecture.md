@@ -7,10 +7,8 @@ from code, PDFs, images, books, and documents. Today Swift/iOS knowledge is hard
 (`swift-dev` is *the* domain); this spec makes it *one pack among many* and lets a user grow new domains.
 Answers backlog **B4** (abstract meta-prompts from domains), **B5** (upload skills/code/`.md` about an
 area), **B6** (build knowledge `.md` from code/PDF/image/book/doc), and reinforces **B12** (feed the repo
-good practices). Complements `preferences-and-priority.md` (whose `code-references/` mechanism this
-generalizes) and `plugin-architecture.md` (the layer it factors). See `akios-backlog-map.md` (G2).
-
-> **State:** designed
+good practices). Complements `docs/architecture/plugin-architecture.md` (the layer it factors).
+See `akios-backlog-map.md` (G2).
 
 > **The shift:** akios's discipline (phases, gates, priority chain, the execution loop) is *general* — it
 > has nothing to do with Swift. Its *knowledge* (SwiftUI patterns, SwiftData, concurrency) is Swift-specific
@@ -98,7 +96,7 @@ can't trace back to its source is a pack you can't safely update.
 
 ---
 
-## 3. Priority-chain placement (D4) — packs generalize tiers 2 and 4
+## 3. Priority-chain placement (D3) — packs generalize tiers 2 and 4
 
 The locked 4-tier chain (`preferences-and-priority.md` §3) is *preserved* and generalized — no tier is added
 or reordered; two tiers widen:
@@ -128,7 +126,7 @@ that already meant "curated" and "floor" is the minimal, conflict-free change. A
 
 ---
 
-## 4. Ingestion — building a pack from raw material (D3, answers B5/B6)
+## 4. Ingestion — building a pack from raw material (D4, answers B5/B6)
 
 The `/akios:learn <source>` path (skill: `knowledge-ingest`, §5) turns material into a pack. It is
 **source-typed** and **`oss-first`-routed** — akios does not hand-parse what a mature extractor already does.

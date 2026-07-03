@@ -8,10 +8,9 @@ skeletons exist for different architectures (ALVA, MVVM-C, Clean, or anything el
 at init time, the user picks an architecture and gets that architecture's skeleton **if one is
 registered** — otherwise the default plugin scaffold, unchanged. Complements `snippet-library.md`
 (the sibling mechanism for reusable *pieces*, not whole trees) and `knowledge-architecture.md` (whose
-user-global storage convention this reuses). Registers backlog **B31** (`akios-backlog-map.md` §11).
-
-> **State:** designed — mechanism only, same posture as `snippet-library.md`: no skeleton content is
-> populated by this pass.
+user-global storage convention this reuses). Registers backlog **B31** (`akios-backlog-map.md` §1, §3
+— see §10 of this spec for the full backlog placement notes). Mechanism only, same posture as
+`snippet-library.md`: no skeleton content is populated by this pass.
 
 > **Autonomous decision pass:** at the user's explicit request, the remaining open decisions in this
 > spec (§1–§6) were resolved **autonomously**, `/akios:just-vibes`-style — the recommended position

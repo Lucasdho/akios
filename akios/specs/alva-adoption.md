@@ -9,8 +9,6 @@ module-boundary posture, the coordinator add), and (3) produces the ordered buil
 (whose §1/§2 this reconciles), and `ui-overhaul-implementation.md` (whose build plan this re-homes onto a
 slice). Answers backlog **B7–B12, B14, and fixes B10** (`akios-backlog-map.md`).
 
-> **State:** designed
-
 > **v1.1 changelog (2026-07-01):** the human fork (§10, was blocking) is **resolved — ALVA wins,
 > confirmed**. Two refinements land: components nest **per-view** inside `presentation/`
 > (`presentation/<View>/components/<Component>/`, not a flat `presentation/Components/`); and the

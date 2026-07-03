@@ -1,8 +1,9 @@
 # ALVA — Agent-Legible Vertical Architecture
 
-> **Versão:** 0.1 (Draft)
-> **Data:** 2026-06-30
-> **Status:** Doutrina em consolidação — resultado de uma sessão de co-design.
+> **Versão:** 1.0
+> **Data:** 2026-06-30 (conteúdo); status promovido a `done` em 2026-07-03, ver `Roadmap.md`
+> **Status:** Adotada — consolidada contra `AGENTS.md` e as specs existentes via `alva-adoption.md`;
+> ground-truth executável.
 > **Escopo:** Define (I) um padrão de arquitetura portátil, adotável por qualquer
 > pessoa/time/ferramenta, e (II) como o **akios** operacionaliza esse padrão num
 > workflow otimizado para agentes.
@@ -492,5 +493,5 @@ arquitetura**. O princípio sobrevive; muda o executor.
 
 Documento derivado de uma sessão de co-design (2026-06-30) sobre "arquitetura para
 agentes": a ponte entre arquiteturas MVVM/Clean maduras e a realidade de código
-mantido por IA. Versão inicial 0.1 — a consolidar contra `AGENTS.md` e specs
-existentes do projeto antes de virar ground-truth executável.
+mantido por IA. Versão 1.0 — consolidada contra `AGENTS.md` e as specs existentes do projeto via
+`alva-adoption.md` (2026-07-01); ground-truth executável.

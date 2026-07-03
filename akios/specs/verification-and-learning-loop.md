@@ -7,11 +7,9 @@ Closes akios's two post-execution blind spots: **did it really do what the task 
 it right," and defines a *hurdles ledger* that grows from divergences and repeated failures and feeds back
 into the priority chain. Answers backlog **B2** (compare planned vs done → save to project context / "common
 hurdles" file) and **B19** ("será que implementou certinho msm?"). Realizes **Vision wishlist #3** (the
-auto-build/test hook). Complements `task-execution.md` (the seams it plugs into), `just-vibes` (the
-autonomous capture path), and `knowledge-architecture.md` (G2 — the hurdles ledger is project knowledge). See
-`akios-backlog-map.md` (G5).
-
-> **State:** designed
+auto-build/test hook). Complements the `task-execution` skill (the seams it plugs into), `just-vibes`
+(the autonomous capture path), and `knowledge-architecture.md` (G2 — the hurdles ledger is project
+knowledge). See `akios-backlog-map.md` (G5).
 
 > **The shift:** akios commits at each checkpoint and archives decisions, but it never *checks the code
 > against the intent that produced it*, and it never *remembers a mistake so it stops repeating it.* Today a

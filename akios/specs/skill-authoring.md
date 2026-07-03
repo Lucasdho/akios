@@ -6,10 +6,8 @@ Gives akios a first-class path to **author its own skills and knowledge packs**:
 **self-registers** the new skill everywhere the kit requires (the `install-skills.sh` array, a `commands/`
 wrapper, and the version-bump trio), structurally eliminating the kit's most common maintenance mistake.
 Answers backlog **B1**. Complements `knowledge-architecture.md` (G2 — packs are the other thing this can
-scaffold), `ios-agentic-kit.md` (the conventions it must honor), and `Context.md` (the gotcha it fixes). See
-`akios-backlog-map.md` (G3).
-
-> **State:** designed
+scaffold), the `ios-agentic-kit` skill (the conventions it must honor), and `Context.md` (the gotcha it
+fixes). See `akios-backlog-map.md` (G3).
 
 > **The shift:** authoring a skill in akios today is manual and error-prone — the `Context.md` "Gotchas"
 > section literally names *"forgetting to update `install-skills.sh` is the most common mistake."* A kit that

@@ -50,15 +50,13 @@ type: plugin-docs
 
 | Spec | Domain | Status | Notes |
 |---|---|---|---|
-| pipeline.md | Core pipeline contract (workflow.yml + phases) | done | shipped in v0.7.0 refactor |
-| plugin-architecture.md | Plugin structure, skill routing, install | done | shipped in v0.7.0 refactor |
-| preferences-and-priority.md | Priority chain + preferences.seed.md | done | shipped in v0.7.0 refactor |
+| plugin-architecture.md | Plugin structure, skill routing, install | done | shipped in v0.7.0 refactor; lives at `docs/architecture/plugin-architecture.md`, not `akios/specs/` |
 | deep-brainstorm-rww-audit.md | R-W-W post-burst audit phase + just-vibes fuel filter | done | shipped in v0.7.3; Vision wishlist #1 |
 | prototype-first-workflow.md | Prototype-first visual workflow: multi-variant SwiftUI `#Preview` generation + remix, direct-to-code (no HTML/translation); new `design` phase | done | UI overhaul, spec 1 of 3 (C→A→B); v2.0 pivot (2026-07-01) — Figma/Stitch/HTML parked; realized via ui-overhaul-implementation.md's T012/T014/T025 (v0.8.0 session 2); version bump deferred to the v0.8.0 closeout |
 | ui-first-architecture.md | UI-first ordering + structure: per-feature folders, layer split, build-order law, dumb-component `init` rule, factory/router DI | designed | UI overhaul, spec 2 of 3 (C→A→B) — §1/§2 folder shape SUPERSEDED (confirmed 2026-07-01) by ALVA §4/§6, see alva-adoption.md D1/D2; §3–§8 behavioral laws survive, re-homed into `presentation/<View>/` |
 | swiftui-design-doctrine.md | Visual craft: unified `DesignSystem` token struct, native-over-custom budget, Nielsen heuristics backbone, text/image role ViewModifiers, `containerRelativeFrame` adaptivity | done | UI overhaul, spec 3 of 3 (C→A→B); realized via ui-overhaul-implementation.md's T015/T021-T023 (v0.8.0 session 2); version bump deferred to the v0.8.0 closeout |
 | ui-overhaul-implementation.md | Ordered build backlog consolidating the C→A→B family onto ALVA (7 phases: pipeline → Foundation/scaffold → `ui-variations` → reshape skills → doctrine → coordinator → release) | done | UI overhaul, execution plan — v2.0 (2026-07-01), re-homed onto ALVA per alva-adoption.md §7; T012-T026 all shipped (v0.8.0 session 2); version bump deferred to the v0.8.0 closeout |
-| akios-backlog-map.md | AKIOS backlog synthesis (index — routes the whole family) | designed | read FIRST; maps every backlog item B1–B29 → covering spec |
+| akios-backlog-map.md | AKIOS backlog synthesis (index — routes the whole family) | designed | read FIRST; maps every backlog item B1–B37 → covering spec |
 | alva-architecture-doctrine.md | Agent-Legible Vertical Architecture — portable doctrine (Part I) + akios impl (Part II) | done | backlog B7–B12; publishable standalone; realized via alva-adoption.md's T001–T011 (v0.8.0 session 1); version bump deferred to the v0.8.0 closeout |
 | alva-adoption.md | ALVA adoption + reconciliation with the UI family; ordered build backlog | done | backlog B7–B12,B14,B10; v1.1 — fork resolved 2026-07-01, ALVA confirmed; T001–T011 all shipped (v0.8.0 session 1); version bump deferred to the v0.8.0 closeout |
 | knowledge-architecture.md | Meta-prompt/knowledge split + knowledge packs + ingestion (code/PDF/image/book/doc) | done | backlog B4–B6,B12; generalizes code-references + swift-dev-as-a-pack; realized via T027–T031 (v0.8.0 session 2); within-tier pack precedence and ingested-pack audit deliberately left open (§9); version bump deferred to the v0.8.0 closeout |

@@ -11,8 +11,6 @@ against it (or vice versa) — headcount and push-safety are independent variabl
 `operating-modes.md`), `just-vibes` (whose SHIP step this re-gates), and `task-execution`
 (whose hard human gate this formalizes rather than replaces).
 
-> **State:** designed
-
 > **Autonomous decision pass:** because no human was present overnight, the remaining open
 > decisions in this spec were resolved **autonomously**, `/akios:just-vibes`-style — the
 > recommended position was taken for each, alternatives are recorded with why they were rejected,
