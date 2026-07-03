@@ -11,8 +11,6 @@ This spec draws a sharper line — genuine akios housekeeping moves into one `ak
 only what an *external tool* requires at root, or what is the user's own application source,
 stays there. Everything here is settled unless marked *open*.
 
-> **State:** designed
-
 > **Autonomous decision pass:** decided without a human turn-by-turn (background session, auto
 > mode) — the recommended position was taken for each question, alternatives are recorded with why
 > they were rejected, and consequences are flagged so the user can override anything on read.
@@ -297,7 +295,7 @@ bounded retry, the `.akios/`-always-gitignored default reasoning reused in this 
 `Roadmap.md` gets a new row: `akios-footprint-consolidation.md` | domain "Consolidates akios's
 generated housekeeping (`Context.md`/`Roadmap.md`/`Vision.md`/`workflow.yml`/`specs/`/`tasks/`/
 `archive/`/`code-references/`/the runtime journal) into one root-level `akios/` folder; reopens and
-narrows `init-reliability-and-ux.md`'s footprint-consolidation decision (D5)" | status `designed` |
+narrows `init-reliability-and-ux.md`'s footprint-consolidation decision (D5)" | status `done` |
 notes "reopens B35; supersedes init-reliability-and-ux.md §5 only, §§1-4/6-11 there stand."
 
 ---
