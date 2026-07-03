@@ -20,28 +20,42 @@ no Xcode project, and no app to build or run here.
 
 - Install skills: `bash scripts/install-skills.sh`
 - Smoke-test install: check that `~/.claude/skills/<skill>/SKILL.md` exists for each skill
-- Validate YAML: `python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" workflow.yml`
+- Validate YAML: `python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" akios/workflow.yml`
 - Check for orphaned refs: `grep -ri '<old-term>' --include=*.md --include=*.sh --include=*.yml .`
 - Publish (plugin marketplace): handled via the `.claude-plugin/` manifest (if present)
 
 ## Architecture
 
+> **Naming note:** this repo (the git project) is named `akios`; it also contains a subfolder
+> literally named `akios/` — the same housekeeping folder `/akios:setup` creates in every
+> consumer repo (`akios-footprint-consolidation.md`). This repo dogfoods its own convention: the
+> two are not the same thing, don't conflate a reference to "the akios repo" with "the `akios/`
+> folder inside it."
+
 ```
-akios/
+<repo root>/
 ├── skills/          ← one directory per skill; each has SKILL.md (+ optional references/)
 ├── commands/        ← one .md per /akios:<command>; thin wrappers that load the skill
 ├── templates/       ← scaffold files dropped into iOS projects by /akios:setup
 │   └── rules/       ← .claude/rules/ templates (e.g. swift.md gate)
 ├── scripts/         ← install-skills.sh and other maintenance scripts
-├── specs/           ← design specs for akios itself (same format as any iOS project)
-├── tasks/           ← task backlog for building akios (todo/ in-progress/ review/ done/)
-│   └── todo/        ← pending tasks (T<NNN>-<slug>.md)
-├── archive/         ← completed spec archives
-├── workflow.yml     ← phase contract (single source of truth for phases + commands)
-├── Vision.md        ← north star + wishlist for akios itself
-├── Roadmap.md       ← spec-level status table for akios development
-└── CHANGELOG.md     ← version history
+├── akios/           ← this repo's own housekeeping (akios-footprint-consolidation.md)
+│   ├── Context.md       ← this file
+│   ├── Roadmap.md       ← spec-level status table for akios development
+│   ├── Vision.md        ← north star + wishlist for akios itself
+│   ├── workflow.yml     ← phase contract (single source of truth for phases + commands)
+│   ├── specs/           ← design specs for akios itself (same format as any iOS project)
+│   └── tasks/           ← task backlog for building akios
+│       ├── todo/        ← pending tasks (T<NNN>-<slug>.md)
+│       ├── in-progress/ · review/ · done/
+│       └── handoffs/    ← cross-session continuity docs
+├── CHANGELOG.md     ← version history
+└── VERSION          ← installed semver, compared against a consumer repo's stamped version
 ```
+
+No `archive/` or `code-references/` yet — this repo hasn't archived a completed spec or ingested
+a code-reference pack, so neither directory exists on disk (they materialize under `akios/` the
+first time either is needed, same as in a consumer repo).
 
 ## Conventions
 
@@ -63,6 +77,6 @@ akios/
   exists, open it and confirm the content matches the spec, grep for orphaned old references.
 - **install-skills.sh must be updated** whenever a new skill directory is added — forgetting
   this is the most common mistake. Always check it when adding a skill.
-- **`workflow.yml` is parsed by commands** — keep it valid YAML after every edit.
+- **`akios/workflow.yml` is parsed by commands** — keep it valid YAML after every edit.
 - **tasks.md** (root) was retired — the v0.7.0 single-file backlog (T001–T021) was fully
-  migrated into `tasks/todo/`. New tasks go in `tasks/todo/T<NNN>-<slug>.md`.
+  migrated into `akios/tasks/todo/`. New tasks go in `akios/tasks/todo/T<NNN>-<slug>.md`.

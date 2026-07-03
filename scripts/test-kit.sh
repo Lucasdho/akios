@@ -21,7 +21,7 @@ done
 # 2. Install templates + phase contract + hook present.
 for f in templates/AGENTS.md templates/Context.md templates/CLAUDE.md \
          templates/Roadmap.md templates/spec.md templates/task.md templates/preferences.seed.md \
-         templates/rules/swift.md workflow.yml \
+         templates/rules/swift.md akios/workflow.yml \
          scripts/hook/agentic-kit-inject.sh scripts/hook/skill-trace.sh; do
   if [ -e "$KIT/$f" ]; then echo "ok   $f"
   else echo "FAIL: missing $f"; fail=1; fi

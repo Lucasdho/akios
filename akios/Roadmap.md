@@ -1,7 +1,7 @@
 # Roadmap
 
 > Spec-level state for the akios plugin repo. One line per spec. The agent reads this to know
-> what already exists and which phase each spec is in (see `workflow.yml`).
+> what already exists and which phase each spec is in (see `akios/workflow.yml`).
 > **Single source of truth** — do not duplicate the `## Specs` table elsewhere.
 
 ## Mode
@@ -14,12 +14,12 @@ collaboration: solo
 
 ## Posture
 
-<!-- learning | delivery (default: delivery); see AGENTS.md "Operating posture" / specs/operating-modes.md -->
+<!-- learning | delivery (default: delivery); see AGENTS.md "Operating posture" / akios/specs/operating-modes.md -->
 posture: delivery
 
 ## Autonomy
 
-<!-- manual | auto (default: manual); see AGENTS.md "Delivery autonomy" / specs/collaboration-autonomy.md
+<!-- manual | auto (default: manual); see AGENTS.md "Delivery autonomy" / akios/specs/collaboration-autonomy.md
      Independent of `collaboration` above — not inferred from it. This repo has run `collaboration: solo`
      the whole v0.8.0 arc; every session has built + committed locally and deliberately never pushed
      (solo + manual in this flag's terms) — autonomy: manual makes that the formal default instead of a
