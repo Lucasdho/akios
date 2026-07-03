@@ -1,6 +1,6 @@
 ---
 id: T000
-spec: specs/{{spec}}.md
+spec: akios/specs/{{spec}}.md
 est_tokens: {{rough estimate ≈ Σ touched-file sizes + description weight}}
 runner: {{orchestrator (≤20k) | subagent (>20k)}}
 parallel: {{true | false}}   # true = [P], shares no files/symbols with siblings in this checkpoint
@@ -10,7 +10,7 @@ area: {{file / module / concern — same-area tasks serialize}}
 # T000 — {{one-line goal}}
 
 > **State:** todo
-<!-- State is the containing folder: tasks/todo → in-progress → review → done.
+<!-- State is the containing folder: akios/tasks/todo → in-progress → review → done.
      Moving the file changes state; this line mirrors it for readability. -->
 
 ## Description

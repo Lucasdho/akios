@@ -5,8 +5,8 @@ auto-loads `CLAUDE.md`). akios targets the Claude agent. This is the single sour
 for how to work here — the skill gates live below, not in a separate file.
 
 ## The loop (every code task)
-1. **Orient** → `Context.md` — stack, commands, architecture, conventions
-   (auto-loaded for you via the `@Context.md` import in `CLAUDE.md`).
+1. **Orient** → `akios/Context.md` — stack, commands, architecture, conventions
+   (auto-loaded for you via the `@akios/Context.md` import in `CLAUDE.md`).
 2. **Recall** → your native auto-memory (`MEMORY.md`, loaded automatically) for
    decisions already made. Don't relitigate them.
 3. **Route** → the gate table below — which skill fits this task type.
@@ -41,7 +41,7 @@ ground-truth reference, publishable standalone from the akios-specific realizati
 what works). The kit has no external dependency on it; install it for yourself if you like.
 
 ## Operating posture (learning vs. delivery)
-`Roadmap.md` carries a third flag beside `mode`/`collaboration`: `posture: learning | delivery`
+`akios/Roadmap.md` carries a third flag beside `mode`/`collaboration`: `posture: learning | delivery`
 (default `delivery`, written by `/akios:setup`, overridable for one session via a command flag —
 `/akios:deliver --learning` — or a spoken switch, without rewriting the Roadmap default).
 Posture changes **only** how akios communicates and captures — never what it builds; a learning-
@@ -61,11 +61,11 @@ A closed, named **teaching surface** — everything else is identical between po
 Every phase skill (`idea-to-spec`, `spec-to-tasks`, `task-execution`, `align-ui`) reads `posture`
 the same way it already reads `collaboration` and toggles only this surface. Under `just-vibes`
 (no human present), learning posture writes a **"Lessons"** section to
-`.akios/just-vibes-journal.md` per unit instead of narrating live; delivery journals outcomes
-only. Full detail: `specs/operating-modes.md`.
+`akios/.local/just-vibes-journal.md` per unit instead of narrating live; delivery journals outcomes
+only. Full detail: `akios/specs/operating-modes.md`.
 
 ## Delivery autonomy (manual vs. auto)
-`Roadmap.md` carries a fourth flag: `autonomy: manual | auto` (default `manual`, written by
+`akios/Roadmap.md` carries a fourth flag: `autonomy: manual | auto` (default `manual`, written by
 `/akios:setup`, overridable for one run via a command flag or a spoken switch, without rewriting
 the Roadmap default). **Independent of `collaboration` — not inferred from it**: `collaboration`
 answers "who else runs akios on this repo" (solo/team); `autonomy` answers "is `just-vibes`
@@ -81,15 +81,15 @@ report's **"Built (unshipped)"** bucket — distinct from Parked (red) and Shipp
 shipped) — awaiting a human push/merge. `task-execution`'s hard human gate is waived only when
 **both** `just-vibes` **and** `autonomy: auto` apply; outside `just-vibes`, this flag has no
 effect (a human is already present to answer the gate directly). Full detail:
-`specs/collaboration-autonomy.md`.
+`akios/specs/collaboration-autonomy.md`.
 
 ## The priority chain (whose answer wins)
 For any code decision (pattern, naming, architecture), resolve **top-down — the first tier
 with a relevant answer wins, lower tiers only fill silence**:
 
 ```
-1. Project decision already made   (MEMORY.md + existing code / Context.md)
-2. Knowledge packs, user-curated   (code-references/ = the project's auto-built code pack;
+1. Project decision already made   (MEMORY.md + existing code / akios/Context.md)
+2. Knowledge packs, user-curated   (akios/code-references/ = the project's auto-built code pack;
                                      other ingested packs — a DDD book, a design system — route
                                      here too, by domain-tag match)
 3. Global user preference           (~/.claude/akios/preferences.md)
@@ -101,13 +101,13 @@ on top). Concrete code you've shown outranks a stated preference (a curated know
 above preferences). `swift-dev` (the `ios` baseline pack) is the floor that always answers.
 The chain itself is unchanged — tiers 2 and 4 just widened from "code-references / swift-dev"
 specifically to "knowledge packs" generally, so a user-ingested pack (`/akios:learn`) slots in
-without a new tier. See `specs/knowledge-architecture.md` for the pack format and ingestion path.
+without a new tier. See `akios/specs/knowledge-architecture.md` for the pack format and ingestion path.
 
 ## How to execute (orchestration)
-The feature spine's phases are defined in **`workflow.yml`** (the machine-readable contract —
+The feature spine's phases are defined in **`akios/workflow.yml`** (the machine-readable contract —
 commands and phase detection read it). `task-execution` owns the *deliver* phase loop;
 `spec-to-tasks` owns *plan*; `idea-to-spec` owns *brainstorm*. For a vague "build X" request,
-**`ios-feature-pipeline`** is the entry point — it reads `workflow.yml` and walks you through
+**`ios-feature-pipeline`** is the entry point — it reads `akios/workflow.yml` and walks you through
 the phases.
 
 Note: a spawned subagent starts cold — it does NOT inherit these gates. When you dispatch one
@@ -150,7 +150,7 @@ money to save nothing. If subagents are unavailable, inline is the answer anyway
   needs — that's spending the orchestrator's tier on work a cheaper one ships correctly.
 - *Never clone your context into a subagent.* A subagent starts cold and is billed for **every token you
   hand it** — passing your whole window is the single most expensive mistake here. Send only the slice:
-  the task + its DoD, the one `swift-dev` domain sub-skill, the matching `Context.md` gotcha, the
+  the task + its DoD, the one `swift-dev` domain sub-skill, the matching `akios/Context.md` gotcha, the
   precedent file path. If you're about to paste the conversation, stop — summarize the slice instead.
 
 ## Skill gates
@@ -183,8 +183,8 @@ not from cutting the safety rails.
 | Trigger | Skill | When |
 |---|---|---|
 | Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → deliver | before starting |
-| Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → write specs to `specs/` | before building |
-| Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `tasks/todo/` | after the spec |
+| Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → write specs to `akios/specs/` | before building |
+| Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `akios/tasks/todo/` | after the spec |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
 | Implementing / running / debugging Swift | `swift-dev` (domain router) + `fewer-permission-prompts` | while coding |
 | Creating / polishing SwiftUI Views | `swift-dev` → `swiftui-pro` (+ design-principles for polish) | before the view |
@@ -209,52 +209,57 @@ overhead. Inside `idea-to-spec` the full protocol applies (see its "Deepthink mo
 ## Where things live (artifact map)
 One lookup for where every artifact is created and stored — so files land consistently and
 the agent (or a newcomer) finds them fast. These are the kit's fixed conventions; your own
-source dirs are described in `Context.md` `## Architecture`.
+source dirs are described in `akios/Context.md` `## Architecture`.
 
 | Artifact | Location | Naming | Found / loaded via |
 |---|---|---|---|
-| Operating files | repo root | `CLAUDE.md`, `AGENTS.md`, `Context.md` | Claude Code auto-loads `CLAUDE.md`, which imports the other two |
-| Phase contract | repo root (from plugin) | `workflow.yml` | commands + phase detection read it |
-| Spec state | repo root | `Roadmap.md` | mode flag + `collaboration` flag + one line per spec |
-| Product vision | repo root | `Vision.md` | north star + prioritized wishlist; top-tier `just-vibes` fuel |
-| Specs | `specs/` | `<domain>.md`, one file per domain | `Roadmap.md` `## Specs` table |
-| Tasks | `tasks/<state>/` | `T<NNN>-<slug>.md`; state = folder (`todo/ in-progress/ review/ done/`) | moved between folders = state change |
-| Archived specs | `archive/` | `<spec>.md` + `Archive.md` (summary index) | read `Archive.md` first; open full file on demand |
-| Code references | `code-references/` | user-uploaded `.swift` + `INDEX.md` (tags) | loaded on-demand by matching domain tag |
+| Operating files | repo root (`CLAUDE.md`/`AGENTS.md`); `akios/` (`Context.md`) | `CLAUDE.md`, `AGENTS.md`, `akios/Context.md` | Claude Code auto-loads `CLAUDE.md`, which imports `AGENTS.md` (root) and `akios/Context.md` |
+| Phase contract | `akios/` | `akios/workflow.yml` | commands + phase detection read it |
+| Spec state | `akios/` | `akios/Roadmap.md` | mode flag + `collaboration` flag + one line per spec |
+| Product vision | `akios/` | `akios/Vision.md` | north star + prioritized wishlist; top-tier `just-vibes` fuel |
+| Specs | `akios/specs/` | `<domain>.md`, one file per domain | `akios/Roadmap.md` `## Specs` table |
+| Tasks | `akios/tasks/<state>/` | `T<NNN>-<slug>.md`; state = folder (`todo/ in-progress/ review/ done/`) | moved between folders = state change |
+| Archived specs | `akios/archive/` | `<spec>.md` + `Archive.md` (summary index) | read `Archive.md` first; open full file on demand |
+| Code references | `akios/code-references/` | user-uploaded `.swift` + `INDEX.md` (tags) | loaded on-demand by matching domain tag |
 | User preferences | `~/.claude/akios/preferences.md` (not in repo) | — | priority chain tier 3 |
 | Durable decisions | native auto-memory (not in repo) | `MEMORY.md` | written automatically; survives compaction |
 | Path rules | `.claude/rules/` | `<topic>.md` (e.g. `swift.md`) | fires when a matching file is read |
 | Hooks | `.claude/hooks/` | `<event>-<name>.sh` | wired in `.claude/settings.json` |
-| Skill trace + run journal | `.akios/` | `trace.jsonl`, `just-vibes-journal.md` (append-only) | local runtime; **gitignored** — not shared |
-| Instance claims | committed, not `.akios/` | task frontmatter `owner:` + the `Roadmap.md` spec line | teammates see them via `git pull` |
-| App source | per `Context.md` `## Architecture` | project-specific | `Context.md` |
+| Skill trace + run journal | `akios/.local/` | `trace.jsonl`, `just-vibes-journal.md` (append-only) | local runtime; **gitignored** — not shared |
+| Instance claims | committed, not `akios/.local/` | task frontmatter `owner:` + the `akios/Roadmap.md` spec line | teammates see them via `git pull` |
+| App source | per `akios/Context.md` `## Architecture` | project-specific | `akios/Context.md` |
+
+> **Not the same folder:** this table's `akios/` is a **per-project** folder created at repo root
+> by `/akios:setup`. It's unrelated to `~/.claude/akios/` (the "User preferences" row above) —
+> that one is a **user-global** home for preferences/skeletons, outside any single repo. Same
+> name, different scope; they never collide in practice, but don't conflate them.
 
 Adding a new artifact? Put it where the table says and name it the same way. If it's a spec,
-add a row to the `Roadmap.md` `## Specs` table so the next session knows it exists.
+add a row to the `akios/Roadmap.md` `## Specs` table so the next session knows it exists.
 
 ## Specs & Roadmap (idea-to-spec)
-- Store versioned specs in `specs/` — one file per domain.
-- `Roadmap.md` is the orchestration doc: the **mode flag** (`new`/`one-shot`/`feature`, written
+- Store versioned specs in `akios/specs/` — one file per domain.
+- `akios/Roadmap.md` is the orchestration doc: the **mode flag** (`new`/`one-shot`/`feature`, written
   by `/akios:setup`) plus **one line per spec** (spec → domain → status
   `designed/planned/in-progress/done`). Phase detection is per-spec — different specs can be in
   different phases.
-- **Single source of truth.** Spec state lives **only** in `Roadmap.md` — never mirror the `## Specs`
+- **Single source of truth.** Spec state lives **only** in `akios/Roadmap.md` — never mirror the `## Specs`
   table into `CLAUDE.md` or anywhere else. One file updates; nothing else can drift out of sync.
   `CLAUDE.md` imports the operating files; it does not track spec state.
-- Before designing something new, read `Roadmap.md` first.
+- Before designing something new, read `akios/Roadmap.md` first.
 
 ## Full feature workflow (the spine)
-Defined in `workflow.yml`; entry point is **`ios-feature-pipeline`**. At a glance:
+Defined in `akios/workflow.yml`; entry point is **`ios-feature-pipeline`**. At a glance:
 
 `brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → deliver (task-execution)`
 
-Four phases: `brainstorm` (interactive design → `specs/<feature>.md`) → `plan` (one pass →
-`tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, UI states) → `design` (UI-scoped
+Four phases: `brainstorm` (interactive design → `akios/specs/<feature>.md`) → `plan` (one pass →
+`akios/tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, UI states) → `design` (UI-scoped
 tasks only: `ui-variations` explores + remixes + graduates a screen into
 `presentation/<View>/`, `align-ui` resolves states/interactions/navigation + the Nielsen
 heuristics checklist; non-UI tasks skip straight to `deliver`) → `deliver` (branch per spec,
 folder-state lifecycle, TDD-first, commit at each checkpoint, `/verify` + `/code-review`,
-human gate before push/merge). See `ios-feature-pipeline` for the conduct; `workflow.yml` for the
+human gate before push/merge). See `ios-feature-pipeline` for the conduct; `akios/workflow.yml` for the
 contract. No speckit, no `.specify/`, no constitution.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
@@ -268,7 +273,7 @@ see `ios-agentic-kit`'s `references/sandbox.md`.)
 
 ### Autonomous run (just-vibes) — driving the spine yourself
 `/akios:just-vibes` runs the whole spine **unattended**: it picks the next fuel (a submitted idea →
-`tasks/todo/` → designed specs → `Vision.md`/`Roadmap.md`), builds it, gates on quality, and delivers.
+`akios/tasks/todo/` → designed specs → `akios/Vision.md`/`akios/Roadmap.md`), builds it, gates on quality, and delivers.
 **Default** does one unit then stops at the spec boundary; **`--force`** loops until fuel is exhausted
 or you interrupt. It is the **explicit opt-out of the human push/merge gate** (invoking it *is* the
 authorization) — but the **quality gate stays**: verify + code-review + a bounded fix loop, and a spec
@@ -277,19 +282,19 @@ that won't go green is **parked** (branch + logs), never delivered. Unattended b
 fuel precedence, and reporting live in the `just-vibes` skill — don't re-document them here.
 
 ## Working alongside teammates (multi-instance)
-When `Roadmap.md` says `collaboration: team`, several teammates each run akios against this repo.
+When `akios/Roadmap.md` says `collaboration: team`, several teammates each run akios against this repo.
 Coordination is **git-based, safety-first, no central server** — the etiquette:
 
 - **Recognize signatures.** Each instance has an identity (`.claude/hooks/akios-instance.sh` →
   `user@host/id`) carried on commit trailers (`Akios-Instance:`) and claims. Work tagged with a
   signature that isn't yours belongs to a teammate's akios — leave it alone.
 - **Claim before you build.** `git pull`, check ownership, then claim the unit in a **committed** file
-  (task frontmatter `owner:` or its `Roadmap.md` line) and push. **Push-rejection is the lock**: if your
+  (task frontmatter `owner:` or its `akios/Roadmap.md` line) and push. **Push-rejection is the lock**: if your
   claim push is rejected, pull, re-check, and yield if a teammate took it. Full protocol in `task-execution`.
 - **One branch per spec; never two instances on one branch.** Worktrees keep parallel builds isolated.
-- **`Roadmap.md` is shared and single-source.** Edit only your unit's line; never reorder the table.
+- **`akios/Roadmap.md` is shared and single-source.** Edit only your unit's line; never reorder the table.
   Status is **monotonic** (`designed < planned < in-progress < done`, plus the `needs-revision`/
-  `blocked` demotion side-states — see `Roadmap.md`'s status-enum note for the full order) — on a
+  `blocked` demotion side-states — see `akios/Roadmap.md`'s status-enum note for the full order) — on a
   merge conflict, higher status wins, so an unattended run resolves it without a human.
 - **Solo (`collaboration: solo`) skips all of this** — no claims, and delivery merges + pushes the
   default branch directly.
