@@ -140,6 +140,18 @@ your session, so it rarely pays for itself. Reach for one only when **both** hol
 Below that bar, just do it inline — offloading a light task, or one while you have ample context, spends
 money to save nothing. If subagents are unavailable, inline is the answer anyway.
 
+This kit uses three similarly-valued thresholds for three different things — say which one you mean:
+
+| Name | Value | Measures | Where | Triggers |
+|---|---|---|---|---|
+| Inter-spec compact line | 110k / 135k | The **orchestrator's own** context, between specs | `task-execution/SKILL.md` "Context management" | warn at 110k → finish current task; urgent `/compact` at 135k |
+| Subagent-dispatch judgment | 120k | The **orchestrator's own** context, before deciding to dispatch at all | this section, above | at/above it, dispatching a heavy isolatable task becomes worth considering |
+| Subagent lineage budget | 120k | **A subagent's own context**, accumulated across the tasks it has chained through so far | `akios/specs/subagent-context-chaining.md` | at/above it, that link finishes its current task, hands off, and terminates — it does not start another task |
+
+The dispatch-judgment line and the lineage budget share a value by coincidence, not identity — one
+is checked against the orchestrator's window, the other against a subagent's own. See
+`subagent-context-chaining.md` §2 for the full reasoning.
+
 **3. When you do dispatch: cheapest model that fits, and only the slice it needs.**
 - *Orchestration tier.* The driving session runs on **opus or sonnet** — sonnet is the budget option
   and is a fine default; reach for opus when the planning/judgment genuinely warrants it. Pick per

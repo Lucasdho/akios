@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.8.2 (2026-07-03)
+
+### Added — subagent context chaining
+- **`subagent-context-chaining.md` (B38/G14)** — one subagent now chains through a sequential
+  task batch, compacting itself between tasks instead of being killed and re-spawned per task;
+  at a **120k-token subagent lineage budget** it writes a handoff and terminates, and the
+  orchestrator spawns a fresh cold subagent to continue from that handoff. Answers the
+  `feedback_subagent_dispatch` memory's ~300k-token subagent incident with a repeatable
+  threshold instead of an ad hoc judgment call.
+- **`skills/task-execution/SKILL.md`** — "Runner routing + model tier" gains a "Batch chaining"
+  bullet pointing subagent-eligible batches at the new protocol.
+- **`templates/AGENTS.md`** — "Sizing the work & subagent economy" gains a three-row table
+  disambiguating the kit's three similarly-valued thresholds (the 110k/135k inter-spec compact
+  line, the orchestrator-side 120k dispatch-judgment line, and the new subagent-side 120k
+  lineage budget) — this exact area had a documented history of the first two being confused
+  (B36's self-audit).
+- **`skills/handoff/SKILL.md`** — registers the `subagent-<spec-slug>-<link-number>.md` naming
+  convention for chain-internal handoffs, mandatory (not situational) at the budget line.
+
 ## 0.8.1 (2026-07-03)
 
 ### Added — `akios/` folder consolidation
