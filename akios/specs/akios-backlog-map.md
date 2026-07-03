@@ -23,7 +23,11 @@ self-generated backlog. B36 comes from a self-audit of the kit's own shipped con
 skills, templates, `workflow.yml`) — see `specs-review-2026-07-01.md` on branch
 `claude/inspiring-rubin-3vksm6` (not yet merged into this branch). B37 comes from a live scheduling
 question asked mid-build during the v0.8.0 Session 2 execution itself (2026-07-01) — this map's own
-§5 "Recommended build order" was already doing that reasoning by hand.
+§5 "Recommended build order" was already doing that reasoning by hand. B38 comes from user feedback
+(2026-07-03) generalizing the `feedback_subagent_dispatch` memory's ad hoc recommendation (write a
+handoff file, cold-start, split large builds into sessions) into a repeatable, threshold-triggered
+protocol — surfaced by the same class of incident that memory records (a subagent session ballooning
+to ~300k tokens with nothing capping it).
 
 | ID | Demand (raw) | Theme |
 |---|---|---|
@@ -64,6 +68,7 @@ question asked mid-build during the v0.8.0 Session 2 execution itself (2026-07-0
 | **B35** | Consolidate every akios-generated file under one folder, and offer the user an option to gitignore all of it, so `/akios:setup` doesn't pollute the person's repo | Init footprint / repo hygiene — **reopened** by `akios-footprint-consolidation.md` (G13) after a live `/akios:setup` run showed `init-reliability-and-ux.md`'s original one-move-plus-exclusions answer (§5/D5) still leaves 15 top-level items in a fresh repo |
 | **B36** | Self-review of the shipped kit contract found real drift: `align-ui` "skip vs run under just-vibes" stated three contradictory ways, `runner: subagent` per-task routing conflicts with `AGENTS.md`'s session-pressure subagent-economy rule, `AGENTS.md` misquotes task-execution's 110k context-warn line as 120k, plus number/enum drift (`objectVersion` 77 vs 90, two divergent R-W-W rubrics claiming to be the same one, 3 conflicting skill counts, `needs-revision`/`blocked` missing from the status enum) and dangling refs (`specs/pipeline.md`, `founderlens-sim`, `/ios-feature-pipeline` as a command). Needs a reconciliation pass against `workflow.yml` + `AGENTS.md` as the two authorities. Full detail: `specs-review-2026-07-01.md`, branch `claude/inspiring-rubin-3vksm6`. | Kit self-consistency / contract drift |
 | **B37** | Before delegating multiple specs/tasks to concurrent agents (subagents or worktrees), akios has no repeatable way to tell which pairs are safe to parallelize versus which collide on shared kit machinery (`task-execution/SKILL.md`, `spec-to-tasks/SKILL.md`, `Roadmap.md`, `AGENTS.md`, `install-skills.sh`) — worked out by hand, ad hoc, per session today (see this map's own §5). | Execution scheduling / multi-agent orchestration |
+| **B38** | Reinforce running a batch of tasks in subagents with a handoff-file protocol: on finishing a task the subagent isn't killed, it compacts itself and takes the next task, keeping both orchestrator and subagent context low; if a subagent's own context passes 120k tokens it must stop, write a handoff explaining why, and the orchestrator spawns a fresh subagent to continue from that handoff. | Execution scheduling / multi-agent orchestration |
 
 ---
 
@@ -139,6 +144,7 @@ What the two families do **not** cover. Each becomes a spec in this family.
 | G11 | resolved directly against `workflow.yml`/`AGENTS.md` — no spec file (commit `2bd8393`) | B36 | Reconcile the ~17 drift points from the 2026-07-01 self-review against `workflow.yml`/`AGENTS.md` as the two authorities: fix the 3 outright contradictions first (align-ui skip/run, runner routing vs. subagent economy, 110k/120k), then number/enum drift, then dangling refs. |
 | G12 | `parallel-execution-scheduling.md` | B37 | Generalizes `spec-to-tasks`' intra-checkpoint `[P]` collision check to the spec level, so a multi-spec batch (like this map's own §5) can identify which pairs are safe to delegate to concurrent agents vs. which must serialize on shared kit "spine" files. |
 | G13 | `akios-footprint-consolidation.md` | B35 (reopened) | Draws a three-way line — external-tool-contract files (`CLAUDE.md`/`AGENTS.md`/`.claude/`), akios housekeeping, and user app source (the ALVA scaffold) — and moves only the middle category into one root-level `akios/` folder, narrowing `init-reliability-and-ux.md` §5's original one-move-plus-exclusions decision. |
+| G14 | `subagent-context-chaining.md` | B38 | One subagent chains through a sequential task batch, compacting itself between tasks instead of being killed and re-spawned per task; at a 120k-token subagent-side lineage budget (explicitly disambiguated from the orchestrator-side 120k dispatch-judgment line and the 110k/135k compaction lines) it writes a handoff file and terminates, and the orchestrator spawns a fresh cold subagent to continue from that handoff. |
 
 ---
 
@@ -210,7 +216,11 @@ behind the build-order above. G12 is already `designed` (unlike G9–G11) but de
 **self-referential**: it's the tool this map's own §5 should eventually use to *compute* build order
 rather than hand-derive it, so its own placement in the sequence is not urgent — nothing else in this
 backlog blocks on it, and it can be built whenever a future multi-spec batch would benefit from the
-graph being checked instead of reasoned by hand.
+graph being checked instead of reasoned by hand. G14 is also already `designed` and also
+self-referential in a similar sense — it governs *how* a subagent batch dispatched under G12's
+scheduling decision should flow, but nothing else in the backlog blocks on it either; build it
+whenever a chained multi-task subagent batch would benefit from the budgeted handoff protocol
+instead of running unbounded.
 
 ---
 
