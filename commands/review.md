@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 Thin wrapper, not a replacement: loads `skills/swift-dev/skills/review-doctrine/GUIDE.md` (the
 SOLID/DRY-via-ledger/ACID-scoped-to-persistence checklist + ALVA/UI conformance + folder/SRP
-drift table — see `specs/code-review-doctrine.md`), then runs the built-in `/code-review` against
+drift table — see `akios/specs/code-review-doctrine.md`), then runs the built-in `/code-review` against
 the current diff with that doctrine as context.
 
 **Graduated severity.** Block on correctness + boundary violations (a slice importing another

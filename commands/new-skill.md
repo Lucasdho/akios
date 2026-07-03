@@ -3,7 +3,7 @@ description: Scaffold a new akios skill or knowledge pack and self-register it (
 disable-model-invocation: true
 ---
 
-# /akios:new-skill — Author a skill or knowledge pack (workflow.yml: skill-author, maintenance action)
+# /akios:new-skill — Author a skill or knowledge pack (akios/workflow.yml: skill-author, maintenance action)
 
 **Not a pipeline phase.** Like `/akios:setup` and `/akios:learn`, this is a maintenance
 action — run it whenever you're extending akios itself, not building an app feature.

@@ -11,7 +11,7 @@ into their repo, so you do this with your own file tools. Work at the **git repo
 
 Templates live in the installed plugin at `${CLAUDE_PLUGIN_ROOT}/templates/` and
 `${CLAUDE_PLUGIN_ROOT}/scripts/`. Read them from there; do not invent their contents.
-`setup` is **bootstrap, not a phase** (see `workflow.yml` `bootstrap`).
+`setup` is **bootstrap, not a phase** (see `akios/workflow.yml` `bootstrap`).
 
 **Narrate as you go (`init-reliability-and-ux.md` §1).** Print a one-line header the moment each
 numbered step below starts (e.g. "Scanning repo…", "Materializing 12 files + folder tree…",
@@ -31,8 +31,8 @@ Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's reco
   **self-check (step 6)**, repair any single missing artifact, and stop with "Already initialized
   at v<X> — nothing to do." Re-run the full flow only if the user asks to repair/reset.
 - **Recorded < installed** → **migrate, don't re-interview.** Skip step 1. Refresh only the
-  **always-copy** artifacts (the two hooks, `workflow.yml`, the version file); leave the
-  *skip-if-exists* files (`AGENTS.md`, `Context.md`, `Roadmap.md`, `.claude/rules/swift.md`)
+  **always-copy** artifacts (the two hooks, `akios/workflow.yml`, the version file); leave the
+  *skip-if-exists* files (`AGENTS.md`, `akios/Context.md`, `akios/Roadmap.md`, `.claude/rules/swift.md`)
   untouched. Re-verify wiring (steps 4–5). Write the new version, then **report the diff** from
   `${CLAUDE_PLUGIN_ROOT}/CHANGELOG.md` in two or three lines, flagging anything needing a manual touch.
   Detect the **mode** here too: if the user has feature work in mind, ask `new`/`one-shot`/`feature`.
@@ -43,25 +43,50 @@ Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's reco
   file — never delete-then-copy. This targets that one named file only; never touch anything else
   the user may have in their own `scripts/` folder.
 
+  **`akios/` folder migration (opt-in, `akios-footprint-consolidation.md` §8/D8 — supersedes
+  `init-reliability-and-ux.md` §5 only).** Detect a pre-consolidation repo: a recorded version
+  older than this spec, alongside root-level `specs/`, `tasks/`, `Context.md`, `Roadmap.md`,
+  `Vision.md`, `workflow.yml` rather than an `akios/` folder. **Ask, don't silently move:**
+  "This repo predates the `akios/` consolidation — migrate now? (moves `specs/ tasks/ archive/
+  code-references/ Context.md Roadmap.md Vision.md workflow.yml` into `akios/`, renames the
+  runtime journal `.akios/` to `akios/.local/`, updates `CLAUDE.md`'s import path. Everything
+  keeps working either way — this is cosmetic, not a functional requirement.) y/n"
+  - **On yes:** move file-by-file, reusing `init-reliability-and-ux.md` §2–§4's exact
+    verification discipline — verify each move landed (source gone, destination present +
+    non-empty) before the next, retry once on a confirmed miss, stop-and-report an itemized
+    manifest on a second failure. Update `CLAUDE.md`'s `@Context.md` → `@akios/Context.md`
+    import as the **last** write in the sequence, only after every file move is confirmed — a
+    failed migration must never leave the import pointing at a `Context.md` that no longer
+    exists at the old path.
+  - **On no (or nothing stale):** leave the repo as-is — a pre-consolidation repo is not broken,
+    every path still resolves for that repo's own commands/skills written against the old
+    paths. Don't ask again until the user explicitly requests it (`/akios:setup --consolidate`).
+  - **Name-collision check (before any write):** if the repo already has a pre-existing `akios/`
+    directory unrelated to this kit (no recognizable `Context.md`/`Roadmap.md`/`specs/`/`tasks/`
+    shape inside it), treat it the same as any other "file already exists and isn't ours" case
+    in step 3's materialize table — surface it to the user, ask how to proceed (e.g. a
+    different folder name, or abort the migration), and **never** silently write into or over
+    it. This applies to both this migrate path and a fresh §3 materialize run.
+
 ## 1. Interview (short — map answers to the placeholders)
 Ask in one batched pass (skip what the scan in step 2 answers confidently; confirm rather than re-ask):
 - **Mode** — `new` (greenfield repo) / `one-shot` (single deliverable) / `feature` (adding to an
-  existing app). Written to `Roadmap.md`; `brainstorm` reads it instead of re-asking.
+  existing app). Written to `akios/Roadmap.md`; `brainstorm` reads it instead of re-asking.
 - **Collaboration** — `solo` (you're the only one running akios here) / `team` (multiple devs each
-  run akios against this repo). Written to `Roadmap.md`. Drives delivery: **solo** → just-vibes merges
+  run akios against this repo). Written to `akios/Roadmap.md`. Drives delivery: **solo** → just-vibes merges
   + pushes the default branch; **team** → just-vibes pushes `feature/<spec>` + opens a PR, and the
   multi-instance claim/signature etiquette is in force.
 - **Posture** — `learning` (narrate the *why* behind decisions as you build) / `delivery` (ship
-  quietly, default). Written to `Roadmap.md`. Orthogonal to mode/collaboration; overridable for a
+  quietly, default). Written to `akios/Roadmap.md`. Orthogonal to mode/collaboration; overridable for a
   single session via a command flag or a spoken switch without rewriting this default. See
   `AGENTS.md` "Operating posture" for what the flag actually changes.
 - **Autonomy** — `manual` (default: just-vibes never pushes/merges/opens a PR on its own, even
   under `--force`; a finished unit stays local and shows up in the run's "Built (unshipped)"
   bucket) / `auto` (just-vibes auto-ships per the `collaboration` answer above — solo merges +
-  pushes, team pushes + opens a PR). Written to `Roadmap.md`. **Independent of `collaboration` —
+  pushes, team pushes + opens a PR). Written to `akios/Roadmap.md`. **Independent of `collaboration` —
   not inferred from it**: collaboration is about headcount, autonomy is about whether unattended
   delivery is authorized at all. Overridable per run via a command flag or a spoken switch without
-  rewriting this default. See `AGENTS.md` "Delivery autonomy" / `specs/collaboration-autonomy.md`.
+  rewriting this default. See `AGENTS.md` "Delivery autonomy" / `akios/specs/collaboration-autonomy.md`.
 - **Stack** — language / framework / runtime / DB (`{{LANGUAGE / FRAMEWORK / RUNTIME / DB}}`)
 - **Commands** — install / run-dev / test / lint / build (`{{install}}` `{{dev}}` `{{test}}` `{{lint}}` `{{build}}`)
 - **Architecture** — one paragraph: entry points, key dirs, data flow
@@ -92,10 +117,10 @@ the option is never even shown outside `mode: new`.
    1's existing "Architecture" interview answer (still user-editable) — this is not a second
    question.
 5. **Copy before scan.** If a skeleton was chosen, copy its full file tree into the repo root
-   **now**, before step 2 (Scan) runs and before step 3 (Materialize) writes `Context.md` /
+   **now**, before step 2 (Scan) runs and before step 3 (Materialize) writes `akios/Context.md` /
    `AGENTS.md` / etc. Copying first means the scan sees the real, chosen starting structure
    (a real `.xcodeproj`, real source dirs) instead of an empty repo — scanning after the copy
-   would produce a `Context.md` that describes nothing. **Narrate + verify per file
+   would produce a `akios/Context.md` that describes nothing. **Narrate + verify per file
    (`init-reliability-and-ux.md` §1, §2, §4):** as each file/dir lands, print "✓ `<path>` copied"
    and re-check the destination actually exists (non-empty) before moving to the next item — don't
    assume success from a clean tool-call return. On a confirmed miss, retry that one item once;
@@ -103,10 +128,10 @@ the option is never even shown outside `mode: new`.
    landed vs. which didn't, rather than continuing into the scan with a half-copied tree.
 6. **A skeleton never ships akios's own meta files.** Its tree covers only the app's own source
    (Xcode project, `Router/`, `Container/`, `Foundation/`, an example `Features/` slice, or
-   whatever its architecture calls for) — never `AGENTS.md`, `Context.md`, `Roadmap.md`,
-   `Vision.md`, or `.claude/`. Those always come from step 3's templates, applied after this
+   whatever its architecture calls for) — never `AGENTS.md`, `akios/Context.md`, `akios/Roadmap.md`,
+   `akios/Vision.md`, or `.claude/`. Those always come from step 3's templates, applied after this
    copy; step 3's own skip-if-exists/always-write rules remain the single source of truth for
-   those five names regardless of what a skeleton's tree happens to contain.
+   those names regardless of what a skeleton's tree happens to contain.
 
 This step does not change or duplicate the existing ALVA scaffold instructions in step 3
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/`, `usage-ledger.json`) —
@@ -122,7 +147,7 @@ Inspect the repo to fill/verify command + stack + architecture: `.xcodeproj`/`.x
 space-containing project/scheme), deployment target, top-level source dirs. If a scan fact
 contradicts an interview answer, tell the user and ask which is right before writing.
 
-**Target membership (fills `Context.md` `## Xcode targets`).** Read the `.pbxproj` and check for
+**Target membership (fills `akios/Context.md` `## Xcode targets`).** Read the `.pbxproj` and check for
 `PBXFileSystemSynchronizedRootGroup` (or `objectVersion` ≥ 77 = Xcode 16+). If present, the project
 uses **synchronized groups** — record which on-disk folder maps to which target (files dropped there
 auto-include, no `.pbxproj` edit). If absent, record that target membership is **manual**. Note
@@ -131,7 +156,7 @@ on every new file.
 
 ## 3. Materialize the context files + folder tree (never clobber existing files)
 Copy each template into the repo, replacing every `{{...}}` token with the resolved value.
-Placeholders to fill live in `Context.md`, `AGENTS.md`, `CLAUDE.md`, and `Roadmap.md` (mode).
+Placeholders to fill live in `akios/Context.md`, `AGENTS.md`, `CLAUDE.md`, and `akios/Roadmap.md` (mode).
 
 **Narrate + verify per row, always-per-file `chmod` (`init-reliability-and-ux.md` §1-§4).** As
 each row below is applied, print "✓ `<File>` written/copied" (or "skipped — already exists" per
@@ -150,11 +175,11 @@ continuing or guessing at the repo's state.
 | File | Source | Rule |
 |---|---|---|
 | `AGENTS.md` | `templates/AGENTS.md` | skip if it already exists |
-| `Context.md` | `templates/Context.md` | skip if it already exists |
-| `Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `collaboration:` + `posture:` + `autonomy:` lines |
-| `Vision.md` | `templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
-| `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
-| `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@Context.md` imports is missing (Context first so AGENTS ends on top) |
+| `akios/Context.md` | `templates/Context.md` | skip if it already exists |
+| `akios/Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `collaboration:` + `posture:` + `autonomy:` lines |
+| `akios/Vision.md` | `templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
+| `akios/workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
+| `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@akios/Context.md` imports is missing (Context first so AGENTS ends on top) |
 | `.claude/rules/swift.md` | `templates/rules/swift.md` | skip if it already exists |
 | `.claude/hooks/agentic-kit-inject.sh` | `scripts/hook/agentic-kit-inject.sh` | always copy; make executable (per-file `chmod`) |
 | `.claude/hooks/skill-trace.sh` | `scripts/hook/skill-trace.sh` | always copy; make executable (per-file `chmod`, optional telemetry) |
@@ -164,24 +189,47 @@ continuing or guessing at the repo's state.
 | `.claude/scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | always copy; make executable (per-file `chmod`). **Namespaced under `.claude/` (`init-reliability-and-ux.md` §5) — not a bare root-level `scripts/` folder**, which a consumer repo is likely to already own for its own scripts. |
 | `.git/hooks/pre-commit` | append a call to `.claude/scripts/alva-usage-ledger.sh` | if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
 
-**Footprint — what's consolidated and what deliberately isn't (`init-reliability-and-ux.md` §5).**
-Beyond the `alva-usage-ledger.sh` move above, this repo's other akios-generated artifacts are
-**not** further consolidated, on purpose: the five root-convention files (`AGENTS.md`,
-`CLAUDE.md`, `Context.md`, `Roadmap.md`, `Vision.md`) stay at repo root because `CLAUDE.md` is
-where Claude Code itself looks and `AGENTS.md`/`Context.md` are pulled in via its root-relative
-`@AGENTS.md`/`@Context.md` imports; the content folders (`specs/ tasks/ archive/
-code-references/`) stay at root because they hold work product the user browses directly, not
-generated housekeeping; the ALVA scaffold (`Router/ Container/ Foundation/ scratchs/`) stays at
-root because it's the user's own application source. `.claude/` (this step's hooks/rules/version
-marker) is already one directory and needs no further consolidation.
+**Footprint — the three-way line (`akios-footprint-consolidation.md` §1, supersedes
+`init-reliability-and-ux.md` §5).** Not everything this command writes is the same *kind* of
+thing:
+- **External-tool contract** — `CLAUDE.md`, `AGENTS.md`, `.claude/` — stays at repo root. A
+  *different* program (Claude Code, or any AGENTS.md-reading tool) looks for these at root,
+  independent of akios; not akios's call to relocate.
+- **akios housekeeping** — `Context.md`, `Roadmap.md`, `Vision.md`, `workflow.yml`, `specs/`,
+  `tasks/`, `archive/`, `code-references/`, the runtime journal — moves into one folder,
+  **`akios/`**. Read only by akios's own skills/commands; no other tool cares where it lives.
+- **User's own application source** — the ALVA scaffold (`Router/ Container/ Foundation/
+  scratchs/`) — stays at root. It's the deliverable Xcode/SPM must find in a normal layout, not
+  akios's paperwork.
 
-**Create the folder tree** (empty, with a `.gitkeep` if your tooling needs it):
-`specs/ tasks/todo/ tasks/in-progress/ tasks/review/ tasks/done/ archive/ code-references/`.
-(`.akios/` is created at runtime for the local journal/trace and stays **unconditionally**
-gitignored — no yes/no prompt (`init-reliability-and-ux.md` §6): there's no legitimate case for
-tracking a per-machine journal/trace/claims-cache, so a forced default beats asking a question
-with only one sane answer. Multi-instance claims live in **committed** files instead: task
-frontmatter `owner:` and the `Roadmap.md` spec line.)
+**Create the `akios/` folder tree** (empty, with a `.gitkeep` if your tooling needs it):
+```
+akios/
+├── Context.md
+├── Roadmap.md
+├── Vision.md
+├── workflow.yml
+├── specs/
+├── tasks/
+│   ├── todo/
+│   ├── in-progress/
+│   ├── review/
+│   └── done/
+├── archive/
+├── code-references/
+└── .local/                      # gitignored — runtime journal
+```
+Root, after this step, holds only: `CLAUDE.md`, `AGENTS.md`, `.claude/` (untouched), `akios/`, the
+ALVA scaffold (`Router/ Container/ Foundation/ scratchs/`, untouched), and whatever the user's own
+project already has (their Xcode project, `README.md`, etc. — akios never generated these).
+
+(`akios/.local/` is created at runtime for the local journal/trace — the renamed, now-nested form
+of the old sibling `.akios/` — and stays **unconditionally** gitignored — no yes/no prompt
+(`init-reliability-and-ux.md` §6, reused by `akios-footprint-consolidation.md` §7): there's no
+legitimate case for tracking a per-machine journal/trace/claims-cache, so a forced default beats
+asking a question with only one sane answer. The rest of `akios/` is **never** offered as
+gitignorable — it's committed work product a team reads and reviews. Multi-instance claims live
+in **committed** files instead: task frontmatter `owner:` and the `akios/Roadmap.md` spec line.)
 
 **Scaffold the ALVA composition root** (skip any piece that already exists):
 `Router/ Container/ Foundation/Design-tokens/ Foundation/Code-tokens/ scratchs/`, plus a starter
@@ -189,7 +237,7 @@ frontmatter `owner:` and the `Roadmap.md` spec line.)
 []}`) so `.claude/scripts/alva-usage-ledger.sh` has a file to overwrite on the first commit. **Do not**
 create `Features/` empty up front — a feature only gets a slice when `spec-to-tasks` decomposes
 its spec; an empty `Features/` folder is dead scaffolding no one asked for yet. `scratchs/` holds
-rejected `ui-variations` rounds and is excluded from the Xcode target (`Context.md` gets a line
+rejected `ui-variations` rounds and is excluded from the Xcode target (`akios/Context.md` gets a line
 noting this, so a fresh session doesn't have to re-derive it).
 
 Also copy the two design-token stubs into `Foundation/Design-tokens/` (skip if either already
@@ -219,16 +267,16 @@ run a fresh self-check as if nothing happened — report the itemized manifest t
 produced (confirmed landed / confirmed missing / never attempted) as the result, so the state is
 explicit rather than re-derived or assumed complete.
 
-Otherwise, confirm: the context files (incl. `Vision.md`) + `workflow.yml` + the folder tree exist;
-`CLAUDE.md` imports both `@AGENTS.md` and `@Context.md`; both hooks +
+Otherwise, confirm: the `akios/` context files (incl. `akios/Vision.md`) + `akios/workflow.yml` + the folder tree exist;
+`CLAUDE.md` imports both `@AGENTS.md` and `@akios/Context.md`; both hooks +
 `.claude/hooks/akios-instance.sh` + `.claude/hooks/post-checkpoint-verify.sh` are present;
-`Roadmap.md` has a `mode:`, a `collaboration:`,
+`akios/Roadmap.md` has a `mode:`, a `collaboration:`,
 a `posture:`, **and** an `autonomy:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
-`Context.md` / `AGENTS.md` / `CLAUDE.md` / `Roadmap.md` / `Vision.md`; and the ALVA scaffold
+`akios/Context.md` / `AGENTS.md` / `CLAUDE.md` / `akios/Roadmap.md` / `akios/Vision.md`; and the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
 `Foundation/usage-ledger.json` + the pre-commit hook calling `.claude/scripts/alva-usage-ledger.sh`)
 is in place. **If a skeleton was copied (step 1a):** confirm it did not overwrite `AGENTS.md`,
-`Context.md`, `Roadmap.md`, `Vision.md`, or `.claude/` — those must still be the plugin's own
+`akios/Context.md`, `akios/Roadmap.md`, `akios/Vision.md`, or `.claude/` — those must still be the plugin's own
 templates, not skeleton-sourced files. Report any miss.
 
 ## 6. Dependencies

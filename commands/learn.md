@@ -3,7 +3,7 @@ description: Turn raw material (code, PDF/book, image, docs, or a skill) into a 
 disable-model-invocation: true
 ---
 
-# /akios:learn — Ingest a knowledge pack (workflow.yml: knowledge-ingest, maintenance action)
+# /akios:learn — Ingest a knowledge pack (akios/workflow.yml: knowledge-ingest, maintenance action)
 
 **Not a pipeline phase.** Like `/akios:setup`, this is a maintenance action — run it whenever the
 user wants akios to learn a domain from material they trust.
