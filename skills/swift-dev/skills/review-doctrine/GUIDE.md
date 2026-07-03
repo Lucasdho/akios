@@ -9,7 +9,7 @@ metadata:
 
 # Review Doctrine — akios-aware `/code-review`
 
-Full design: `specs/code-review-doctrine.md`. This guide is the checklist itself — the reference
+Full design: `akios/specs/code-review-doctrine.md`. This guide is the checklist itself — the reference
 `task-execution`'s finish step and `just-vibes`' GATE step load as context for the built-in
 `/code-review`. It does not replace `/code-review`; it feeds it doctrine the built-in command has
 no reason to know on its own.
@@ -78,7 +78,7 @@ like `swift-dev` itself — never a mandate that beats project decisions.
 ## 6. Findings feed the hurdles ledger
 
 A **repeated** review finding (the same check firing a 2nd time on the same kind of change) is a
-2nd-occurrence signal — route it to `code-references/hurdles.md`
+2nd-occurrence signal — route it to `akios/code-references/hurdles.md`
 (`verification-and-learning-loop.md` §3) so the pattern gets prevented upstream, not just caught
 downstream every time.
 
@@ -87,7 +87,7 @@ downstream every time.
 - **Non-ALVA repo:** §4's checks are advisory visibility notes, not blocks — SOLID/DRY-via-ledger/
   ACID and the folder/SRP check still apply (architecture-agnostic).
 - **Plugin/docs repo (no Swift):** the Swift-specific checks are N/A; review degrades to the DoD
-  audit (grep for orphaned refs, YAML validity, install smoke-test) per `Roadmap.md` project-type.
+  audit (grep for orphaned refs, YAML validity, install smoke-test) per `akios/Roadmap.md` project-type.
 - **A finding the human disputes:** record as a warn or a project override, not forced; a
   *repeated* dispute routes to the hurdles ledger too — the doctrine or a project decision may
   need updating.

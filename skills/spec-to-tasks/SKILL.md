@@ -1,16 +1,16 @@
 ---
 name: spec-to-tasks
-description: Turn an approved spec into a lean, executable backlog of task files under tasks/todo/ in a single pass — replaces speckit's clarify/specify/plan/tasks phases for Swift/iOS work. Use after idea-to-spec has produced specs/<feature>.md and you need the execution backlog, or when a user runs /akios:plan. Produces atomic task files with est_tokens + runner, parallel markers, checkpoint barriers, definitions of done, and per-task UI-state coverage. Does NOT write app code — it writes the plan that task-execution runs.
+description: Turn an approved spec into a lean, executable backlog of task files under akios/tasks/todo/ in a single pass — replaces speckit's clarify/specify/plan/tasks phases for Swift/iOS work. Use after idea-to-spec has produced akios/specs/<feature>.md and you need the execution backlog, or when a user runs /akios:plan. Produces atomic task files with est_tokens + runner, parallel markers, checkpoint barriers, definitions of done, and per-task UI-state coverage. Does NOT write app code — it writes the plan that task-execution runs.
 license: MIT
 metadata:
   author: Lucas Oliveira
   version: "2.0.0"
 ---
 
-# Spec to Tasks — one pass, spec → tasks/todo/
+# Spec to Tasks — one pass, spec → akios/tasks/todo/
 
 Turns an approved spec into the execution backlog for `task-execution`: **one task file per task
-under `tasks/todo/`**. One skill, one pass, one human confirm — this replaces speckit's four
+under `akios/tasks/todo/`**. One skill, one pass, one human confirm — this replaces speckit's four
 phases and its `.specify/` + constitution machinery, none of which this skill creates or needs.
 
 **Why it exists:** `idea-to-spec` already resolves ambiguity decision-by-decision upstream, and
@@ -18,14 +18,14 @@ the kit's gates (`AGENTS.md` house rules, `swift-dev`, `/code-review`) enforce q
 This skill does the one thing that was missing: decompose the spec into runnable, sized tasks.
 
 ## Inputs / output
-- **In:** one or more approved `specs/<feature>.md` (passed as `$ARGUMENTS`), plus `Context.md`
+- **In:** one or more approved `akios/specs/<feature>.md` (passed as `$ARGUMENTS`), plus `akios/Context.md`
   (architecture/conventions) and `MEMORY.md` (locked decisions). Read **only** these.
-- **Out:** task files in `tasks/todo/` (`T<NNN>-<slug>.md`, see the `task.md` template), and the
-  spec's status set to `planned` in `Roadmap.md`. No single `tasks.md`, no `.specify/`, no constitution.
+- **Out:** task files in `akios/tasks/todo/` (`T<NNN>-<slug>.md`, see the `task.md` template), and the
+  spec's status set to `planned` in `akios/Roadmap.md`. No single `tasks.md`, no `.specify/`, no constitution.
 
 ## The pass (do this in order, once)
 
-1. **Read** the spec(s) + `Context.md` + `MEMORY.md`. Nothing else. Don't re-clarify what the spec
+1. **Read** the spec(s) + `akios/Context.md` + `MEMORY.md`. Nothing else. Don't re-clarify what the spec
    already settled — if something is genuinely ambiguous, ask one direct question, no clarify ceremony.
 2. **Decompose by similarity + size, on the ALVA slice.**
    - **Group by similarity** — same file / area / concern travels together, and for a new or
@@ -82,15 +82,15 @@ This skill does the one thing that was missing: decompose the spec into runnable
    §1/§2). A task that scaffolds a new feature/slice, or touches `Router/`/`Container/`, is
    tagged `alva-architecture` first, alongside whatever code-level guide also applies.
 10. **One interactive confirm.** Show the checkpoint/task graph + est_tokens/runner + designer's-eye
-    coverage compactly. Get a yes or adjustments. *Then* write the task files into `tasks/todo/`.
+    coverage compactly. Get a yes or adjustments. *Then* write the task files into `akios/tasks/todo/`.
 
 ## Task file format
-One file per task in `tasks/todo/`, following `templates/task.md`:
+One file per task in `akios/tasks/todo/`, following `templates/task.md`:
 
 ```markdown
 ---
 id: T001
-spec: specs/<feature>.md
+spec: akios/specs/<feature>.md
 est_tokens: 14k
 runner: orchestrator        # ≤20k orchestrator · >20k subagent
 parallel: true              # true = [P]; shares no files/symbols with siblings this checkpoint
@@ -123,17 +123,17 @@ State is the **containing folder**; `task-execution` moves the file `todo → in
 | Figma → SwiftUI | `figma-to-swiftui` |
 
 ## Posture (learning vs. delivery)
-Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for this session
+Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for this session
 without rewriting the Roadmap value — same rule as `collaboration`). In **learning** mode, the
 step-10 confirm also states *why* the graph came out this way: why these checkpoint boundaries,
 why a task is `[P]` (or isn't), why a task carries the `pack:<domain>` tag it does. **Delivery**
 (default) shows the graph without the running commentary, as documented above. Never changes the
 decomposition itself — same tasks, same checkpoints, same tags in both postures. See
-`AGENTS.md` "Operating posture" / `specs/operating-modes.md` §3.
+`AGENTS.md` "Operating posture" / `akios/specs/operating-modes.md` §3.
 
 ## Hand-off
-`tasks/todo/` is the sole input to `task-execution` (`/akios:deliver`). Stop after writing the
-files + updating `Roadmap.md`; tell the user the backlog is ready and that `/akios:deliver` ships it.
+`akios/tasks/todo/` is the sole input to `task-execution` (`/akios:deliver`). Stop after writing the
+files + updating `akios/Roadmap.md`; tell the user the backlog is ready and that `/akios:deliver` ships it.
 
 ## Anti-patterns
 - Creating `.specify/`, a constitution, or any second formal spec format. Don't.

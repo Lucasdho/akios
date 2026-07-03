@@ -1,6 +1,6 @@
 ---
 name: deep-brainstorm
-description: Whole-app mapping session — runs the FounderLens Double Diamond on the entire product, cartographs every major surface area (screens, data domains, flows, infrastructure), scopes each area (core/enhance/future), and bursts out a complete family of versioned specs into specs/ and Roadmap.md. Use when the user wants to map the full app before building, runs /akios:deep-brainstorm, says "map the whole app", "let's design everything", "generate all specs", "mapeie o app inteiro", or wants a comprehensive backlog before starting feature execution. Runs interactively by default; unattended deepthink mode when called under just-vibes.
+description: Whole-app mapping session — runs the FounderLens Double Diamond on the entire product, cartographs every major surface area (screens, data domains, flows, infrastructure), scopes each area (core/enhance/future), and bursts out a complete family of versioned specs into akios/specs/ and akios/Roadmap.md. Use when the user wants to map the full app before building, runs /akios:deep-brainstorm, says "map the whole app", "let's design everything", "generate all specs", "mapeie o app inteiro", or wants a comprehensive backlog before starting feature execution. Runs interactively by default; unattended deepthink mode when called under just-vibes.
 license: MIT
 metadata:
   author: Lucas Oliveira
@@ -14,13 +14,13 @@ of the app, scope each area, and produce a **complete family of versioned specs*
 identified domain — that future `/akios:plan` + `/akios:deliver` runs can build from.
 
 This skill **does not write app code**. It writes specs. Every identified domain becomes a
-`specs/<domain>.md` registered in `Roadmap.md` at status `designed`.
+`akios/specs/<domain>.md` registered in `akios/Roadmap.md` at status `designed`.
 
 ## The contract: what this skill owns
 
-- Reads: `Context.md`, `Vision.md` (if present), `Roadmap.md`, `MEMORY.md`, existing `specs/*.md`.
+- Reads: `akios/Context.md`, `akios/Vision.md` (if present), `akios/Roadmap.md`, `MEMORY.md`, existing `akios/specs/*.md`.
   Nothing else without checking first.
-- Writes: `specs/*.md` (one per identified domain), updates `Roadmap.md`.
+- Writes: `akios/specs/*.md` (one per identified domain), updates `akios/Roadmap.md`.
 - Does NOT: write app code, task files, or data files — those belong to the deliver pipeline.
 
 ## Relation to the existing pipeline
@@ -34,7 +34,7 @@ the entire backlog autonomously.
 
 ## Phase 0 — Orient (always, one short turn)
 
-Read `Context.md`, `Vision.md`, `Roadmap.md`, and any existing `specs/*.md`. Build a mental
+Read `akios/Context.md`, `akios/Vision.md`, `akios/Roadmap.md`, and any existing `akios/specs/*.md`. Build a mental
 model of:
 - What the app does and who it's for.
 - What's already specced / built / planned.
@@ -51,9 +51,9 @@ start. Wait.
 **Purpose:** Establish a shared, grounded understanding of the whole product before mapping
 its parts. One decision at a time. Follow `idea-to-spec`'s golden rules throughout.
 
-**If the user has already run `founderlens-behavior`** (there's a `specs/founderlens-*.md`
-or `Vision.md` has a completed first-diamond section): summarize the locked decisions,
-flag any tensions with the existing `Context.md`, and ask permission to skip straight to
+**If the user has already run `founderlens-behavior`** (there's a `akios/specs/founderlens-*.md`
+or `akios/Vision.md` has a completed first-diamond section): summarize the locked decisions,
+flag any tensions with the existing `akios/Context.md`, and ask permission to skip straight to
 Phase 2 (Cartograph). Wait.
 
 **Otherwise:** run the Discover phase inline, adapted for whole-app mapping. Walk through
@@ -91,7 +91,7 @@ a design session — you're listing what exists and what needs to exist, not des
 works. Deep design happens in the individual spec sessions.
 
 Work through these 6 dimensions. For each, propose a list of candidates (what you can infer
-from Context.md + the Discover decisions), ask the user to add, remove, or rename, then lock
+from akios/Context.md + the Discover decisions), ask the user to add, remove, or rename, then lock
 the list. One dimension per turn.
 
 ### The 6 dimensions
@@ -167,7 +167,7 @@ to shuffle anything.
 
 ## Phase 4 — Spec-burst (produce the spec family)
 
-**Purpose:** Translate the scoped app map into a complete family of `specs/*.md` files.
+**Purpose:** Translate the scoped app map into a complete family of `akios/specs/*.md` files.
 Each spec represents one coherent domain — the unit that `spec-to-tasks` will later decompose
 into an ALVA feature slice (`Features/<Domain>/{domain,data,presentation,contract,tests}`). Carry
 forward the contract-boundary and Foundation-seed notes from Phase 2 into each spec's Contract &
@@ -217,7 +217,7 @@ Leave `Implementation notes` blank — those belong in spec-to-tasks.
 
 ### After writing
 
-Update `Roadmap.md`: add a row per spec to the `## Specs` table with status `designed` and
+Update `akios/Roadmap.md`: add a row per spec to the `## Specs` table with status `designed` and
 its priority tier. Preserve any existing rows; never reorder them.
 
 ---
@@ -235,7 +235,7 @@ Score each spec produced in Phase 4 against three dimensions:
 
 | Dimension | Criterion | Max |
 |---|---|---|
-| **Real** | Does this domain address a genuine gap / pain in the user's workflow? Is the scope grounded in Context.md / Vision.md / the Discover decisions? | 30 |
+| **Real** | Does this domain address a genuine gap / pain in the user's workflow? Is the scope grounded in akios/Context.md / akios/Vision.md / the Discover decisions? | 30 |
 | **Win** | Can this domain be built within the app's stated constraints (stack, no-external-deps, team size)? Does it differentiate vs. alternatives identified in Discover? | 40 |
 | **Worth It** | Is the execution effort justified by the value delivered? Can it be decomposed into one `spec-to-tasks` session (not a multi-month project)? | 30 |
 
@@ -245,7 +245,7 @@ Score each spec produced in Phase 4 against three dimensions:
 user-pain evidence scores low on Real. A scope-unbounded spec scores low on Worth It.
 Name the specific weakness; pair with a one-line remediation hint.
 
-### Write `specs/rww-audit.md`
+### Write `akios/specs/rww-audit.md`
 
 Write (or overwrite) a consolidated audit file in the target project:
 
@@ -258,7 +258,7 @@ Generated by /akios:deep-brainstorm Phase 5.
 | <spec-name>.md | <score> | <score> | <score> | <total> | Green/Yellow/Red | — / [audit: shaky] / needs-revision | <one-line note> |
 ```
 
-### Update `Roadmap.md`
+### Update `akios/Roadmap.md`
 
 - **Red (0–40):** change spec's status from `designed` to `needs-revision`.
 - **Yellow (41–70):** keep status `designed`; append `[audit: shaky]` to the Notes column.
@@ -271,7 +271,7 @@ for acknowledgement before moving to Phase 6. The user may manually override a s
 the override and its reason in `rww-audit.md`.
 
 In unattended (just-vibes) mode: derive scores from Discover-phase decisions + spec content;
-record reasoning per spec in the audit file; update Roadmap.md silently; log audit summary
+record reasoning per spec in the audit file; update akios/Roadmap.md silently; log audit summary
 (X green, Y shaky, Z need revision) in the just-vibes journal.
 
 ---
@@ -321,7 +321,7 @@ When called under `/akios:just-vibes`:
 - **Resolve via best judgment.** Where genuinely 50/50, choose the reversible option.
 - **Flag, don't smooth.** Tensions and unverifiable assumptions get marked as open risks in
   the relevant spec. The human triages them when they review.
-- Produce all specs + update Roadmap.md. Then report and stop (or yield to just-vibes loop).
+- Produce all specs + update akios/Roadmap.md. Then report and stop (or yield to just-vibes loop).
 
 ---
 

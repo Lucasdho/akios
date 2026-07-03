@@ -45,7 +45,7 @@ Lets the agent write specs and docs (e.g. during `idea-to-spec`) but not Swift o
   "permissions": {
     "allow": [
       "Read", "Glob", "Grep",
-      "Write(specs/*)", "Edit(specs/*)", "Write(docs/*)", "Edit(docs/*)",
+      "Write(akios/specs/*)", "Edit(akios/specs/*)", "Write(docs/*)", "Edit(docs/*)",
       "mcp__xcodebuildmcp__*"
     ],
     "deny": ["Write(*.swift)", "Edit(*.swift)", "Write(*.json)", "Write(*.plist)"]
@@ -53,7 +53,7 @@ Lets the agent write specs and docs (e.g. during `idea-to-spec`) but not Swift o
 }
 ```
 
-✅ Level 1 + write specs/docs  ❌ No Swift/config changes
+✅ Level 1 + write akios/specs/docs  ❌ No Swift/config changes
 
 ---
 
@@ -66,7 +66,7 @@ Adds test files — useful for a test-first pass before production code is unloc
   "permissions": {
     "allow": [
       "Read", "Glob", "Grep",
-      "Write(specs/*)",
+      "Write(akios/specs/*)",
       "Write(*Tests/*.swift)", "Write(*Tests/**/*.swift)",
       "Edit(*Tests/*.swift)", "Edit(*Tests/**/*.swift)",
       "mcp__xcodebuildmcp__*"
