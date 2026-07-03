@@ -112,6 +112,14 @@ for each task (by checkpoint, respecting [P]/area):
   gates — it inherits nothing. **Never clone your context window into it:** a subagent is billed for
   every token you hand it, so pasting the whole conversation is the most expensive mistake here — send
   the slice, not the session.
+- **Batch chaining (a subagent-eligible *batch*, not a single task).** The two bullets above cover
+  one dispatch for one task. When a batch of ≥2 subagent-eligible tasks shares a domain/slice and is
+  meant to run in order, `subagent-context-chaining.md` §§1–6 is the default execution shape: one
+  subagent works the batch in sequence inside one session, compacting itself between tasks, instead
+  of a fresh cold subagent per task or one subagent running the whole batch unbounded. At a
+  **120k-token subagent lineage budget** (its own accumulated context, not the driving session's —
+  see that spec's §2 for how this differs from the two thresholds above), it finishes its current
+  task, writes a handoff, and terminates; the orchestrator spawns a fresh cold subagent to continue.
 
 ## Snippet consumption — copy, adapt, prune (`kind: snippet`, `snippet-library.md`)
 A pack lookup can resolve to a `kind: snippet` entry — literal, field-tested Swift code (a card
