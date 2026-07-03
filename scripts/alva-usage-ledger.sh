@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ALVA Foundation usage ledger — strategy A (grep + git-hook).
-# Doctrine: specs/alva-architecture-doctrine.md §6.4 (strategy A, upgrade path to B/C/D).
+# Doctrine: akios/specs/alva-architecture-doctrine.md §6.4 (strategy A, upgrade path to B/C/D).
 #
 # Regenerates <repo>/Foundation/usage-ledger.json: a deterministic count of which
 # Features/*/ reference which symbol, so task-execution can *read* promotion/demotion

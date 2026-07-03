@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # post-checkpoint-verify.sh — the auto-build/test hook (Vision wishlist #3).
-# Doctrine: specs/verification-and-learning-loop.md §4 (D4).
+# Doctrine: akios/specs/verification-and-learning-loop.md §4 (D4).
 #
 # Runs after a [major] checkpoint / spec completion so the build/test proof (one of
 # task-execution's "three proofs") is automatic instead of relying on someone remembering
@@ -21,9 +21,9 @@
 #     -> writes ran:false, tool:"none" and exits 0. task-execution then either runs the
 #        battery INLINE in the session (if xcodebuild is reachable there) or, in a
 #        plugin/docs repo with no build tool at all, falls back to the DoD audit
-#        (grep + YAML validation + install smoke-test) per Roadmap.md project-type.
+#        (grep + YAML validation + install smoke-test) per akios/Roadmap.md project-type.
 #   - no .xcodeproj/.xcworkspace found -> same graceful "ran:false" result, reason noted.
-#   - Context.md's own recorded test command always wins over auto-detection when present
+#   - akios/Context.md's own recorded test command always wins over auto-detection when present
 #     (project decision beats a guessed invocation — same priority-chain spirit as everywhere
 #     else in this kit).
 #
@@ -34,9 +34,9 @@
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-OUT_DIR="$ROOT/.akios"
+OUT_DIR="$ROOT/akios/.local"
 OUT="$OUT_DIR/verify-result.json"
-CONTEXT_MD="$ROOT/Context.md"
+CONTEXT_MD="$ROOT/akios/Context.md"
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 mkdir -p "$OUT_DIR"
@@ -47,7 +47,7 @@ write_result() {
     "$ts" "$ran" "$tool" "$exit_code" "$summary" > "$OUT"
 }
 
-# 1. Prefer the project's own recorded test command (Context.md ## Commands), if resolvable
+# 1. Prefer the project's own recorded test command (akios/Context.md ## Commands), if resolvable
 #    and not still a template placeholder.
 test_cmd=""
 if [ -f "$CONTEXT_MD" ]; then
@@ -60,7 +60,7 @@ fi
 # 2. No usable command and no build tool on PATH -> graceful no-op (plugin/docs repo, or a
 #    sandbox that denies it). This is the expected, non-error path for THIS repo.
 if [ -z "$test_cmd" ] && ! command -v xcodebuild >/dev/null 2>&1; then
-  write_result "false" "none" "null" "no test command in Context.md and no xcodebuild on PATH"
+  write_result "false" "none" "null" "no test command in akios/Context.md and no xcodebuild on PATH"
   exit 0
 fi
 
@@ -70,7 +70,7 @@ if [ -n "$test_cmd" ]; then
   eval "$test_cmd" >"$OUT_DIR/verify-last-run.log" 2>&1
   code=$?
   set -e
-  write_result "true" "context.md" "$code" "ran Context.md's recorded Test: command"
+  write_result "true" "context.md" "$code" "ran akios/Context.md's recorded Test: command"
   exit 0
 fi
 

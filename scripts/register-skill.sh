@@ -2,9 +2,9 @@
 # Idempotently register a kit-authored skill into scripts/install-skills.sh's SKILLS array,
 # then re-run install-skills.sh to install it into ~/.claude/skills/ and smoke-test it.
 #
-# This is the deterministic half of skill registration (specs/skill-authoring.md §1/§7) — the
+# This is the deterministic half of skill registration (akios/specs/skill-authoring.md §1/§7) — the
 # `skill-author` skill calls this instead of hand-editing the array as an LLM string edit,
-# which is exactly the mistake Context.md's "Gotchas" section names as most common in this kit.
+# which is exactly the mistake akios/Context.md's "Gotchas" section names as most common in this kit.
 #
 # Usage: scripts/register-skill.sh <skill-name>
 set -euo pipefail
