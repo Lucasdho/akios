@@ -1,13 +1,14 @@
 # AKIOS - Agentic Kit for IOS
 
 A Claude Code plugin that gives your agent a structured, repeatable workflow for building
-Swift / iOS apps — design, plan, deliver — so features ship clean instead of being improvised
-session by session.
+Swift / iOS apps — brainstorm, plan, design, deliver — so features ship clean instead of being
+improvised session by session.
 
 ## What it does
 
-- **Design** (`/akios:brainstorm`) — turn a rough idea into an approved spec
+- **Brainstorm** (`/akios:brainstorm`) — turn a rough idea into an approved spec
 - **Plan** (`/akios:plan`) — break the spec into a task backlog with estimates and checkpoints
+- **Design** (`/akios:design`) — explore, remix, and graduate SwiftUI variations for UI-scoped tasks before implementation
 - **Deliver** (`/akios:deliver`) — implement, test, and code-review each task; stop before push/merge
 - **Autonomous run** (`/akios:just-vibes`) — drive the whole pipeline unattended; quality gate stays on
 
@@ -42,6 +43,7 @@ Then, inside the repo you want to set up:
 | `/akios:brainstorm "<idea>"` | Idea → approved spec in `akios/specs/` |
 | `/akios:deep-brainstorm [focus]` | Map the whole app → a complete spec family in one session |
 | `/akios:plan <spec>` | Spec → task backlog in `akios/tasks/todo/` |
+| `/akios:design` | Explore, remix, and graduate a screen's SwiftUI variations (UI-scoped tasks only) |
 | `/akios:deliver` | Implement tasks; stop before push/merge |
 | `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
 | `/akios:handoff` | Write a handoff doc for another agent session, or return results |
