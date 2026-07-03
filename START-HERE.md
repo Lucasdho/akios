@@ -60,7 +60,7 @@ and explain choices in plain language.
 4. Run: ~/akios/scripts/install.sh "$(pwd)"
    This drops the kit's guide files into my project. It never overwrites files I already
    have.
-5. Now FILL IN every {{...}} blank in the files it created — Context.md, AGENTS.md, and
+5. Now FILL IN every {{...}} blank in the files it created — akios/Context.md, AGENTS.md, and
    CLAUDE.md. Use my answers from step 3 and what you can read from the code: the stack,
    the install/run/test/build commands, the architecture, the target, the conventions,
    and any project-specific rules. Leave NO {{...}} blanks behind.
@@ -116,7 +116,7 @@ A few terms come up. Plain-English versions:
   over-building. Nice to have, not required.
 - **MEMORY** — where Claude Code remembers *this project's* decisions across sessions, so you
   don't repeat yourself.
-- **Code References** — a `code-references/` folder where you can drop Swift files whose style
+- **Code References** — a `akios/code-references/` folder where you can drop Swift files whose style
   you like; the assistant prefers their patterns over its generic defaults.
 - **Preferences** — your cross-project coding taste, learned as you work and saved in
   `~/.claude/akios/preferences.md` (it asks before saving anything).

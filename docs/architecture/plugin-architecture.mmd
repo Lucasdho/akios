@@ -18,7 +18,7 @@ flowchart TB
         RV["/akios:review"]
     end
 
-    SETUP --> BOOT["writes: CLAUDE.md, AGENTS.md, Context.md, Roadmap.md, specs/, tasks/, archive/"]
+    SETUP --> BOOT["writes: CLAUDE.md, AGENTS.md, akios/Context.md, akios/Roadmap.md, akios/specs/, akios/tasks/, akios/archive/"]
     SETUP --> HOOKS
     SETUP --> TEMPL["templates/"]
 
@@ -66,7 +66,7 @@ flowchart TB
     SWIFTDEV --> BUNDLE
 
     IAK["ios-agentic-kit (meta/onboarding skill)"] -.describes/overlaps.-> BOOT
-    IAK -.describes/overlaps.-> CTXMD["Context.md"]
+    IAK -.describes/overlaps.-> CTXMD["akios/Context.md"]
     IFP["ios-feature-pipeline (orchestrator skill)"] -.describes/overlaps.-> CTXMD
 
     subgraph SCRIPTS["scripts/ — 7 maintenance scripts"]

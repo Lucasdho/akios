@@ -103,7 +103,7 @@ flowchart TB
         RV["/akios:review"]
     end
 
-    SETUP --> BOOT["writes: CLAUDE.md, AGENTS.md, Context.md, Roadmap.md, specs/, tasks/, archive/"]
+    SETUP --> BOOT["writes: CLAUDE.md, AGENTS.md, akios/Context.md, akios/Roadmap.md, akios/specs/, akios/tasks/, akios/archive/"]
     SETUP --> HOOKS
     SETUP --> TEMPL["templates/"]
 
@@ -151,7 +151,7 @@ flowchart TB
     SWIFTDEV --> BUNDLE
 
     IAK["ios-agentic-kit (meta/onboarding skill)"] -.describes/overlaps.-> BOOT
-    IAK -.describes/overlaps.-> CTXMD["Context.md"]
+    IAK -.describes/overlaps.-> CTXMD["akios/Context.md"]
     IFP["ios-feature-pipeline (orchestrator skill)"] -.describes/overlaps.-> CTXMD
 
     subgraph SCRIPTS["scripts/ — 7 maintenance scripts"]
@@ -182,10 +182,10 @@ flowchart TB
     <table>
       <tr><th>Command</th><th>Skill loaded</th><th>Role</th><th>Notes</th></tr>
       <tr><td><code>/akios:setup</code></td><td>— (direct file ops)</td><td>Bootstrap</td><td>Not a phase. Materializes context files, folder tree, hooks, templates.</td></tr>
-      <tr><td><code>/akios:brainstorm</code></td><td><code>idea-to-spec</code></td><td>Phase 1</td><td>→ <code>specs/*.md</code>, status <code>designed</code>.</td></tr>
-      <tr><td><code>/akios:plan</code></td><td><code>spec-to-tasks</code></td><td>Phase 2</td><td>→ <code>tasks/todo/*.md</code>, status <code>planned</code>.</td></tr>
+      <tr><td><code>/akios:brainstorm</code></td><td><code>idea-to-spec</code></td><td>Phase 1</td><td>→ <code>akios/specs/*.md</code>, status <code>designed</code>.</td></tr>
+      <tr><td><code>/akios:plan</code></td><td><code>spec-to-tasks</code></td><td>Phase 2</td><td>→ <code>akios/tasks/todo/*.md</code>, status <code>planned</code>.</td></tr>
       <tr><td><code>/akios:design</code></td><td><code>ui-variations</code> + <code>align-ui</code></td><td>Phase 3 (UI-scoped)</td><td>Non-UI tasks skip to <code>deliver</code>.</td></tr>
-      <tr><td><code>/akios:deliver</code></td><td><code>task-execution</code></td><td>Phase 4</td><td>→ <code>tasks/done/*.md</code>. Routes into <code>swift-dev</code>.</td></tr>
+      <tr><td><code>/akios:deliver</code></td><td><code>task-execution</code></td><td>Phase 4</td><td>→ <code>akios/tasks/done/*.md</code>. Routes into <code>swift-dev</code>.</td></tr>
       <tr><td><code>/akios:deep-brainstorm</code></td><td><code>deep-brainstorm</code></td><td>Run-style (pre-exec)</td><td>Optionally invokes <code>founderlens-behavior</code>.</td></tr>
       <tr><td><code>/akios:just-vibes</code></td><td><code>just-vibes</code></td><td>Run-style (over pipeline)</td><td>Waives human push/merge gate only; quality gate stays.</td></tr>
       <tr><td><code>/akios:learn</code></td><td><code>knowledge-ingest</code></td><td>Maintenance</td><td>Delegates to <code>oss-first</code>/pdf/etc.</td></tr>
@@ -201,7 +201,7 @@ flowchart TB
       <tr><th>Skill</th><th>Version</th><th>Purpose</th></tr>
       <tr><td><code>idea-to-spec</code></td><td>1.2.0</td><td>Idea → versioned spec, decision-by-decision.</td></tr>
       <tr><td><code>oss-first</code></td><td>1.0.0</td><td>Prefer mature OSS tooling over hand-generated code.</td></tr>
-      <tr><td><code>ios-feature-pipeline</code></td><td>3.0.0</td><td>Orchestrator: routes an idea through workflow.yml phases.</td></tr>
+      <tr><td><code>ios-feature-pipeline</code></td><td>3.0.0</td><td>Orchestrator: routes an idea through akios/workflow.yml phases.</td></tr>
       <tr><td><code>ios-agentic-kit</code></td><td>2.0.0</td><td>Meta-doc: what the kit installs, how it routes.</td></tr>
       <tr><td><code>spec-to-tasks</code></td><td>2.0.0</td><td>Spec → task backlog, single pass.</td></tr>
       <tr><td><code>task-execution</code></td><td>2.2.0</td><td>Drives backlog to implemented/committed/reviewed code.</td></tr>
@@ -261,12 +261,12 @@ flowchart TB
   <section>
     <h2>Audit flags — candidates worth a closer look</h2>
     <ul class="flags">
-      <li><b>Meta-documentation overlap.</b> <code>Context.md</code>, <code>README.md</code>, <code>ios-agentic-kit</code>, and <code>ios-feature-pipeline</code> all describe "how the kit works" from slightly different angles. Check whether all four earn their keep.</li>
+      <li><b>Meta-documentation overlap.</b> <code>akios/Context.md</code>, <code>README.md</code>, <code>ios-agentic-kit</code>, and <code>ios-feature-pipeline</code> all describe "how the kit works" from slightly different angles. Check whether all four earn their keep.</li>
       <li><b>swiftui-* sub-skill sprawl.</b> Six sub-skills under <code>swift-dev/skills/</code> cover overlapping SwiftUI territory with no documented boundary in the router table. 627 lines vs. 95–108 in neighbors suggests uneven scope, not necessarily redundancy.</li>
       <li><b>Vendored-looking guides inside an "authored skills" repo.</b> <code>swift-concurrency-pro</code> and <code>swift-testing-pro</code> ship their own <code>CODE_OF_CONDUCT.md</code> — the repo's own <code>.gitignore</code> comment says vendored skills shouldn't be bundled here. Confirm intentional exception vs. drift.</li>
-      <li><b>align-ui sits outside workflow.yml's phases: list.</b> Well-referenced (30+ files) but declared only in prose (<code>commands/design.md</code>, <code>ui-variations</code>), not as its own phase/run-style. Likely fine (it's a gate inside <code>design</code>) — confirm intended shape.</li>
+      <li><b>align-ui sits outside akios/workflow.yml's phases: list.</b> Well-referenced (30+ files) but declared only in prose (<code>commands/design.md</code>, <code>ui-variations</code>), not as its own phase/run-style. Likely fine (it's a gate inside <code>design</code>) — confirm intended shape.</li>
       <li><b>commands/review.md is a two-line wrapper around a built-in.</b> Confirm the doctrine pre-load still justifies a dedicated command.</li>
-      <li><b>tasks.md (root)</b> is self-flagged in <code>Context.md</code> as a legacy single-file backlog, "most tasks already done" — known removal candidate.</li>
+      <li><b>tasks.md (root)</b> is self-flagged in <code>akios/Context.md</code> as a legacy single-file backlog, "most tasks already done" — known removal candidate.</li>
     </ul>
   </section>
 

@@ -15,11 +15,11 @@ source) and `plugin-architecture.html` (rendered, browsable).
 
 | Command | Skill loaded | Role | Notes |
 |---|---|---|---|
-| `/akios:setup` | — (no skill; direct file ops) | Bootstrap | Not a pipeline phase. Materializes `CLAUDE.md`, `AGENTS.md`, `Context.md`, `Roadmap.md`, `specs/`, `tasks/`, `archive/`, hooks, templates. |
-| `/akios:brainstorm` | `idea-to-spec` | Pipeline phase 1 | → `specs/*.md`, status `designed`. |
-| `/akios:plan` | `spec-to-tasks` | Pipeline phase 2 | → `tasks/todo/*.md`, status `planned`. |
+| `/akios:setup` | — (no skill; direct file ops) | Bootstrap | Not a pipeline phase. Materializes `CLAUDE.md`, `AGENTS.md`, `akios/Context.md`, `akios/Roadmap.md`, `akios/specs/`, `akios/tasks/`, `akios/archive/`, hooks, templates. |
+| `/akios:brainstorm` | `idea-to-spec` | Pipeline phase 1 | → `akios/specs/*.md`, status `designed`. |
+| `/akios:plan` | `spec-to-tasks` | Pipeline phase 2 | → `akios/tasks/todo/*.md`, status `planned`. |
 | `/akios:design` | `ui-variations` (+ `align-ui`) | Pipeline phase 3 (UI-scoped only) | Non-UI tasks skip straight to `deliver`. |
-| `/akios:deliver` | `task-execution` | Pipeline phase 4 | → `tasks/done/*.md`, status `done`. Routes Swift work into `swift-dev`. |
+| `/akios:deliver` | `task-execution` | Pipeline phase 4 | → `akios/tasks/done/*.md`, status `done`. Routes Swift work into `swift-dev`. |
 | `/akios:deep-brainstorm` | `deep-brainstorm` | Run-style (pre-execution) | Whole-app mapping → spec family. Optionally invokes `founderlens-behavior`. |
 | `/akios:just-vibes` | `just-vibes` | Run-style (over the pipeline) | Drives brainstorm→plan→design→deliver unattended; waives the human push/merge gate only. |
 | `/akios:learn` | `knowledge-ingest` | Maintenance | Not a phase. Delegates extraction to `oss-first`/`pdf`/etc. |
@@ -27,7 +27,7 @@ source) and `plugin-architecture.html` (rendered, browsable).
 | `/akios:handoff` | `handoff` | Maintenance | Not a phase. Cross-session continuity doc. |
 | `/akios:review` | `swift-dev/skills/review-doctrine` (+ built-in `/code-review`) | Maintenance | Thin wrapper: loads doctrine, then delegates to the built-in reviewer. |
 
-`workflow.yml` is the single declared source of truth for phases/prereqs/outputs — commands
+`akios/workflow.yml` is the single declared source of truth for phases/prereqs/outputs — commands
 deliberately don't re-document it.
 
 ## 3. Top-level registered skills (15)
@@ -39,9 +39,9 @@ actually ships to `~/.claude/skills/`.
 |---|---|---|
 | `idea-to-spec` | 1.2.0 | Idea → versioned spec, decision-by-decision. |
 | `oss-first` | 1.0.0 | Prefer mature OSS tooling over hand-generated code for commodity problems. |
-| `ios-feature-pipeline` | 3.0.0 | Orchestrator: routes a raw feature idea through `workflow.yml`'s phases. |
+| `ios-feature-pipeline` | 3.0.0 | Orchestrator: routes a raw feature idea through `akios/workflow.yml`'s phases. |
 | `ios-agentic-kit` | 2.0.0 | Meta-doc: what the kit installs, how it routes, how to set it up. |
-| `spec-to-tasks` | 2.0.0 | Spec → `tasks/todo/*.md` backlog, single pass. |
+| `spec-to-tasks` | 2.0.0 | Spec → `akios/tasks/todo/*.md` backlog, single pass. |
 | `task-execution` | 2.2.0 | Drives the backlog to implemented/committed/reviewed code. |
 | `swift-dev` | 1.1.0 | Router for all Swift/iOS work; bundles 14 sub-skill guides (§4). |
 | `deep-brainstorm` | 1.0.0 | Whole-app Double Diamond mapping → spec family. |
@@ -98,12 +98,12 @@ table — candidate for a closer read (§7).
 |---|---|---|
 | `agentic-kit-inject.sh` | `SessionStart` | Re-states default skill gates + discovers knowledge packs each session. Reminds, doesn't enforce. |
 | `post-checkpoint-verify.sh` | Called by `task-execution` at `[major]` checkpoints | Auto build/test proof; not wired to a Claude Code event directly (too slow per-tool-call). |
-| `skill-trace.sh` | `PostToolUse` | Appends a JSON trace line to `.akios/trace.jsonl` on skill/reference reads. |
+| `skill-trace.sh` | `PostToolUse` | Appends a JSON trace line to `akios/.local/trace.jsonl` on skill/reference reads. |
 
 ## 6. Templates (`templates/`)
 
-Materialized into a consumer repo by `/akios:setup`: `AGENTS.md`, `CLAUDE.md`, `Context.md`,
-`Roadmap.md`, `Vision.md`, `preferences.seed.md`, `spec.md`, `task.md`, `rules/swift.md`
+Materialized into a consumer repo by `/akios:setup`: `AGENTS.md`, `CLAUDE.md`, `akios/Context.md`,
+`akios/Roadmap.md`, `akios/Vision.md`, `preferences.seed.md`, `spec.md`, `task.md`, `rules/swift.md`
 (the swift gate), `foundation/DesignSystem.swift`, `foundation/RoleModifiers.swift`.
 
 ## 7. Diagram
@@ -125,7 +125,7 @@ flowchart LR
 Originally logged as observations, not verdicts. Each was checked against the actual file
 contents in a follow-up pass; verdicts below.
 
-1. **Meta-documentation overlap — closed, false alarm.** `Context.md`, `README.md`,
+1. **Meta-documentation overlap — closed, false alarm.** `akios/Context.md`, `README.md`,
    `ios-agentic-kit`, and `ios-feature-pipeline` serve different audiences (repo-self-context,
    GitHub visitor/install, kit onboarding, in-flight phase routing). `ios-agentic-kit` carries
    only a one-line phase-spine summary that points to `ios-feature-pipeline`'s full table — that's
@@ -136,11 +136,11 @@ contents in a follow-up pass; verdicts below.
    (a full design-philosophy guide), not redundancy.
 3. **Vendored-looking `CODE_OF_CONDUCT.md` — confirmed, actioned.** Present in
    `swift-concurrency-pro` and `swift-testing-pro`, referenced nowhere else in the repo. Removed.
-4. **`align-ui` outside `workflow.yml`'s `phases:` list — closed, false alarm.** It's documented
+4. **`align-ui` outside `akios/workflow.yml`'s `phases:` list — closed, false alarm.** It's documented
    by design as a gate inside the `design` phase's own comment block, not a missing phase.
 5. **`commands/review.md` "two-line wrapper" — closed, false alarm.** It loads real doctrine
    (graduated block/warn severity, ledger-driven DRY via `Foundation/usage-ledger.json`, non-ALVA
    repo degradation) that the built-in `/code-review` has no way to replicate on its own.
 6. **`tasks.md` (root) — confirmed, actioned.** The file itself no longer exists (fully migrated
-   into `tasks/todo/`). `Context.md`'s Gotchas section still described it in the present tense;
+   into `akios/tasks/todo/`). `akios/Context.md`'s Gotchas section still described it in the present tense;
    corrected to past tense.
