@@ -250,7 +250,7 @@ for the full shape (ui-overhaul-implementation.md Phase 1.4 / Phase 4.1).
 exist, create `~/.claude/akios/` and copy `templates/preferences.seed.md` there as
 `preferences.md`. If it already exists, leave it untouched (it survives plugin updates).
 
-Append `.akios/` to the repo's `.gitignore` (the skill trace is runtime data, not source).
+Append `akios/.local/` to the repo's `.gitignore` (the skill trace is runtime data, not source).
 
 ## 4. Wire the hooks (idempotent)
 In `<root>/.claude/settings.json` (create as `{}` if absent; use `jq` if available):

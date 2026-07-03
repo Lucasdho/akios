@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # skill-trace.sh — PostToolUse hook. Appends a one-line JSON record to
-# .akios/trace.jsonl whenever a Skill loads or a skill/reference file is read,
+# akios/.local/trace.jsonl whenever a Skill loads or a skill/reference file is read,
 # with a cheap `git diff --shortstat` snapshot for a before/after delta.
 #
 # ponytail: snapshot is git shortstat only — NO test runs here (a hook firing
@@ -14,7 +14,7 @@ set -euo pipefail
 
 input="$(cat)"                       # PostToolUse passes JSON on stdin
 root="${CLAUDE_PROJECT_DIR:-$(pwd)}"
-out="$root/.akios/trace.jsonl"
+out="$root/akios/.local/trace.jsonl"
 
 # --- extract fields (jq if present, else a grep fallback) ---
 if command -v jq >/dev/null 2>&1; then
@@ -30,7 +30,7 @@ fi
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 stat="$(git -C "$root" diff --shortstat 2>/dev/null | tr -d '\n' | sed 's/"/\\"/g' || true)"
 
-emit() { mkdir -p "$root/.akios"; printf '%s\n' "$1" >> "$out"; }
+emit() { mkdir -p "$root/akios/.local"; printf '%s\n' "$1" >> "$out"; }
 
 case "$tool" in
   Skill)
