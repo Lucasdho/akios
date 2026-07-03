@@ -91,7 +91,7 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 **Review doctrine is loaded at the gate, not by this table.** `skills/review-doctrine/GUIDE.md` —
 SOLID/DRY/ACID applied honestly + ALVA/UI conformance — isn't selected by Phase 2's classify step;
 `task-execution`'s finish step and `just-vibes`' GATE step load it directly before `/code-review`.
-See `specs/code-review-doctrine.md`.
+See `akios/specs/code-review-doctrine.md`.
 
 ### Phase 3 — Do the work
 
@@ -102,7 +102,7 @@ Follow the loaded guides. Each guide points to extra files under its own folder 
 When a task creates a new file (a view, a test, a resource), don't agonize over whether it lands
 in the target — check the project once and act:
 
-- **Check the project's answer first.** `Context.md` should record the target-membership mechanism
+- **Check the project's answer first.** `akios/Context.md` should record the target-membership mechanism
   (the kit's `/akios:setup` detects it). Prefer that over re-deriving.
 - **Otherwise inspect the `.pbxproj`.** Grep it for `PBXFileSystemSynchronizedRootGroup` (or read
   `objectVersion` — ≥ 77 means Xcode 16+). If present, the project uses **synchronized groups**:

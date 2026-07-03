@@ -4,10 +4,10 @@
 
 .claude/
 /speckit
-.akios/
+akios/.local/
 
-# Vision.md / Roadmap.md / Context.md are NOT ignored here: this repo dogfoods its own kit on
-# itself (see Context.md "What this repo is"), so its root Vision/Roadmap/Context are the real,
-# current project state — not template output — and must be tracked like any other source file.
-# (These three names ARE the right ignore in a *consumer* repo /akios:init sets up; don't copy
-# this exception there without checking which case applies.)
+# akios/Vision.md, akios/Roadmap.md, akios/Context.md, akios/specs/, akios/tasks/ are NOT
+# ignored: this repo dogfoods its own kit on itself (see akios/Context.md "What this repo is"),
+# so these are the real, current project state, not template output — tracked like any other
+# source file, same as in a consumer repo (akios-footprint-consolidation.md §7: only
+# akios/.local/ is ever gitignored; the rest of akios/ is committed work product).

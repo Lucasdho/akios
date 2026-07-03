@@ -1,7 +1,7 @@
 # Roadmap
 
 > Spec-level state for this repo. One line per spec. The agent reads this to know
-> what already exists and which phase each spec is in (see `workflow.yml`).
+> what already exists and which phase each spec is in (see `akios/workflow.yml`).
 > Phase detection is per-spec: different specs can sit in different phases.
 > **Single source of truth** — do not duplicate the `## Specs` table elsewhere (e.g. CLAUDE.md).
 
@@ -43,12 +43,12 @@ posture: {{learning | delivery}}   # default: delivery
      auto   → just-vibes auto-ships a green unit per `collaboration` (solo → merge + push the
               default branch; team → push feature/<spec> + open a PR), exactly as documented in
               task-execution's Finish gate's just-vibes exception.
-     See specs/collaboration-autonomy.md and AGENTS.md "Delivery autonomy" for the full design. -->
+     See akios/specs/collaboration-autonomy.md and AGENTS.md "Delivery autonomy" for the full design. -->
 autonomy: {{manual | auto}}   # default: manual
 
 ## Specs
 <!-- status: designed → planned → in-progress → done
-     (matches the `roadmap:` field of each phase in workflow.yml)
+     (matches the `roadmap:` field of each phase in akios/workflow.yml)
      Two extra demotion side-states exist outside the forward chain: `needs-revision`
      (deep-brainstorm's R-W-W audit flagged the spec weak — revise back to `designed`) and
      `blocked` (task-execution's fix loop gave up — needs human intervention before resuming).

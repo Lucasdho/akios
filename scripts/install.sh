@@ -28,25 +28,34 @@ if [ "$HERE" -eq 0 ]; then
   fi
 fi
 
-# 1. Context files — never clobber an existing one.
-for f in AGENTS.md Context.md Roadmap.md Vision.md; do
-  if [ -e "$TARGET/$f" ]; then
-    echo "skip  $f (already exists)"
+# 1. AGENTS.md — external-tool contract, stays at repo root.
+if [ -e "$TARGET/AGENTS.md" ]; then
+  echo "skip  AGENTS.md (already exists)"
+else
+  cp "$KIT/templates/AGENTS.md" "$TARGET/AGENTS.md"
+  echo "added AGENTS.md"
+fi
+
+# 1a. akios housekeeping (Context.md/Roadmap.md/Vision.md) — into akios/, never clobber an existing one.
+mkdir -p "$TARGET/akios"
+for f in Context.md Roadmap.md Vision.md; do
+  if [ -e "$TARGET/akios/$f" ]; then
+    echo "skip  akios/$f (already exists)"
   else
-    cp "$KIT/templates/$f" "$TARGET/$f"
-    echo "added $f"
+    cp "$KIT/templates/$f" "$TARGET/akios/$f"
+    echo "added akios/$f"
   fi
 done
 
 # 1b. Phase contract — always copy (commands + phase detection read it).
-cp "$KIT/workflow.yml" "$TARGET/workflow.yml"
-echo "added workflow.yml"
+cp "$KIT/workflow.yml" "$TARGET/akios/workflow.yml"
+echo "added akios/workflow.yml"
 
 # 1c. Folder tree the pipeline expects.
-mkdir -p "$TARGET/specs" "$TARGET/tasks/todo" "$TARGET/tasks/in-progress" \
-         "$TARGET/tasks/review" "$TARGET/tasks/done" "$TARGET/archive" \
-         "$TARGET/code-references"
-echo "created specs/ tasks/{todo,in-progress,review,done}/ archive/ code-references/"
+mkdir -p "$TARGET/akios/specs" "$TARGET/akios/tasks/todo" "$TARGET/akios/tasks/in-progress" \
+         "$TARGET/akios/tasks/review" "$TARGET/akios/tasks/done" "$TARGET/akios/archive" \
+         "$TARGET/akios/code-references"
+echo "created akios/{specs/,tasks/{todo,in-progress,review,done}/,archive/,code-references/}"
 
 # 1d. Seed user-global preferences once (survives plugin updates; never clobbered).
 PREFS="$HOME/.claude/akios/preferences.md"
@@ -59,14 +68,14 @@ else
 fi
 
 # 2. CLAUDE.md — the file Claude Code actually auto-loads. Make it import the
-#    operating manual (@AGENTS.md) and the project context (@Context.md).
+#    operating manual (@AGENTS.md) and the project context (@akios/Context.md).
 if [ ! -e "$TARGET/CLAUDE.md" ]; then
   cp "$KIT/templates/CLAUDE.md" "$TARGET/CLAUDE.md"
-  echo "added CLAUDE.md (imports @AGENTS.md, @Context.md)"
+  echo "added CLAUDE.md (imports @AGENTS.md, @akios/Context.md)"
 else
   # ensure each import exists; prepend whichever is missing (Context first so
   # AGENTS ends up on top). Handles upgrades from a CLAUDE.md that only had AGENTS.
-  for imp in '@Context.md' '@AGENTS.md'; do
+  for imp in '@akios/Context.md' '@AGENTS.md'; do
     if grep -qF "$imp" "$TARGET/CLAUDE.md"; then
       echo "skip  CLAUDE.md (already imports $imp)"
     else
@@ -119,12 +128,12 @@ echo "$VERSION" > "$TARGET/.claude/.agentic-kit-version"
 echo "stamped version $VERSION"
 
 # 7. Self-check: the install is only done if every artifact landed.
-for f in AGENTS.md Context.md Roadmap.md Vision.md CLAUDE.md workflow.yml .claude/.agentic-kit-version \
-         .claude/rules/swift.md .claude/hooks/agentic-kit-inject.sh .claude/hooks/akios-instance.sh \
-         specs tasks/todo archive code-references; do
+for f in AGENTS.md CLAUDE.md akios/Context.md akios/Roadmap.md akios/Vision.md akios/workflow.yml \
+         .claude/.agentic-kit-version .claude/rules/swift.md .claude/hooks/agentic-kit-inject.sh \
+         .claude/hooks/akios-instance.sh akios/specs akios/tasks/todo akios/archive akios/code-references; do
   [ -e "$TARGET/$f" ] || { echo "FAIL: missing $TARGET/$f" >&2; exit 1; }
 done
-for imp in '@AGENTS.md' '@Context.md'; do
+for imp in '@AGENTS.md' '@akios/Context.md'; do
   grep -qF "$imp" "$TARGET/CLAUDE.md" || { echo "FAIL: CLAUDE.md does not import $imp" >&2; exit 1; }
 done
 # Warn if the SessionStart hook was never wired (jq absent and user hasn't added it manually).

@@ -9,7 +9,7 @@ metadata:
 
 # UI Variations — explore, remix, graduate
 
-Runs inside the `design` phase (`workflow.yml`), between `plan` and `deliver`. It is the **one
+Runs inside the `design` phase (`akios/workflow.yml`), between `plan` and `deliver`. It is the **one
 skill** that owns the whole prototype-first loop introduced by `prototype-first-workflow.md`
 v2.0: everything happens **directly in SwiftUI**, as named `#Preview` blocks built from what
 already exists in the project (`Foundation/Design-tokens/` tokens, promoted components, and
@@ -75,7 +75,7 @@ is nothing left to converge later.
   `scratchs/<Component-or-View>.swift` at the project root. Nothing is silently deleted at
   approval time.
 - `scratchs/` is **excluded from the Xcode target** (compilable/previewable standalone, never
-  added to target membership — `Context.md` records this).
+  added to target membership — `akios/Context.md` records this).
 - **Cleanup is manual or agent-assisted, never automatic.** No background job prunes `scratchs/`.
 
 ## Just-vibes posture (unattended)

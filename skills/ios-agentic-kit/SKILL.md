@@ -1,6 +1,6 @@
 ---
 name: ios-agentic-kit
-description: The agentic-kit meta-system for Swift/iOS repos — what it installs, how it routes work, and how to set it up. Use when setting up agentic Claude Code workflows in a Swift/iOS/iPadOS/macOS repo, when you see a CLAUDE.md that imports @AGENTS.md + @Context.md, when deciding which gate/skill a Swift task routes to (idea-to-spec, oss-first, ios-feature-pipeline, spec-to-tasks, task-execution, swift-dev), or when installing/updating the kit.
+description: The agentic-kit meta-system for Swift/iOS repos — what it installs, how it routes work, and how to set it up. Use when setting up agentic Claude Code workflows in a Swift/iOS/iPadOS/macOS repo, when you see a CLAUDE.md that imports @AGENTS.md + @akios/Context.md, when deciding which gate/skill a Swift task routes to (idea-to-spec, oss-first, ios-feature-pipeline, spec-to-tasks, task-execution, swift-dev), or when installing/updating the kit.
 license: MIT
 metadata:
   author: Lucas Oliveira
@@ -25,7 +25,7 @@ them — don't make them follow shell steps by hand.
 ## The workflow (spine)
 
 The kit binds its skills into **one spec-driven flow** from idea to shipped code. The phases are
-defined in **`workflow.yml`** (the machine-readable contract); the commands are thin wrappers
+defined in **`akios/workflow.yml`** (the machine-readable contract); the commands are thin wrappers
 that read it:
 
 ```
@@ -38,21 +38,21 @@ interactions/heuristics); non-UI tasks (domain/data/contract) skip straight from
 
 For any end-to-end feature, **start with `ios-feature-pipeline`** (a skill, invoked by description
 or by name — not a `/akios:*` slash command) — the entry point that reads
-`workflow.yml`, detects the current phase per spec, and walks the hand-offs. (No speckit: design
+`akios/workflow.yml`, detects the current phase per spec, and walks the hand-offs. (No speckit: design
 rigor lives in `idea-to-spec`, quality in `AGENTS.md` + `swift-dev` + `/code-review`.)
 
 ## What it installs (per repo)
 
 | File | Role |
 |---|---|
-| `CLAUDE.md` | The file Claude Code auto-loads; imports `@AGENTS.md` + `@Context.md` |
+| `CLAUDE.md` | The file Claude Code auto-loads; imports `@AGENTS.md` + `@akios/Context.md` |
 | `AGENTS.md` | Operating manual — the loop, the priority chain, the gate table (single source of truth) |
-| `Context.md` | Stack, commands, architecture, conventions |
-| `Roadmap.md` | Mode flag + per-spec state table |
-| `workflow.yml` | The phase contract (commands + phase detection read it) |
+| `akios/Context.md` | Stack, commands, architecture, conventions |
+| `akios/Roadmap.md` | Mode flag + per-spec state table |
+| `akios/workflow.yml` | The phase contract (commands + phase detection read it) |
 | `.claude/rules/swift.md` | Path-scoped rule — loads the `swift-dev` gate whenever a `.swift` file is read |
 | `.claude/hooks/agentic-kit-inject.sh` | SessionStart hook — re-states the gates each session |
-| folders | `specs/ tasks/{todo,in-progress,review,done}/ archive/ code-references/` |
+| folders | `akios/specs/ akios/tasks/{todo,in-progress,review,done}/ archive/ akios/code-references/` |
 
 Durable **project** decisions live in native auto-memory (`MEMORY.md`); transferable **user**
 preferences live in `~/.claude/akios/preferences.md` (user-global, outside the repo).
@@ -64,8 +64,8 @@ installed `AGENTS.md` — the canonical lookup. Edit it there, not here.
 For any code decision, resolve top-down (first tier with an answer wins):
 
 ```
-1. Project decision (MEMORY.md + existing code/Context.md)
-2. Knowledge packs, user-curated (code-references/ = the code pack; other ingested packs too)
+1. Project decision (MEMORY.md + existing code/akios/Context.md)
+2. Knowledge packs, user-curated (akios/code-references/ = the code pack; other ingested packs too)
 3. User preferences (~/.claude/akios/preferences.md)
 4. Baseline packs, shipped floor (swift-dev = the `ios` pack; other baseline packs)
 ```
@@ -74,7 +74,7 @@ For any code decision, resolve top-down (first tier with an answer wins):
 
 You don't "run" the kit — it shapes the agent's behavior passively:
 
-1. **Session start** — Claude Code loads `CLAUDE.md`, which imports `@AGENTS.md` + `@Context.md`
+1. **Session start** — Claude Code loads `CLAUDE.md`, which imports `@AGENTS.md` + `@akios/Context.md`
    in full; the SessionStart hook re-states the gates. (`ponytail` self-activates if you've
    installed it — optional, no dependency.)
 2. **`AGENTS.md` orients** — the loop, the priority chain, the gate table, routing.
@@ -90,8 +90,8 @@ session); this is the portable version for repos without the kit installed.
 | Trigger | Skill | When |
 |---|---|---|
 | Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → deliver | before starting |
-| Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → specs to `specs/` | before building |
-| Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `tasks/todo/` | after the spec |
+| Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → specs to `akios/specs/` | before building |
+| Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `akios/tasks/todo/` | after the spec |
 | Hand-writing complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
 | Implementing / running / debugging Swift | `swift-dev` (domain router) + `fewer-permission-prompts` | while coding |
 | Creating / polishing SwiftUI Views | `swift-dev` → `swiftui-pro` (+ design-principles) | before the view |
@@ -127,7 +127,7 @@ No required external plugins. Everything the spine routes to is shipped by the k
 
 Install the akios plugin (via the marketplace / `/plugin`), then in your repo run **`/akios:setup`** —
 it is idempotent and version-aware: it creates the file/folder structure, runs a light interview to
-fill `Context.md`, writes the mode flag to `Roadmap.md`, and seeds `~/.claude/akios/preferences.md`.
+fill `akios/Context.md`, writes the mode flag to `akios/Roadmap.md`, and seeds `~/.claude/akios/preferences.md`.
 
 > **Use it in** Swift/iOS/iPadOS/macOS repos — the gates are Swift-specific. **Don't use it in**
 > non-Swift projects; fork the structure (AGENTS.md + hook + your own gate table) instead.

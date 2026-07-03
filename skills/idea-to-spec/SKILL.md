@@ -25,7 +25,7 @@ The core bet: **specs emerge from accumulated decisions, not from a single gener
 
 ## Posture (learning vs. delivery)
 
-Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override — a command flag or
+Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override — a command flag or
 spoken switch — wins for this session without rewriting the Roadmap value). It changes only how
 decisions are narrated, never the design itself:
 
@@ -38,7 +38,7 @@ decisions are narrated, never the design itself:
   and give the reason" instruction, simply voiced rather than only written.
 
 See `AGENTS.md` "Operating posture" for the full teaching-surface this flag controls across every
-phase; `specs/operating-modes.md` for the source design.
+phase; `akios/specs/operating-modes.md` for the source design.
 
 ## Intake — one prompt may be many specs (do this first)
 
@@ -59,7 +59,7 @@ them into one spec.
    user always knows which spec they're answering for ("**[seed-data]** how many clubs?"). When you
    close one and move to the next, announce the switch explicitly ("seed-data is locked — switching
    to **first-screens**").
-5. **Register as you go.** Each spec gets its own `specs/<name>.md` and a row in the `## Specs`
+5. **Register as you go.** Each spec gets its own `akios/specs/<name>.md` and a row in the `## Specs`
    table the moment it's framed, so the set is visible and they don't overlap.
 
 This is the design-time twin of the pipeline's *anti-drift* rule: anti-drift catches a new spec
@@ -131,7 +131,7 @@ trail the human can review *after*. The rules don't relax — the human-in-the-l
   external facts would change the answer — golden rule #4 still binds, harder (no one's here to catch
   an invented "research shows").
 - **Reuse what shipped well.** Before designing from scratch, read `archive/Archive.md` (and
-  `MEMORY.md`, `code-references/`) for **previously delivered high-quality specs** and mirror their
+  `MEMORY.md`, `akios/code-references/`) for **previously delivered high-quality specs** and mirror their
   patterns and decisions. Consistency with proven work beats novelty.
 - **Resolve via the priority chain, then your best judgment.** Pick the recommendation you'd have
   pre-marked. Where genuinely 50/50, choose the **reversible** option.

@@ -1,7 +1,7 @@
 # Roadmap
 
 > Spec-level state for the akios plugin repo. One line per spec. The agent reads this to know
-> what already exists and which phase each spec is in (see `workflow.yml`).
+> what already exists and which phase each spec is in (see `akios/workflow.yml`).
 > **Single source of truth** — do not duplicate the `## Specs` table elsewhere.
 
 ## Mode
@@ -14,12 +14,12 @@ collaboration: solo
 
 ## Posture
 
-<!-- learning | delivery (default: delivery); see AGENTS.md "Operating posture" / specs/operating-modes.md -->
+<!-- learning | delivery (default: delivery); see AGENTS.md "Operating posture" / akios/specs/operating-modes.md -->
 posture: delivery
 
 ## Autonomy
 
-<!-- manual | auto (default: manual); see AGENTS.md "Delivery autonomy" / specs/collaboration-autonomy.md
+<!-- manual | auto (default: manual); see AGENTS.md "Delivery autonomy" / akios/specs/collaboration-autonomy.md
      Independent of `collaboration` above — not inferred from it. This repo has run `collaboration: solo`
      the whole v0.8.0 arc; every session has built + committed locally and deliberately never pushed
      (solo + manual in this flag's terms) — autonomy: manual makes that the formal default instead of a
@@ -71,4 +71,4 @@ type: plugin-docs
 | parallel-execution-scheduling.md | Cross-spec parallel/sequential scheduling — generalizes spec-to-tasks' `[P]` collision check to whole specs, so multi-spec batches know which pairs are safe for concurrent agent delegation | designed | backlog B37; self-surfaced during v0.8.0 Session 2; self-referential — not on the critical path, build whenever a future multi-spec batch benefits |
 | collaboration-autonomy.md | 4th Roadmap flag — `autonomy: manual/auto`, splits delivery-authorization from headcount | done | backlog B32; realized via T052-T053 (v0.8.0 session 3c); version bump deferred to the v0.8.0 closeout |
 | init-reliability-and-ux.md | `/akios:setup` narration, per-action verification, per-file chmod policy, bounded retry, footprint consolidation | done | backlog B33-B35; realized via T055-T056 (v0.8.0 session 3c); durable manifest-file idea deliberately left open (§11); version bump deferred to the v0.8.0 closeout; **§5 (footprint consolidation) superseded 2026-07-02 by akios-footprint-consolidation.md — see that spec** |
-| akios-footprint-consolidation.md | Consolidates akios's generated housekeeping (Context.md/Roadmap.md/Vision.md/workflow.yml/specs/tasks/archive/code-references/runtime journal) into one root-level `akios/` folder; reopens and narrows init-reliability-and-ux.md's footprint decision (D5) | designed | reopens B35; supersedes init-reliability-and-ux.md §5 only, §§1-4/6-11 there stand; mechanical path-rewrite across ~108 files deliberately left as follow-up implementation (§13) |
+| akios-footprint-consolidation.md | Consolidates akios's generated housekeeping (Context.md/Roadmap.md/Vision.md/workflow.yml/specs/tasks/archive/code-references/runtime journal) into one root-level `akios/` folder; reopens and narrows init-reliability-and-ux.md's footprint decision (D5) | done | reopens B35; supersedes init-reliability-and-ux.md §5 only, §§1-4/6-11 there stand; T058-T073 (7 checkpoints) built + shipped 2026-07-03 on `feature/akios-footprint-consolidation`, including self-migrating this repo's own root (T072); v0.8.1 |

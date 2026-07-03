@@ -1,33 +1,33 @@
 ---
 name: task-execution
-description: Drive a tasks/todo/ backlog to implemented, committed, reviewed Swift/iOS code — the kit's execution phase (absorbs the execution discipline once borrowed from superpowers). Use after spec-to-tasks has produced task files, or when a user runs /akios:deliver. Works on a per-spec branch, moves task files through folder states, writes tests first, commits at each checkpoint, manages the context window, archives finished specs, and stops at a hard human gate before any push or merge.
+description: Drive a akios/tasks/todo/ backlog to implemented, committed, reviewed Swift/iOS code — the kit's execution phase (absorbs the execution discipline once borrowed from superpowers). Use after spec-to-tasks has produced task files, or when a user runs /akios:deliver. Works on a per-spec branch, moves task files through folder states, writes tests first, commits at each checkpoint, manages the context window, archives finished specs, and stops at a hard human gate before any push or merge.
 license: MIT
 metadata:
   author: Lucas Oliveira
   version: "2.2.0"
 ---
 
-# Task Execution — tasks/todo/ → shipped, reviewed code
+# Task Execution — akios/tasks/todo/ → shipped, reviewed code
 
 Runs the backlog `spec-to-tasks` produced. This is the kit's Phase 3 — it owns the execution loop
 end to end with **no external skill dependency** (the TDD and verification discipline once borrowed
 from `superpowers` is built in here). Subagents are a **tool, not the spine** — execution never
 *depends* on them, because this environment can deny them `xcodebuild`.
 
-**Input:** the task files in `tasks/todo/`. **Output:** the feature implemented and committed on a
+**Input:** the task files in `akios/tasks/todo/`. **Output:** the feature implemented and committed on a
 branch — **not pushed, not merged.**
 
 ## Setup (once, before any task)
 1. **Branch per spec.** Create `feature/<spec>`. Never work on `main`/`master`.
 2. **Keep specs + tasks on the working branch.** Work in-place. If you use a worktree, commit
-   `specs/` + `tasks/` onto the branch first — otherwise the executor can't edit them and the task
+   `akios/specs/` + `akios/tasks/` onto the branch first — otherwise the executor can't edit them and the task
    states never update.
 3. **Detect the build path.** Try a no-op `xcodebuild`/builder dispatch once. If subagents are
    denied it (common in background sessions), set a flag: run all builds/tests **in this session**.
    Never let a dead subagent stall execution — degrade to inline.
 
 ## Multi-instance: claim before you work (team mode)
-When `Roadmap.md` has `collaboration: team`, several teammates' akios instances share this repo. Claim
+When `akios/Roadmap.md` has `collaboration: team`, several teammates' akios instances share this repo. Claim
 a unit before touching it so two instances never build the same thing. **Solo mode skips all of this.**
 
 - **Identity.** Each instance has a signature from `.claude/hooks/akios-instance.sh` (or the plugin's
@@ -36,19 +36,19 @@ a unit before touching it so two instances never build the same thing. **Solo mo
 - **Claim protocol (git is the lock, no server):**
   1. `git pull` (or fetch) first.
   2. Check the unit isn't already owned: a task's frontmatter `owner:`, or the owner annotation on its
-     `Roadmap.md` spec line (for a spec/unit with no tasks yet). If owned by **another** signature →
-     **yield**, pick the next unit. (Claims live in **committed** files, never in gitignored `.akios/`,
+     `akios/Roadmap.md` spec line (for a spec/unit with no tasks yet). If owned by **another** signature →
+     **yield**, pick the next unit. (Claims live in **committed** files, never in gitignored `akios/.local/`,
      so a `git pull` shows you what teammates hold.)
-  3. Claim: set the task frontmatter `owner: <sig>` + `claimed_at` (or annotate the unit's `Roadmap.md`
+  3. Claim: set the task frontmatter `owner: <sig>` + `claimed_at` (or annotate the unit's `akios/Roadmap.md`
      line `owner: <sig>` when no tasks exist yet), move `todo → in-progress`, commit
      `claim: <task> by <sig>`, **push immediately**.
   4. **Push rejected** = someone pushed first → pull, re-check ownership, yield if it was taken.
      The push race *is* the arbitration; don't add a lock server.
 - **Stale claims.** A claim that's old with no commits behind it may be reclaimed — note the takeover
   in the commit so the original owner sees it.
-- **Roadmap.md is shared.** It stays the single source of truth, but edit **only your unit's line** in
+- **akios/Roadmap.md is shared.** It stays the single source of truth, but edit **only your unit's line** in
   the `## Specs` table — never reorder it. Status is **monotonic** (`designed < planned < in-progress
-  < done`, plus the `needs-revision`/`blocked` demotion side-states — full order in `Roadmap.md`'s
+  < done`, plus the `needs-revision`/`blocked` demotion side-states — full order in `akios/Roadmap.md`'s
   status-enum note); on a merge conflict, **higher status wins** (a finished spec is never demoted by
   a stale edit). This rule lets an unattended run resolve the merge without a human.
 
@@ -59,7 +59,7 @@ when subagents are available and cheap; otherwise sequentially in-session — sa
 
 ```
 for each task (by checkpoint, respecting [P]/area):
-  move  tasks/todo/<T>.md → tasks/in-progress/
+  move  akios/tasks/todo/<T>.md → akios/tasks/in-progress/
   consult the PRIORITY CHAIN (below) before choosing any pattern
   load the task's pack reference by scope, per its `pack:<domain>` tag (default `pack:ios` for a
     Swift repo — its realization is swift-dev's bundled domain sub-skill; a non-ios pack's
@@ -69,21 +69,21 @@ for each task (by checkpoint, respecting [P]/area):
   [Foundation gate] before writing any new helper/protocol/component → consult ONLY
     Foundation/ (never the whole repo); see "Foundation ledger" below
   [Hurdles gate] before starting a task in a domain that has one → load the matching-tag slice of
-    code-references/hurdles.md (below) so a known hurdle is avoided by consulting the ledger
+    akios/code-references/hurdles.md (below) so a known hurdle is avoided by consulting the ledger
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
   TDD  → failing test → implement → green        (see TDD posture)
-  move  → tasks/review/
+  move  → akios/tasks/review/
   /verify (when runnable) + /code-review (loads `review-doctrine` — see "Code-review doctrine")
   [Divergence audit] compare planned (Description + DoD + Files) vs. done (actual diff/decisions)
-  move  → tasks/done/        (only when the THREE PROOFS (below) are green; failure loops to in-progress)
+  move  → akios/tasks/done/        (only when the THREE PROOFS (below) are green; failure loops to in-progress)
 ↳ at each checkpoint barrier: audit EVERY task's DoD + the boundary lint, then commit "checkpoint: <name>"
 ```
 
 - **UI alignment gate.** A task is UI-scoped when its title or scope mentions View, Screen,
   SwiftUI, layout, or UI. Before writing any implementation code, run the `align-ui` skill:
   it resolves every visual and interaction decision with the user and writes
-  `tasks/ui-alignment/<ScreenName>.md`. Load that file as the highest-priority reference for
-  the task — it overrides `swift-dev` and `code-references/` for visual decisions.
+  `akios/tasks/ui-alignment/<ScreenName>.md`. Load that file as the highest-priority reference for
+  the task — it overrides `swift-dev` and `akios/code-references/` for visual decisions.
   Under just-vibes the **interactive grilling** is skipped — `align-ui` still runs, in auto-decide
   mode, and writes the alignment doc unattended (every auto-decision marked `[auto]`).
 
@@ -108,7 +108,7 @@ for each task (by checkpoint, respecting [P]/area):
   is unavailable, **degrade to inline** — never fail.
 - **Cold-subagent discipline (only when you dispatch one).** A subagent starts cold. Its prompt MUST
   carry — and *only* — the slice it needs: the task + its DoD, the task's named **`swift-dev` domain
-  sub-skill**, `ponytail` (if installed), and any `Context.md` gotcha matching the task type. Restate
+  sub-skill**, `ponytail` (if installed), and any `akios/Context.md` gotcha matching the task type. Restate
   gates — it inherits nothing. **Never clone your context window into it:** a subagent is billed for
   every token you hand it, so pasting the whole conversation is the most expensive mistake here — send
   the slice, not the session.
@@ -152,7 +152,7 @@ is born inside the current feature; it is not shared preemptively.
   deterministic tool (`.claude/scripts/alva-usage-ledger.sh` or its consumer-repo git-hook installation) —
   investigating usage across features is not something you do by grepping the repo per-run.
 - **Each ledger entry becomes a task, not a silent move.** Every `candidates_promote` /
-  `candidates_demote` entry in the ledger gets written as a new `tasks/todo/T<NNN>-*.md` (promote:
+  `candidates_demote` entry in the ledger gets written as a new `akios/tasks/todo/T<NNN>-*.md` (promote:
   move the symbol to its `target` behind a contract if it's a Code-token; demote: return it to its
   sole remaining feature). Promotion is **suggested**, reviewed like any other task — never mutate
   `Foundation/` because the ledger said so without a task and a DoD.
@@ -162,9 +162,9 @@ is born inside the current feature; it is not shared preemptively.
   P3 (folder-first + lint by default; compiler-enforced local SPM modules only once the app has
   earned it — a recurring violation, or the user asks).
 
-## Hurdles ledger (`code-references/hurdles.md` — tier 2 of the priority chain)
+## Hurdles ledger (`akios/code-references/hurdles.md` — tier 2 of the priority chain)
 A solved recurring problem is curated project knowledge, so it lives in the project's **code
-pack** at tier 2 — the same place `code-references/` already sits — not a loose file nobody
+pack** at tier 2 — the same place `akios/code-references/` already sits — not a loose file nobody
 loads. `INDEX.md` carries a row for it with domain tags, same as any other reference.
 
 - **Read, before a domain task.** Load the matching-tag slice of `hurdles.md` before starting a
@@ -193,8 +193,8 @@ loads. `INDEX.md` carries a row for it with domain tags, same as any other refer
 First tier with a relevant answer wins; lower tiers only fill silence:
 
 ```
-1. Project decision (MEMORY.md + existing code / Context.md)
-2. Knowledge packs, user-curated (code-references/ = the project's auto-built code pack — load
+1. Project decision (MEMORY.md + existing code / akios/Context.md)
+2. Knowledge packs, user-curated (akios/code-references/ = the project's auto-built code pack — load
    the file whose INDEX tag matches the task domain; other ingested packs route the same way
    by pack:<domain>)
 3. User preferences (~/.claude/akios/preferences.md)
@@ -205,7 +205,7 @@ Concrete shown code outranks a stated preference. A repo's established architect
 rewritten because of a general preference.
 
 ## Operating posture (learning vs. delivery)
-Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override — e.g.
+Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override — e.g.
 `/akios:deliver --learning` — wins for this session only and does not rewrite the Roadmap
 value). It never changes what gets built, only what gets narrated:
 
@@ -219,12 +219,12 @@ value). It never changes what gets built, only what gets narrated:
   3–5 principles this unit exercised. If nothing teachable happened (a routine mechanical task),
   say so plainly rather than manufacture a lesson.
 - **Under `just-vibes`:** no one is present to narrate to — learning posture instead appends the
-  same digest as a **"Lessons"** section to `.akios/just-vibes-journal.md` per unit (see
+  same digest as a **"Lessons"** section to `akios/.local/just-vibes-journal.md` per unit (see
   `just-vibes`'s own posture note). Delivery journals outcomes only, as today.
 
 Learning posture is also where a hurdle/preference capture gets **proposed more eagerly**, with
 its rationale attached — see "Feedback logging" below. See `AGENTS.md` "Operating posture" /
-`specs/operating-modes.md` §3–§4 for the full design.
+`akios/specs/operating-modes.md` §3–§4 for the full design.
 
 ## TDD posture (tests-first where meaningful)
 - **Logic / data / concurrency** → write the failing test first (Swift Testing /
@@ -256,7 +256,7 @@ bounded fix loop and just-vibes' "park red, never deliver broken."
 
 | Proof | What it checks | Mechanism | Applies to |
 |---|---|---|---|
-| Build/test proof | it compiles and tests pass | the auto-build/test hook `.claude/hooks/post-checkpoint-verify.sh` (installed by `/akios:setup`) → runs Context.md's `Test:` command or auto-detects `xcodebuild`, writes `.akios/verify-result.json` for you to read; degrades to inline if the hook/tool is unavailable, and to the DoD audit (grep + YAML validation + install smoke-test) in a plugin/docs repo with no build tool | every code task |
+| Build/test proof | it compiles and tests pass | the auto-build/test hook `.claude/hooks/post-checkpoint-verify.sh` (installed by `/akios:setup`) → runs akios/Context.md's `Test:` command or auto-detects `xcodebuild`, writes `akios/.local/verify-result.json` for you to read; degrades to inline if the hook/tool is unavailable, and to the DoD audit (grep + YAML validation + install smoke-test) in a plugin/docs repo with no build tool | every code task |
 | Spec-conformance proof | it did what the task said + followed the loaded doctrine | the divergence audit above + `/code-review` with `review-doctrine` loaded | every task |
 | Visual proof | it looks like the approved design | `align-ui`'s post-wiring check: real data vs. the `ui-variations`-graduated screen | UI tasks only |
 
@@ -270,7 +270,7 @@ the boundary lint (no slice importing another slice's internals instead of its `
 `git commit -m "checkpoint: <name>"`. A failing DoD or a boundary violation blocks the commit; fix
 or split, don't paper over it. At a `[major]` checkpoint, run the unit + integration battery first —
 call `.claude/hooks/post-checkpoint-verify.sh` (the build/test proof's hook) and read
-`.akios/verify-result.json` for the outcome rather than parsing build output yourself; if it
+`akios/.local/verify-result.json` for the outcome rather than parsing build output yourself; if it
 reports `ran:false` (no build tool reachable), fall back to running the battery inline, or — in a
 plugin/docs repo with no build tool at all — to the DoD audit. A red battery blocks the next checkpoint.
 
@@ -305,12 +305,12 @@ Never start a new spec without compacting first, regardless of token count.
 When a spec's last checkpoint is green and all its tasks are `done`:
 1. Append a **summary block** to `archive/Archive.md` — decisions, files touched, outcome.
 2. Move the full spec to `archive/<spec>.md`.
-3. Clear that spec's `tasks/done/` files (captured in the summary + git).
+3. Clear that spec's `akios/tasks/done/` files (captured in the summary + git).
 4. Record the **durable decisions** into native `MEMORY.md` (the spec-level what/where stays in
    `Archive.md`; recall-worthy decisions go to `MEMORY.md` — no duplication).
 5. **Hurdles digest.** Any hurdle captured during this spec (see "Hurdles ledger" above) gets a
    one-line `MEMORY.md` pointer alongside the durable decisions — the full entry stays only in
-   `code-references/hurdles.md`.
+   `akios/code-references/hurdles.md`.
 
 Future sessions read `archive/Archive.md` first and open a full archived file only on demand.
 
@@ -322,7 +322,7 @@ drift) against the diff. This doesn't replace the built-in `/code-review` — it
 akios-specific doctrine the built-in has no reason to know. Findings are **graduated**: block on
 correctness + boundary violations, warn on style/DRY/structure. A **repeated** finding is a
 2nd-occurrence signal — route it to the hurdles ledger above. Full doctrine + worked example:
-`specs/code-review-doctrine.md`.
+`akios/specs/code-review-doctrine.md`.
 
 ## Finish — the hard human gate
 When the last checkpoint is green:
@@ -332,12 +332,12 @@ When the last checkpoint is green:
 - **Then ask the user two things and wait:** (a) push this branch? (b) merge — and *where*
   (`dev` / `main` / other)? Never assume the target. Act only on their answer.
 
-**Exception — running under `/akios:just-vibes` AND `Roadmap.md` says `autonomy: auto`.** The human
+**Exception — running under `/akios:just-vibes` AND `akios/Roadmap.md` says `autonomy: auto`.** The human
 push/merge gate is **waived** there: the just-vibes invocation *under `autonomy: auto`* *is* the
 authorization (see the `just-vibes` skill). The **quality gate is not waived** — `/verify` +
 `/code-review` still run, with a bounded **fix loop** on red (diagnose + fix, re-verify; stop after
 two consecutive cycles make no progress, then **park** the spec — keep the branch + logs, mark it
-`blocked` in `Roadmap.md`, never deliver red). Delivery target follows `Roadmap.md` `collaboration`:
+`blocked` in `akios/Roadmap.md`, never deliver red). Delivery target follows `akios/Roadmap.md` `collaboration`:
 **solo** → merge `feature/<spec>` into the default branch + push it; **team** → push `feature/<spec>`
 + open a PR (`gh`). Commits carry the `Akios-Instance:` trailer.
 
@@ -346,7 +346,7 @@ substance, but it also cannot literally "ask and wait" — no human is present t
 waiting would stall the run forever (exactly what just-vibes's unattended rules exist to prevent).
 Instead: run the quality gate as above; on green, record the branch as finished-and-ready (do
 **not** push/merge/open a PR) and return control to just-vibes's loop, which defers shipping and
-reports it in the run's "Built (unshipped)" bucket. See `specs/collaboration-autonomy.md`.
+reports it in the run's "Built (unshipped)" bucket. See `akios/specs/collaboration-autonomy.md`.
 **Outside just-vibes entirely** (an interactive `/akios:deliver` session), `autonomy` has no
 effect — a human is already present to answer "push? merge? where?" directly, per the gate above.
 
@@ -359,7 +359,7 @@ effect — a human is already present to answer "push? merge? where?" directly, 
   under just-vibes with `autonomy: manual` (the default).
 - Delivering a red spec under just-vibes because the fix loop "gave up" — park it (branch + logs), never ship it.
 - Working a task whose `owner:` is **another** instance's signature (team mode) — yield and pick another.
-- Reordering or demoting the `Roadmap.md` `## Specs` table — edit only your line; status only moves up.
+- Reordering or demoting the `akios/Roadmap.md` `## Specs` table — edit only your line; status only moves up.
 - Making execution depend on subagents (they can be denied `xcodebuild`) — always degrade to inline.
 - Counting Foundation usage yourself (grepping the repo to judge "is this used elsewhere") instead
   of reading `Foundation/usage-ledger.json` — that's the exact per-run investigation cost the
@@ -376,6 +376,6 @@ effect — a human is already present to answer "push? merge? where?" directly, 
   classifying it — both defeat the point of the divergence audit.
 - Moving `review → done` on a red proof (build/test, spec-conformance, or visual) — park it.
 - Writing to `preferences.md` silently, or recording project-specific facts there (those go to `MEMORY.md`).
-- Mirroring spec state outside `Roadmap.md` (e.g. duplicating the `## Specs` table into `CLAUDE.md`) — one source, no duplicates.
+- Mirroring spec state outside `akios/Roadmap.md` (e.g. duplicating the `## Specs` table into `CLAUDE.md`) — one source, no duplicates.
 - Cloning your full context into a subagent, or dispatching a model more capable than the subtask needs.
 - Working on `main`/`master`.

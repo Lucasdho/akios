@@ -13,7 +13,7 @@ session by session.
 
 The kit ships a full skill family (Swift domain knowledge, idea-to-spec, task execution,
 whole-app cartography, autonomous runs, and more — see `skills/ios-agentic-kit/SKILL.md`
-for the current set), a phase contract (`workflow.yml`), and a SessionStart hook that
+for the current set), a phase contract (`akios/workflow.yml`), and a SessionStart hook that
 re-states the workflow gates every session so the agent never drifts.
 
 ## Install
@@ -31,17 +31,17 @@ Then, inside the repo you want to set up:
 /akios:setup
 ```
 
-`setup` interviews you, scans the repo, fills in templates, creates the folder tree
-(`specs/`, `tasks/`, `archive/`), and wires the hook. No external dependencies required.
+`setup` interviews you, scans the repo, fills in templates, creates the `akios/` folder tree
+(`akios/specs/`, `akios/tasks/`, `akios/archive/`), and wires the hook. No external dependencies required.
 
 ## Commands
 
 | Command | What it does |
 |---|---|
 | `/akios:setup` | Onboard a repo — interview → scan → fill templates → wire hook |
-| `/akios:brainstorm "<idea>"` | Idea → approved spec in `specs/` |
+| `/akios:brainstorm "<idea>"` | Idea → approved spec in `akios/specs/` |
 | `/akios:deep-brainstorm [focus]` | Map the whole app → a complete spec family in one session |
-| `/akios:plan <spec>` | Spec → task backlog in `tasks/todo/` |
+| `/akios:plan <spec>` | Spec → task backlog in `akios/tasks/todo/` |
 | `/akios:deliver` | Implement tasks; stop before push/merge |
 | `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
 | `/akios:handoff` | Write a handoff doc for another agent session, or return results |

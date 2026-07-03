@@ -3,10 +3,10 @@ description: Map the entire app — run whole-product discovery and produce a co
 disable-model-invocation: true
 ---
 
-# /akios:deep-brainstorm — Whole-app mapping (workflow.yml: deep-brainstorm)
+# /akios:deep-brainstorm — Whole-app mapping (akios/workflow.yml: deep-brainstorm)
 
-**Guard (soft).** Confirm this repo is initialized: `AGENTS.md` + `workflow.yml` +
-`.claude/.agentic-kit-version` present, and `Context.md` exists. If something is missing,
+**Guard (soft).** Confirm this repo is initialized: `AGENTS.md` + `akios/workflow.yml` +
+`.claude/.agentic-kit-version` present, and `akios/Context.md` exists. If something is missing,
 **don't hard-block** — say what's missing and **offer** to run `/akios:setup` first.
 
 **Run.** Load the `deep-brainstorm` skill and execute the full whole-app mapping session.
@@ -14,14 +14,14 @@ The session is interactive; the user must be present for Discover + Cartograph +
 The Spec-burst phase (Phase 4) writes all specs in one pass without interruption.
 
 **If `founderlens-behavior` skill is available** (installed or referenced in MEMORY.md): the
-Discover phase may invoke it for the first-diamond run. If a `specs/founderlens-*.md` already
+Discover phase may invoke it for the first-diamond run. If a `akios/specs/founderlens-*.md` already
 exists, summarize its decisions and offer to skip straight to Cartograph.
 
 App context or focus (optional — narrows the mapping session): `$ARGUMENTS`
 
 **On completion:**
-- All identified specs are written to `specs/*.md` (one per domain).
-- `Roadmap.md` is updated with every new spec at status `designed` and its priority tier.
+- All identified specs are written to `akios/specs/*.md` (one per domain).
+- `akios/Roadmap.md` is updated with every new spec at status `designed` and its priority tier.
 - A compact summary is shown: app map dimensions, scope counts, spec list, open questions,
   suggested execution order.
 

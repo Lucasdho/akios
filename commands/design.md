@@ -3,10 +3,10 @@ description: Explore, remix, and graduate a screen's SwiftUI variations (pipelin
 disable-model-invocation: true
 ---
 
-# /akios:design — Design (workflow.yml: design)
+# /akios:design — Design (akios/workflow.yml: design)
 
 **Guard (soft).** Confirm the repo is initialized and the `design` phase's `prereqs` from
-`workflow.yml` exist (`tasks/todo/*.md`). If the backlog is missing, **don't hard-block** — say
+`akios/workflow.yml` exist (`akios/tasks/todo/*.md`). If the backlog is missing, **don't hard-block** — say
 so and **offer** to run `/akios:plan` first. `design` only applies to UI-scoped tasks (View,
 Screen, SwiftUI, layout) — a non-UI task (domain/data/contract) skips this phase entirely and
 goes straight to `/akios:deliver`.
@@ -25,13 +25,13 @@ re-document it) and run it against the UI-scoped task at hand:
 
 Then load `align-ui` to resolve what a static preview can't express: states / interactions /
 navigation, the JIT DTO shape, the 10 Nielsen heuristics checklist, and the native-over-custom
-flag. Write `tasks/ui-alignment/<ScreenName>.md`.
+flag. Write `akios/tasks/ui-alignment/<ScreenName>.md`.
 
 **Just-vibes posture:** auto-select-and-graduate from the explore round (no remix round), every
 auto-decision marked `[auto]` with rationale recorded.
 
 **Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
-`Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
+`akios/Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
 the Roadmap default. See `align-ui`'s "Posture (learning vs. delivery)".
 
 Task or spec (pass as `$ARGUMENTS`): `$ARGUMENTS`

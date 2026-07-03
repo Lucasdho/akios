@@ -112,13 +112,13 @@ exist anymore since there's no second medium to diff against). A divergence here
 
 ## Posture (learning vs. delivery)
 
-Read `Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for the session
+Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for the session
 without rewriting it). **Learning** mode adds, at each decision: *which* Nielsen heuristic (table
 above) the resolved state satisfies, and *why* native-over-custom fired (or didn't) for a given
 component — one line each, grounded in the table/flag already in this skill, not new judgment.
 **Delivery** (default) resolves the same decisions silently, exactly as documented above. Neither
 posture changes the resulting alignment doc's decisions — only whether the reasoning is voiced
-during the walk. See `AGENTS.md` "Operating posture" / `specs/operating-modes.md` §3.
+during the walk. See `AGENTS.md` "Operating posture" / `akios/specs/operating-modes.md` §3.
 
 ## Completion criterion
 
@@ -128,13 +128,13 @@ as a **risk** in the alignment doc and continue; don't block on it.
 
 ## Output
 
-Write `tasks/ui-alignment/<ScreenName>.md` before task-execution begins the implementation.
+Write `akios/tasks/ui-alignment/<ScreenName>.md` before task-execution begins the implementation.
 
 ```markdown
 # UI Alignment — <ScreenName>
 
-> Spec: specs/<spec-name>.md
-> Task: tasks/in-progress/<task-name>.md
+> Spec: akios/specs/<spec-name>.md
+> Task: akios/tasks/in-progress/<task-name>.md
 > Date: YYYY-MM-DD
 
 ## Structure & Navigation
@@ -166,7 +166,7 @@ Write `tasks/ui-alignment/<ScreenName>.md` before task-execution begins the impl
 ```
 
 Task-execution loads this file as the highest-priority reference for the UI task —
-it overrides any pattern from `swift-dev` or `code-references/` for visual decisions.
+it overrides any pattern from `swift-dev` or `akios/code-references/` for visual decisions.
 
 ## Just-vibes posture (gate skipped)
 
@@ -174,6 +174,6 @@ When running unattended, skip the grilling loop entirely. Instead:
 
 1. Read the spec and codebase for existing UI patterns.
 2. Apply HIG defaults for every decision not specified in the spec.
-3. Write the same `tasks/ui-alignment/<ScreenName>.md` — marking every auto-decided item
+3. Write the same `akios/tasks/ui-alignment/<ScreenName>.md` — marking every auto-decided item
    as `[auto]` so the user can review and override post-run.
 4. Record any genuine ambiguity as an open risk, not a silent choice.

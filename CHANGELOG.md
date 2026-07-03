@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.8.1 (2026-07-03)
+
+### Added — `akios/` folder consolidation
+- **`akios-footprint-consolidation.md` (G13)** implemented — reopens B35, supersedes
+  `init-reliability-and-ux.md` §5. A fresh `/akios:setup` now produces 9 top-level root entries
+  instead of 15: `CLAUDE.md`, `AGENTS.md`, `.claude/` (external-tool contracts, unchanged), the
+  ALVA scaffold (unchanged, it's the user's own app source), one `akios/` folder holding every
+  bit of akios's own generated housekeeping (`Context.md`, `Roadmap.md`, `Vision.md`,
+  `workflow.yml`, `specs/`, `tasks/`, `archive/`, `code-references/`), and whatever the user's
+  project already had.
+- **Runtime journal renamed and re-homed**: gitignored `.akios/` is now `akios/.local/` — nested
+  inside the visible, committed folder instead of a same-named, dot-prefixed sibling.
+- **`commands/setup.md`** gains a rewritten materialize table + folder-tree diagram, an opt-in
+  migrate-path sequence for already-onboarded repos (detect, ask, move with verify-after-action,
+  repoint `CLAUDE.md`'s import last), and a name-collision check for a pre-existing unrelated
+  `akios/` folder.
+- **Every kit-internal path reference updated**: `workflow.yml`, all templates/commands/skills,
+  install/register/test scripts, both hooks, and the root docs.
+- **This repo's own root self-migrated** into `akios/` via `git mv` (history preserved),
+  dogfooding the same convention it ships.
+- **Deliberately excluded**: `tasks/done/**` and archived `specs/*.md` prose — historical, left
+  as-is, same treatment as this changelog's own past entries.
+
 ## 0.8.0 (2026-07-02)
 
 ### Added — Architecture

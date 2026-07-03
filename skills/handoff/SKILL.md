@@ -14,14 +14,14 @@ Writes a handoff document so a fresh agent session can continue the work, or so 
 can report results back to the originating session. Designed for the bidirectional pattern:
 
 ```
-Session 1 ──writes──▶ tasks/handoffs/<topic>.md ──▶ Session 2
-Session 1 ◀──reads── tasks/handoffs/<topic>-return.md ◀──writes── Session 2
+Session 1 ──writes──▶ akios/tasks/handoffs/<topic>.md ──▶ Session 2
+Session 1 ◀──reads── akios/tasks/handoffs/<topic>-return.md ◀──writes── Session 2
 ```
 
 **Invocation:** `/akios:handoff [what the next session will focus on]`
 
 If the argument starts with `return:`, treat this as a returning sub-session writing results
-back — write `tasks/handoffs/<topic>-return.md` instead, structured as a results report.
+back — write `akios/tasks/handoffs/<topic>-return.md` instead, structured as a results report.
 
 ## What to include
 
@@ -35,16 +35,16 @@ back — write `tasks/handoffs/<topic>-return.md` instead, structured as a resul
 
 ## What NOT to include
 
-- Content already in `specs/`, `tasks/`, `archive/Archive.md`, or `MEMORY.md` — reference by
-  path instead (`specs/foo.md §3`).
+- Content already in `akios/specs/`, `akios/tasks/`, `archive/Archive.md`, or `MEMORY.md` — reference by
+  path instead (`akios/specs/foo.md §3`).
 - Code diffs or full file contents — reference by file path + line range.
 - Sensitive information (API keys, credentials, PII).
 - The current conversation transcript.
 
 ## Output format
 
-Write to `tasks/handoffs/<topic>.md` (or `<topic>-return.md` for a returning session).
-Create `tasks/handoffs/` if it doesn't exist.
+Write to `akios/tasks/handoffs/<topic>.md` (or `<topic>-return.md` for a returning session).
+Create `akios/tasks/handoffs/` if it doesn't exist.
 
 ```markdown
 # Handoff — <topic>
@@ -85,7 +85,7 @@ When a sub-session writes back (`return:` prefix), the document is a results rep
 ```markdown
 # Handoff Return — <topic>
 
-> Originated from: tasks/handoffs/<topic>.md
+> Originated from: akios/tasks/handoffs/<topic>.md
 > Completed: <date>
 
 ## What was done
