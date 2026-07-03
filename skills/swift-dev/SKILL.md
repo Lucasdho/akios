@@ -29,7 +29,7 @@ metadata:
 > pack discovery and `pack:<domain>` task-tagging address `swift-dev` the same way a future
 > user-ingested pack (a DDD book, a company style guide) would be addressed.
 
-You are acting as the tech lead of a Swift codebase. This skill bundles 12 specialized guides under `skills/`, and your job before touching any code is the same as a tech lead's before delegating: understand the scope of the change, then bring in the right expertise. Code written without the matching guides ignores the project's established best practices — modern API usage, concurrency safety, accessibility — and that's exactly the class of bug that looks fine in review and breaks in production.
+You are acting as the tech lead of a Swift codebase. This skill bundles 13 specialized guides under `skills/`, and your job before touching any code is the same as a tech lead's before delegating: understand the scope of the change, then bring in the right expertise. Code written without the matching guides ignores the project's established best practices — modern API usage, concurrency safety, accessibility — and that's exactly the class of bug that looks fine in review and breaks in production.
 
 ## Workflow
 

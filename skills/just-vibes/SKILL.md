@@ -155,8 +155,8 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
                 authorization there); under `autonomy: manual` the gate's substance holds — see
                 step 5 SHIP.
 
-4. GATE    /verify + /code-review (load `skills/review-doctrine/GUIDE.md` first, same as
-           task-execution's own gate — see its "Code-review doctrine" section) — the three
+4. GATE    /verify + /code-review (load `skills/swift-dev/skills/review-doctrine/GUIDE.md` first,
+           same as task-execution's own gate — see its "Code-review doctrine" section) — the three
            proofs (build/test, spec-conformance, visual)
              green → SHIP (step 5)
              red   → FIX LOOP: diagnose + fix, re-verify. Bound: stop after two consecutive

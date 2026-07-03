@@ -112,6 +112,14 @@ the final self-check only.** Already covered by D2's reasoning — deferred dete
 
 ## 5. Footprint consolidation (D5) — one real move, everything else documented as excluded
 
+> **Superseded 2026-07-02:** seeing this decision's actual output on a fresh repo (15 top-level
+> items) showed the exclusions below under-delivered on B35. `akios-footprint-consolidation.md`
+> (G13) reopens B35 and replaces this section with a three-way split — external-tool-contract
+> files (`CLAUDE.md`/`AGENTS.md`/`.claude/`) and user app source (the ALVA scaffold) still stay at
+> root, but the content folders and root-convention housekeeping files this section kept at root
+> now move into one `akios/` folder. §§1–4 and §6–11 of *this* spec are unaffected and remain in
+> force — only this section (§5) is superseded.
+
 Today's akios-generated footprint in a consumer repo: five root-convention files (`AGENTS.md`,
 `CLAUDE.md`, `Context.md`, `Roadmap.md`, `Vision.md`), `.claude/` (settings, hooks, rules, version
 marker — already one directory, committed), `.akios/` (runtime journal/trace/claims — already one

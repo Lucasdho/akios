@@ -1,0 +1,90 @@
+%% akios plugin architecture — generated audit snapshot, v0.8.0
+%% Render: https://mermaid.live, or open plugin-architecture.html
+flowchart TB
+    MP["marketplace.json"] --> PJ["plugin.json (v0.8.0)"]
+    PJ --> CMDS
+
+    subgraph CMDS["commands/ — 11 thin wrappers"]
+        SETUP["/akios:setup (bootstrap)"]
+        BR["/akios:brainstorm"]
+        PL["/akios:plan"]
+        DS["/akios:design"]
+        DL["/akios:deliver"]
+        DB["/akios:deep-brainstorm"]
+        JV["/akios:just-vibes"]
+        LEARN["/akios:learn"]
+        NS["/akios:new-skill"]
+        HO["/akios:handoff"]
+        RV["/akios:review"]
+    end
+
+    SETUP --> BOOT["writes: CLAUDE.md, AGENTS.md, Context.md, Roadmap.md, specs/, tasks/, archive/"]
+    SETUP --> HOOKS
+    SETUP --> TEMPL["templates/"]
+
+    BR --> IDEA["idea-to-spec"]
+    PL --> S2T["spec-to-tasks"]
+    DS --> UIV["ui-variations"]
+    DS -.-> ALIGN["align-ui"]
+    DL --> TE["task-execution"]
+    DB --> DBS["deep-brainstorm"]
+    DB -.optional.-> FLB["founderlens-behavior"]
+    JV --> JVS["just-vibes"]
+    LEARN --> KI["knowledge-ingest"]
+    NS --> SA["skill-author"]
+    HO --> HS["handoff"]
+    RV --> RD["review-doctrine (inside swift-dev bundle)"]
+
+    JVS -.drives fuel through.-> IDEA
+    JVS -.-> S2T
+    JVS -.-> UIV
+    JVS -.-> TE
+
+    UIV --> ALIGN
+    IDEA -.checks.-> OSS["oss-first"]
+    KI -.delegates to.-> OSS
+
+    TE --> SWIFTDEV["swift-dev (router skill)"]
+
+    subgraph BUNDLE["swift-dev bundle — 14 GUIDE.md sub-skills, NOT individually registered"]
+        SW1["alva-architecture"]
+        SW2["figma-to-swiftui"]
+        SW3["ios-accessibility"]
+        SW4["ios-debugger-agent"]
+        SW5["review-doctrine"]
+        SW6["swift-concurrency-pro"]
+        SW7["swift-testing-pro"]
+        SW8["swiftdata-pro"]
+        SW9["swiftui-design-principles (627 lines)"]
+        SW10["swiftui-design-system (95 lines)"]
+        SW11["swiftui-performance-audit"]
+        SW12["swiftui-pro"]
+        SW13["swiftui-ui-patterns"]
+        SW14["swiftui-view-refactor"]
+    end
+
+    SWIFTDEV --> BUNDLE
+
+    IAK["ios-agentic-kit (meta/onboarding skill)"] -.describes/overlaps.-> BOOT
+    IAK -.describes/overlaps.-> CTXMD["Context.md"]
+    IFP["ios-feature-pipeline (orchestrator skill)"] -.describes/overlaps.-> CTXMD
+
+    subgraph SCRIPTS["scripts/ — 7 maintenance scripts"]
+        INS["install.sh"]
+        INSK["install-skills.sh — SKILLS array = source of truth"]
+        CU["check-update.sh"]
+        AI["akios-instance.sh"]
+        AL["alva-usage-ledger.sh"]
+        RS["register-skill.sh"]
+        TK["test-kit.sh"]
+    end
+
+    subgraph HOOKS["scripts/hook/ — installed into consumer repo's .claude/hooks/"]
+        H1["agentic-kit-inject.sh — SessionStart"]
+        H2["post-checkpoint-verify.sh — called by task-execution"]
+        H3["skill-trace.sh — PostToolUse"]
+    end
+
+    INSK --> ALLSKILLS["skills/* — 15 top-level registered skills"]
+    NS --> INSK
+    RS --> INSK

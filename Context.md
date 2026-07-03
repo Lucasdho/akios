@@ -64,5 +64,5 @@ akios/
 - **install-skills.sh must be updated** whenever a new skill directory is added — forgetting
   this is the most common mistake. Always check it when adding a skill.
 - **`workflow.yml` is parsed by commands** — keep it valid YAML after every edit.
-- **tasks.md** (root) is a legacy single-file backlog from the v0.7.0 refactor. Most of its
-  tasks (T001–T021) are already done. New tasks go in `tasks/todo/T<NNN>-<slug>.md`.
+- **tasks.md** (root) was retired — the v0.7.0 single-file backlog (T001–T021) was fully
+  migrated into `tasks/todo/`. New tasks go in `tasks/todo/T<NNN>-<slug>.md`.

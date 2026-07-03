@@ -316,7 +316,7 @@ Future sessions read `archive/Archive.md` first and open a full archived file on
 
 ## Code-review doctrine (loaded at the gate)
 Before running `/code-review` — at a task's review step and again at `Finish` below — load
-`skills/review-doctrine/GUIDE.md` (`swift-dev`'s bundled doctrine reference) as context and apply
+`skills/swift-dev/skills/review-doctrine/GUIDE.md` (`swift-dev`'s bundled doctrine reference) as context and apply
 its checklist (SOLID/DRY-via-ledger/ACID-scoped-to-persistence + ALVA/UI conformance + folder/SRP
 drift) against the diff. This doesn't replace the built-in `/code-review` — it feeds it the
 akios-specific doctrine the built-in has no reason to know. Findings are **graduated**: block on

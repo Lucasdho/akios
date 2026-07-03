@@ -15,9 +15,9 @@ company's conventions) into a **knowledge pack** the substrate can route to. Thi
 <source> [--pack <name>] [--global]`, or directly by description when a user wants akios to
 learn a new domain.
 
-**Authoring note:** `skill-authoring.md` (a future spec) will eventually scaffold skills/packs
-generically — this skill is hand-authored directly, the same way every other skill in this repo
-predates that tool. Nothing here depends on it existing.
+**Authoring note:** skills/packs can now be scaffolded via `/akios:new-skill` (`skill-author`) +
+`specs/skill-authoring.md` — this skill predates that tooling and was hand-authored directly.
+Nothing here depends on it.
 
 ## The pack format (what this skill produces)
 

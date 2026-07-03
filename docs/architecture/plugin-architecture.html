@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>akios — Plugin Architecture Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161b22;
+    --border: #2a3038;
+    --text: #dbe1e8;
+    --muted: #8b95a1;
+    --accent: #6ea8fe;
+    --flag: #e0a94e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 28px 32px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 32px 80px; }
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .diagram-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  tr:hover td { background: #1b212a; }
+  code {
+    background: #1b212a;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #a8d0ff;
+  }
+  .flags { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .flags li {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--flag);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13.5px;
+  }
+  .flags b { color: var(--flag); }
+  .count { color: var(--muted); font-size: 12px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>akios — Plugin Architecture Audit</h1>
+  <p>Snapshot of v0.8.0 (branch <code>master</code>). Generated for a noise-reduction pass over the plugin surface.
+     Companion files: <code>plugin-architecture.md</code>, <code>plugin-architecture.mmd</code>.</p>
+</header>
+
+<main>
+
+  <section>
+    <h2>Diagram</h2>
+    <div class="diagram-wrap">
+      <pre class="mermaid">
+flowchart TB
+    MP["marketplace.json"] --> PJ["plugin.json (v0.8.0)"]
+    PJ --> CMDS
+
+    subgraph CMDS["commands/ — 11 thin wrappers"]
+        SETUP["/akios:setup (bootstrap)"]
+        BR["/akios:brainstorm"]
+        PL["/akios:plan"]
+        DS["/akios:design"]
+        DL["/akios:deliver"]
+        DB["/akios:deep-brainstorm"]
+        JV["/akios:just-vibes"]
+        LEARN["/akios:learn"]
+        NS["/akios:new-skill"]
+        HO["/akios:handoff"]
+        RV["/akios:review"]
+    end
+
+    SETUP --> BOOT["writes: CLAUDE.md, AGENTS.md, Context.md, Roadmap.md, specs/, tasks/, archive/"]
+    SETUP --> HOOKS
+    SETUP --> TEMPL["templates/"]
+
+    BR --> IDEA["idea-to-spec"]
+    PL --> S2T["spec-to-tasks"]
+    DS --> UIV["ui-variations"]
+    DS -.-> ALIGN["align-ui"]
+    DL --> TE["task-execution"]
+    DB --> DBS["deep-brainstorm"]
+    DB -.optional.-> FLB["founderlens-behavior"]
+    JV --> JVS["just-vibes"]
+    LEARN --> KI["knowledge-ingest"]
+    NS --> SA["skill-author"]
+    HO --> HS["handoff"]
+    RV --> RD["review-doctrine (inside swift-dev bundle)"]
+
+    JVS -.drives fuel through.-> IDEA
+    JVS -.-> S2T
+    JVS -.-> UIV
+    JVS -.-> TE
+
+    UIV --> ALIGN
+    IDEA -.checks.-> OSS["oss-first"]
+    KI -.delegates to.-> OSS
+
+    TE --> SWIFTDEV["swift-dev (router skill)"]
+
+    subgraph BUNDLE["swift-dev bundle — 14 GUIDE.md sub-skills, NOT individually registered"]
+        SW1["alva-architecture"]
+        SW2["figma-to-swiftui"]
+        SW3["ios-accessibility"]
+        SW4["ios-debugger-agent"]
+        SW5["review-doctrine"]
+        SW6["swift-concurrency-pro"]
+        SW7["swift-testing-pro"]
+        SW8["swiftdata-pro"]
+        SW9["swiftui-design-principles (627 lines)"]
+        SW10["swiftui-design-system (95 lines)"]
+        SW11["swiftui-performance-audit"]
+        SW12["swiftui-pro"]
+        SW13["swiftui-ui-patterns"]
+        SW14["swiftui-view-refactor"]
+    end
+
+    SWIFTDEV --> BUNDLE
+
+    IAK["ios-agentic-kit (meta/onboarding skill)"] -.describes/overlaps.-> BOOT
+    IAK -.describes/overlaps.-> CTXMD["Context.md"]
+    IFP["ios-feature-pipeline (orchestrator skill)"] -.describes/overlaps.-> CTXMD
+
+    subgraph SCRIPTS["scripts/ — 7 maintenance scripts"]
+        INS["install.sh"]
+        INSK["install-skills.sh — SKILLS array = source of truth"]
+        CU["check-update.sh"]
+        AI["akios-instance.sh"]
+        AL["alva-usage-ledger.sh"]
+        RS["register-skill.sh"]
+        TK["test-kit.sh"]
+    end
+
+    subgraph HOOKS["scripts/hook/ — installed into consumer repo's .claude/hooks/"]
+        H1["agentic-kit-inject.sh — SessionStart"]
+        H2["post-checkpoint-verify.sh — called by task-execution"]
+        H3["skill-trace.sh — PostToolUse"]
+    end
+
+    INSK --> ALLSKILLS["skills/* — 15 top-level registered skills"]
+    NS --> INSK
+    RS --> INSK
+      </pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Commands <span class="count">(11)</span></h2>
+    <table>
+      <tr><th>Command</th><th>Skill loaded</th><th>Role</th><th>Notes</th></tr>
+      <tr><td><code>/akios:setup</code></td><td>— (direct file ops)</td><td>Bootstrap</td><td>Not a phase. Materializes context files, folder tree, hooks, templates.</td></tr>
+      <tr><td><code>/akios:brainstorm</code></td><td><code>idea-to-spec</code></td><td>Phase 1</td><td>→ <code>specs/*.md</code>, status <code>designed</code>.</td></tr>
+      <tr><td><code>/akios:plan</code></td><td><code>spec-to-tasks</code></td><td>Phase 2</td><td>→ <code>tasks/todo/*.md</code>, status <code>planned</code>.</td></tr>
+      <tr><td><code>/akios:design</code></td><td><code>ui-variations</code> + <code>align-ui</code></td><td>Phase 3 (UI-scoped)</td><td>Non-UI tasks skip to <code>deliver</code>.</td></tr>
+      <tr><td><code>/akios:deliver</code></td><td><code>task-execution</code></td><td>Phase 4</td><td>→ <code>tasks/done/*.md</code>. Routes into <code>swift-dev</code>.</td></tr>
+      <tr><td><code>/akios:deep-brainstorm</code></td><td><code>deep-brainstorm</code></td><td>Run-style (pre-exec)</td><td>Optionally invokes <code>founderlens-behavior</code>.</td></tr>
+      <tr><td><code>/akios:just-vibes</code></td><td><code>just-vibes</code></td><td>Run-style (over pipeline)</td><td>Waives human push/merge gate only; quality gate stays.</td></tr>
+      <tr><td><code>/akios:learn</code></td><td><code>knowledge-ingest</code></td><td>Maintenance</td><td>Delegates to <code>oss-first</code>/pdf/etc.</td></tr>
+      <tr><td><code>/akios:new-skill</code></td><td><code>skill-author</code></td><td>Maintenance</td><td>Scaffolds + self-registers.</td></tr>
+      <tr><td><code>/akios:handoff</code></td><td><code>handoff</code></td><td>Maintenance</td><td>Cross-session continuity doc.</td></tr>
+      <tr><td><code>/akios:review</code></td><td><code>review-doctrine</code> + built-in <code>/code-review</code></td><td>Maintenance</td><td>Two-line wrapper — see audit flag #5.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Top-level registered skills <span class="count">(15 — via install-skills.sh SKILLS array)</span></h2>
+    <table>
+      <tr><th>Skill</th><th>Version</th><th>Purpose</th></tr>
+      <tr><td><code>idea-to-spec</code></td><td>1.2.0</td><td>Idea → versioned spec, decision-by-decision.</td></tr>
+      <tr><td><code>oss-first</code></td><td>1.0.0</td><td>Prefer mature OSS tooling over hand-generated code.</td></tr>
+      <tr><td><code>ios-feature-pipeline</code></td><td>3.0.0</td><td>Orchestrator: routes an idea through workflow.yml phases.</td></tr>
+      <tr><td><code>ios-agentic-kit</code></td><td>2.0.0</td><td>Meta-doc: what the kit installs, how it routes.</td></tr>
+      <tr><td><code>spec-to-tasks</code></td><td>2.0.0</td><td>Spec → task backlog, single pass.</td></tr>
+      <tr><td><code>task-execution</code></td><td>2.2.0</td><td>Drives backlog to implemented/committed/reviewed code.</td></tr>
+      <tr><td><code>swift-dev</code></td><td>1.1.0</td><td>Router for all Swift/iOS work; bundles 14 sub-guides.</td></tr>
+      <tr><td><code>deep-brainstorm</code></td><td>1.0.0</td><td>Whole-app Double Diamond mapping → spec family.</td></tr>
+      <tr><td><code>founderlens-behavior</code></td><td>—</td><td>Virtual co-founder persona for the first diamond.</td></tr>
+      <tr><td><code>align-ui</code></td><td>1.0.0</td><td>Pre-implementation UI decision gate.</td></tr>
+      <tr><td><code>ui-variations</code></td><td>1.0.0</td><td>Design-phase explore → remix → graduate loop.</td></tr>
+      <tr><td><code>knowledge-ingest</code></td><td>1.0.0</td><td>Raw material → knowledge pack.</td></tr>
+      <tr><td><code>just-vibes</code></td><td>1.1.0</td><td>Unattended run-style over the whole pipeline.</td></tr>
+      <tr><td><code>handoff</code></td><td>1.0.0</td><td>Compact a session into a handoff doc.</td></tr>
+      <tr><td><code>skill-author</code></td><td>1.0.0</td><td>Scaffold + self-register a new skill/pack.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2><code>swift-dev</code> bundle <span class="count">(14 sub-skills — not individually registered)</span></h2>
+    <table>
+      <tr><th>Sub-skill</th><th>GUIDE.md size</th><th>agents/</th><th>assets/</th></tr>
+      <tr><td><code>alva-architecture</code></td><td>small</td><td>—</td><td>—</td></tr>
+      <tr><td><code>figma-to-swiftui</code></td><td>small</td><td>—</td><td>—</td></tr>
+      <tr><td><code>ios-accessibility</code></td><td>small</td><td>✓</td><td>—</td></tr>
+      <tr><td><code>ios-debugger-agent</code></td><td>small</td><td>✓</td><td>—</td></tr>
+      <tr><td><code>review-doctrine</code></td><td>small</td><td>—</td><td>—</td></tr>
+      <tr><td><code>swift-concurrency-pro</code></td><td>small</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>swift-testing-pro</code></td><td>small</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>swiftdata-pro</code></td><td>small</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>swiftui-design-principles</code></td><td><b>627 lines</b></td><td>—</td><td>—</td></tr>
+      <tr><td><code>swiftui-design-system</code></td><td>95 lines</td><td>—</td><td>—</td></tr>
+      <tr><td><code>swiftui-performance-audit</code></td><td>106 lines</td><td>✓</td><td>—</td></tr>
+      <tr><td><code>swiftui-pro</code></td><td>108 lines</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>swiftui-ui-patterns</code></td><td>103 lines</td><td>✓</td><td>—</td></tr>
+      <tr><td><code>swiftui-view-refactor</code></td><td>202 lines</td><td>✓</td><td>—</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Scripts <span class="count">(7)</span> &amp; Hooks <span class="count">(3)</span></h2>
+    <table>
+      <tr><th>Script</th><th>Purpose</th></tr>
+      <tr><td><code>install.sh</code></td><td>Plugs the kit into a target repo (used by <code>/akios:setup</code>).</td></tr>
+      <tr><td><code>install-skills.sh</code></td><td>Installs the <code>SKILLS=(...)</code> array into <code>~/.claude/skills/</code>. Source of truth.</td></tr>
+      <tr><td><code>check-update.sh</code></td><td>Checks whether a project's install is behind the kit clone.</td></tr>
+      <tr><td><code>akios-instance.sh</code></td><td>Stable per-instance identity for multi-instance claim etiquette.</td></tr>
+      <tr><td><code>alva-usage-ledger.sh</code></td><td>ALVA Foundation usage ledger (grep + git-hook).</td></tr>
+      <tr><td><code>register-skill.sh</code></td><td>Idempotently adds a skill to <code>install-skills.sh</code>'s array.</td></tr>
+      <tr><td><code>test-kit.sh</code></td><td>Sanity check: skills + templates present and well-formed.</td></tr>
+    </table>
+    <table style="margin-top:16px;">
+      <tr><th>Hook</th><th>Trigger</th><th>Purpose</th></tr>
+      <tr><td><code>agentic-kit-inject.sh</code></td><td>SessionStart</td><td>Re-states default skill gates + discovers knowledge packs.</td></tr>
+      <tr><td><code>post-checkpoint-verify.sh</code></td><td>Called by task-execution</td><td>Auto build/test proof at [major] checkpoints.</td></tr>
+      <tr><td><code>skill-trace.sh</code></td><td>PostToolUse</td><td>Appends JSON trace of skill/reference reads.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Audit flags — candidates worth a closer look</h2>
+    <ul class="flags">
+      <li><b>Meta-documentation overlap.</b> <code>Context.md</code>, <code>README.md</code>, <code>ios-agentic-kit</code>, and <code>ios-feature-pipeline</code> all describe "how the kit works" from slightly different angles. Check whether all four earn their keep.</li>
+      <li><b>swiftui-* sub-skill sprawl.</b> Six sub-skills under <code>swift-dev/skills/</code> cover overlapping SwiftUI territory with no documented boundary in the router table. 627 lines vs. 95–108 in neighbors suggests uneven scope, not necessarily redundancy.</li>
+      <li><b>Vendored-looking guides inside an "authored skills" repo.</b> <code>swift-concurrency-pro</code> and <code>swift-testing-pro</code> ship their own <code>CODE_OF_CONDUCT.md</code> — the repo's own <code>.gitignore</code> comment says vendored skills shouldn't be bundled here. Confirm intentional exception vs. drift.</li>
+      <li><b>align-ui sits outside workflow.yml's phases: list.</b> Well-referenced (30+ files) but declared only in prose (<code>commands/design.md</code>, <code>ui-variations</code>), not as its own phase/run-style. Likely fine (it's a gate inside <code>design</code>) — confirm intended shape.</li>
+      <li><b>commands/review.md is a two-line wrapper around a built-in.</b> Confirm the doctrine pre-load still justifies a dedicated command.</li>
+      <li><b>tasks.md (root)</b> is self-flagged in <code>Context.md</code> as a legacy single-file backlog, "most tasks already done" — known removal candidate.</li>
+    </ul>
+  </section>
+
+</main>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "dark" });
+</script>
+</body>
+</html>
