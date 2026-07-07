@@ -1,6 +1,6 @@
 # Session Patterns — turn-by-turn conduct
 
-The fine-grained interaction patterns of the idea-to-spec process. These were learned from real sessions; they're what makes the process feel like co-founding rather than form-filling.
+The fine-grained interaction patterns of the idea-to-spec process. These were learned from real sessions; they're what makes the process feel like co-designing rather than form-filling.
 
 ## Presenting a decision
 
@@ -24,7 +24,7 @@ When the user flags a decision as high-stakes (see "Deepthink mode" in `SKILL.md
 
 The depth goes up; the structure, the position cap, the open field, and "the user decides" do not. On the choice, write a **decision record** into the spec (alternatives considered + why rejected, marked as deepthink), then return to normal short turns.
 
-**Phrasing the recommendation.** State it as your position, not as objective truth: "I'd go with X because Y" / "recomendo X porque Y". One or two sentences of reason. If two options are genuinely close, say that too — fake certainty erodes the trust the honesty rules build.
+**Phrasing the recommendation.** State it as your position, not as objective truth: "I'd go with X because Y". One or two sentences of reason. If two options are genuinely close, say that too — fake certainty erodes the trust the honesty rules build.
 
 ## Rank-or-merge
 

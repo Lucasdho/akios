@@ -30,28 +30,13 @@ On updates, bump the version and add a changelog callout right under the header:
 
 ## Body conventions
 
-- **Numbered sections** (`## 1.`, `## 2.` …) separated by `---`. Sub-points as
-  bullets with **bold lead-ins**.
-- **Decisions carry their reasons.** Not "we chose X" but "we chose X because Y;
-  the cost is Z, accepted because W." Declined alternatives worth remembering are
-  recorded *with the reason they were declined* — a deliberate "no" is as much a
-  decision as a "yes".
-- **Tables** for ingredient lists, rubrics, band/verdict maps, wiring
-  (signal → what it personalizes), and benchmark data.
-- **Origin notes** when a design reversed course: a short quote-block telling the
-  story ("the brainstorm had 3 dev-centric dimensions; rethinking from scratch
-  flipped the unit from scoring the person to mapping where to help").
-- **Cross-references** to sibling specs by filename and section
-  ("see founderlens-product-strategy.md §4").
-- **Deliberate exclusions get a section.** What was kept OUT on purpose, and where
-  it lives instead ("domain familiarity → asked at project start, not global
-  onboarding"). Prevents future sessions from re-adding what was consciously removed.
-- **Empty states are always documented.** Every spec that defines a screen, list,
-  feed, or data-backed view states its empty/zero-data state explicitly: what the
-  user sees before any data exists, after they clear all data, and on first run.
-  Cover the empty, loading, and error variants where they apply. This is mandatory,
-  not optional — the UI is built from these states, so an undocumented empty state
-  is a missing requirement.
+- **Numbered sections** (`## 1.`, `## 2.` …) separated by `---`. Sub-points as bullets with **bold lead-ins**.
+- **Decisions carry their reasons.** Not "we chose X" but "we chose X because Y; the cost is Z, accepted because W." Declined alternatives worth remembering are recorded *with the reason they were declined* — a deliberate "no" is as much a decision as a "yes".
+- **Tables** for ingredient lists, rubrics, band/verdict maps, wiring (signal → what it personalizes), and benchmark data.
+- **Origin notes** when a design reversed course: a short quote-block telling the story ("the brainstorm had 3 dev-centric dimensions; rethinking from scratch flipped the unit from scoring the person to mapping where to help").
+- **Cross-references** to sibling specs by filename and section ("see founderlens-product-strategy.md §4").
+- **Deliberate exclusions get a section.** What was kept OUT on purpose, and where it lives instead ("domain familiarity → asked at project start, not global onboarding"). Prevents future sessions from re-adding what was consciously removed.
+- **Empty states are always documented.** Every spec that defines a screen, list, feed, or data-backed view states its empty/zero-data state explicitly: what the user sees before any data exists, after they clear all data, and on first run. Cover the empty, loading, and error variants where they apply. This is mandatory, not optional — the UI is built from these states, so an undocumented empty state is a missing requirement.
 
 ## Feature specs get a contract/Foundation header (ALVA)
 
@@ -62,29 +47,19 @@ block right under the header, before §1:
 ```markdown
 ## Contract & Foundation
 
-- **Exports (`contract/`):** what this feature's public surface will be — the protocol +
-  DTOs other features are expected to consume. "None yet" if this is a leaf feature.
-- **Consumes:** which other features' `contract/`, and which `Foundation/Design-tokens` /
-  `Foundation/Code-tokens` symbols, this feature is expected to need.
+- **Exports (`contract/`):** what this feature's public surface will be — the protocol + DTOs other features are expected to consume. "None yet" if this is a leaf feature.
+- **Consumes:** which other features' `contract/`, and which `Foundation/Design-tokens` / `Foundation/Code-tokens` symbols, this feature is expected to need.
 ```
 
-This is cheap to write (a few bullets, not a design pass) and pays for itself twice: `spec-to-tasks`
-reads it to scope the `contract/` task and the Foundation-consult DoD line, and it doubles as a
-cross-check against the usage-ledger's counted evidence (doctrine §6.4 alternative D) — if the
-ledger later shows heavier cross-feature use than declared here, that divergence is worth a look,
-not silently trusted either way.
+This is cheap to write (a few bullets, not a design pass) and pays for itself twice: `spec-to-tasks` reads it to scope the `contract/` task and the Foundation-consult DoD line, and it doubles as a cross-check against the usage-ledger's counted evidence (doctrine §6.4 alternative D) — if the ledger later shows heavier cross-feature use than declared here, that divergence is worth a look, not silently trusted either way.
 
 ## The worked-example section
 
-Every spec that defines process behavior includes the living example's run through
-that block: the actual answers given, scores produced, refinements applied. Real
-data (from grounding) appears with its sources. This section is what makes the spec
-testable against reality instead of aspirational.
+Every spec that defines process behavior includes the living example's run through that block: the actual answers given, scores produced, refinements applied. Real data (from grounding) appears with its sources. This section is what makes the spec testable against reality instead of aspirational.
 
 ## Risks are marked, not buried
 
-Open items that are *risks* (not just future work) get explicit markers in the
-open section:
+Open items that are *risks* (not just future work) get explicit markers in the open section:
 
 ```markdown
 - **[TECHNICAL RISK — specify before implementing] Dependency graph:** ...
