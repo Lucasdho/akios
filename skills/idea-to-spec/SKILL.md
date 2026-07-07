@@ -4,7 +4,7 @@ description: Collaborative design process for taking a raw product/system idea t
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Idea to Spec — Collaborative System Design
@@ -42,7 +42,7 @@ Before the macro loop, triage the raw idea. A single prompt often describes **se
 
 1. **Split.** If the idea spans more than one distinct domain, list the candidate specs back to the user in one short turn — one line each, named, with the domain it owns. State plainly: "this reads as N separate specs, not one."
 2. **Ask which to pursue** — one / some / all / combine. Only combine specs if they accomplish a small task. Recommend a starting order when there's a natural dependency with the reason, then Wait.
-3. **Design sequentially, never interleaved.** If they pick more than one, run the macro loop on them **one at a time** — finish one spec before opening the next. Never have tw  o specs' open questions in flight at once.
+3. **Design sequentially, never interleaved.** If they pick more than one, run the macro loop on them **one at a time** — finish one spec before opening the next. Never have two specs' open questions in flight at once.
 4. **Label every question with its spec.** While designing one of several, prefix decisions so the user always knows which spec they're answering for ("**[spec-name]** - Question"). When you close one and move to the next, announce the switch explicitly ("spec-name is locked — switching to **second-spec**").
 5. **Register as you go.** Each spec gets its own `akios/specs/<name>.md` and a row in the `## Specs` table the moment it's framed, so the set is visible and they don't overlap.
 
@@ -88,7 +88,7 @@ When invoked under **`/akios:just-vibes`** there is no user to answer or approve
 
 - **Deepthink every material decision.** Don't fast-pick to keep moving. For each decision run the full deepthink protocol above (second-order consequences, reversible vs one-way, what it forecloses). The absent human is exactly why the *why* must be thorough.
 - **Ground with research.** Web-search competitor/solution approaches and platform constraints where external facts would change the answer — golden rule #4 still binds, harder (no one's here to catch an invented "research shows").
-- **Reuse what shipped well.** Before designing from scratch, read `archive/Archive.md` (and `MEMORY.md`, `akios/code-references/`) for **previously delivered high-quality specs** and mirror their patterns and decisions. Consistency with proven work beats novelty.
+- **Reuse what shipped well.** Before designing from scratch, read `akios/archive/Archive.md` (and `MEMORY.md`, `akios/code-references/`) for **previously delivered high-quality specs** and mirror their patterns and decisions. Consistency with proven work beats novelty.
 - **Resolve via the priority chain, then your best judgment.** Pick the recommendation you'd have pre-marked. Where genuinely 50/50, choose the **reversible** option.
 - **Record every decision** (chosen + rejected + why) as a deepthink decision record in the spec — this *is* the review surface; the human reads it post-run and can override. A silently-decided spec is a failure here.
 - **Flag, don't smooth.** Tensions and unverifiable assumptions get marked as open risks in the spec, not quietly resolved — the human triages them when they review.
