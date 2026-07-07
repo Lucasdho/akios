@@ -6,9 +6,8 @@ Every closed block of the design becomes (or updates) one of these files. The fo
 
 `<project>-<block>-spec.md` — e.g. `founderlens-onboarding-spec.md`, `founderlens-devaudit-spec.md`. Vision documents that capture ambition before detailed design use `-vision` instead of `-spec`. Strategy/roadmap decisions: `-product-strategy`. Free-form idea capture: `-feature-ideas`.
 
-> **Swift/iOS projects (with `ios-feature-pipeline`):** prefer the simpler `akios/specs/<feature>.md`
-> form (e.g. `akios/specs/catalog.md`) — the pipeline expects files under `akios/specs/` without a project
-> prefix. The `<project>-<block>-spec.md` form is correct for multi-project or non-iOS contexts.
+> **Running inside a larger kit?** Some pipelines mandate their own naming (e.g. akios'
+> `ios-feature-pipeline`) — see `references/akios-integration.md`. Standalone, the form above applies.
 
 ## Header block
 
@@ -38,20 +37,11 @@ On updates, bump the version and add a changelog callout right under the header:
 - **Deliberate exclusions get a section.** What was kept OUT on purpose, and where it lives instead ("domain familiarity → asked at project start, not global onboarding"). Prevents future sessions from re-adding what was consciously removed.
 - **Empty states are always documented.** Every spec that defines a screen, list, feed, or data-backed view states its empty/zero-data state explicitly: what the user sees before any data exists, after they clear all data, and on first run. Cover the empty, loading, and error variants where they apply. This is mandatory, not optional — the UI is built from these states, so an undocumented empty state is a missing requirement.
 
-## Feature specs get a contract/Foundation header (ALVA)
+## Feature specs may need an extra header
 
-Any spec that `spec-to-tasks` will decompose into an ALVA feature slice (i.e. it describes a
-buildable app feature, not a cross-cutting doctrine/process spec) opens with a short declaration
-block right under the header, before §1:
-
-```markdown
-## Contract & Foundation
-
-- **Exports (`contract/`):** what this feature's public surface will be — the protocol + DTOs other features are expected to consume. "None yet" if this is a leaf feature.
-- **Consumes:** which other features' `contract/`, and which `Foundation/Design-tokens` / `Foundation/Code-tokens` symbols, this feature is expected to need.
-```
-
-This is cheap to write (a few bullets, not a design pass) and pays for itself twice: `spec-to-tasks` reads it to scope the `contract/` task and the Foundation-consult DoD line, and it doubles as a cross-check against the usage-ledger's counted evidence (doctrine §6.4 alternative D) — if the ledger later shows heavier cross-feature use than declared here, that divergence is worth a look, not silently trusted either way.
+Some pipelines require a short declaration block up front for downstream automation to scope
+its work — akios' ALVA "Contract & Foundation" header is one example; see
+`references/akios-integration.md` for its exact shape. Standalone, skip this section.
 
 ## The worked-example section
 

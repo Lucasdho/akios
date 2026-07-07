@@ -25,16 +25,13 @@ A process for co-designing complex tasks and systems — products, dev tools, mu
 
 ## Posture (learning vs. delivery)
 
-Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override — a command flag or spoken switch — wins for this session without rewriting the Roadmap value). The posture changes only how decisions are narrated, never the design itself:
+A `posture` flag, if the surrounding project has one (inside akios: `akios/Roadmap.md`'s `posture`, default `delivery` — see `references/akios-integration.md`), picks the narration style; standalone, default to delivery unless the user asks to hear the reasoning as you go. Either way the design itself never changes, only how much of the "why" gets said aloud:
 
 - **Delivery (default):** the decision loop runs exactly as documented above — recommendation,
   reason, decide, move on. The spec already records the alternatives and reasoning; nothing extra
   is spoken.
 - **Learning:** as each decision closes, add one line surfacing *why* the winning position beats
   the others said aloud instead of left silent. No new step, no extra ceremony — the teaching is the existing "Pre-mark the recommendation and give the reason" instruction, simply voiced rather than only written.
-
-See `AGENTS.md` "Operating posture" for the full teaching-surface this flag controls across every
-phase; `akios/specs/operating-modes.md` for the source design.
 
 ## Intake — one prompt may be many specs (do this first)
 
@@ -44,7 +41,7 @@ Before the macro loop, triage the raw idea. A single prompt often describes **se
 2. **Ask which to pursue** — one / some / all / combine. Only combine specs if they accomplish a small task. Recommend a starting order when there's a natural dependency with the reason, then Wait.
 3. **Design sequentially, never interleaved.** If they pick more than one, run the macro loop on them **one at a time** — finish one spec before opening the next. Never have two specs' open questions in flight at once.
 4. **Label every question with its spec.** While designing one of several, prefix decisions so the user always knows which spec they're answering for ("**[spec-name]** - Question"). When you close one and move to the next, announce the switch explicitly ("spec-name is locked — switching to **second-spec**").
-5. **Register as you go.** Each spec gets its own `akios/specs/<name>.md` and a row in the `## Specs` table the moment it's framed, so the set is visible and they don't overlap.
+5. **Register as you go.** Each spec gets its own file and an entry in whatever index the project keeps, the moment it's framed, so the set is visible and they don't overlap (inside akios: `akios/specs/<name>.md` + a row in the `## Specs` table — see `references/akios-integration.md`).
 
 This is the design-time twin of the pipeline's *anti-drift* rule: anti-drift catches a new spec that surfaces **mid-flow**; intake catches the specs that were all in the **opening prompt**. Same discipline — one spec's questions at a time, each registered, none silently merged.
 
@@ -84,16 +81,16 @@ The default loop runs on a short-turn economy — one or two sentences of reason
 
 ### Unattended (just-vibes) — no human in the loop
 
-When invoked under **`/akios:just-vibes`** there is no user to answer or approve decisions. The collaborative loop above assumes a human at every turn; here you must design **alone** and leave a trail the human can review *after*. The rules don't relax — the human-in-the-loop is replaced by **rigor on disk**:
+When there's no human in the loop (unattended runs — inside akios that's **`/akios:just-vibes`**; see `references/akios-integration.md`) there is no user to answer or approve decisions. The collaborative loop above assumes a human at every turn; here you must design **alone** and leave a trail the human can review *after*. The rules don't relax — the human-in-the-loop is replaced by **rigor on disk**:
 
 - **Deepthink every material decision.** Don't fast-pick to keep moving. For each decision run the full deepthink protocol above (second-order consequences, reversible vs one-way, what it forecloses). The absent human is exactly why the *why* must be thorough.
 - **Ground with research.** Web-search competitor/solution approaches and platform constraints where external facts would change the answer — golden rule #4 still binds, harder (no one's here to catch an invented "research shows").
-- **Reuse what shipped well.** Before designing from scratch, read `akios/archive/Archive.md` (and `MEMORY.md`, `akios/code-references/`) for **previously delivered high-quality specs** and mirror their patterns and decisions. Consistency with proven work beats novelty.
+- **Reuse what shipped well.** Before designing from scratch, check whatever the project uses to store prior decisions/specs (inside akios: `akios/archive/Archive.md`, `MEMORY.md`, `akios/code-references/` — see `references/akios-integration.md`) for **previously delivered high-quality specs** and mirror their patterns and decisions. Consistency with proven work beats novelty.
 - **Resolve via the priority chain, then your best judgment.** Pick the recommendation you'd have pre-marked. Where genuinely 50/50, choose the **reversible** option.
 - **Record every decision** (chosen + rejected + why) as a deepthink decision record in the spec — this *is* the review surface; the human reads it post-run and can override. A silently-decided spec is a failure here.
 - **Flag, don't smooth.** Tensions and unverifiable assumptions get marked as open risks in the spec, not quietly resolved — the human triages them when they review.
 
-This posture applies **only** unattended. The moment a human is present (normal `/akios:brainstorm`), revert to the collaborative one-decision-at-a-time loop — never auto-decide over a present user.
+This posture applies **only** unattended. The moment a human is present (normal interactive use), revert to the collaborative one-decision-at-a-time loop — never auto-decide over a present user.
 
 ### Completion is earned, not counted
 
