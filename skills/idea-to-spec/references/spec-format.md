@@ -4,7 +4,10 @@ Every closed block of the design becomes (or updates) one of these files. The fo
 
 ## File naming
 
-`<project>-<block>-spec.md` — e.g. `founderlens-onboarding-spec.md`, `founderlens-devaudit-spec.md`. Vision documents that capture ambition before detailed design use `-vision` instead of `-spec`. Strategy/roadmap decisions: `-product-strategy`. Free-form idea capture: `-feature-ideas`.
+`<project>-<block>-spec.md` — e.g. `founderlens-onboarding-spec.md`,
+`founderlens-devaudit-spec.md`. Vision documents that capture ambition before detailed
+design use `-vision` instead of `-spec`. Strategy/roadmap decisions: `-product-strategy`.
+Free-form idea capture: `-feature-ideas`.
 
 > **Running inside a larger kit?** Some pipelines mandate their own naming (e.g. akios'
 > `ios-feature-pipeline`) — see `references/akios-integration.md`. Standalone, the form above applies.
@@ -30,12 +33,23 @@ On updates, bump the version and add a changelog callout right under the header:
 ## Body conventions
 
 - **Numbered sections** (`## 1.`, `## 2.` …) separated by `---`. Sub-points as bullets with **bold lead-ins**.
-- **Decisions carry their reasons.** Not "we chose X" but "we chose X because Y; the cost is Z, accepted because W." Declined alternatives worth remembering are recorded *with the reason they were declined* — a deliberate "no" is as much a decision as a "yes".
+- **Decisions carry their reasons.** Not "we chose X" but "we chose X because Y; the
+  cost is Z, accepted because W." Declined alternatives worth remembering are recorded
+  *with the reason they were declined* — a deliberate "no" is as much a decision as a
+  "yes".
 - **Tables** for ingredient lists, rubrics, band/verdict maps, wiring (signal → what it personalizes), and benchmark data.
-- **Origin notes** when a design reversed course: a short quote-block telling the story ("the brainstorm had 3 dev-centric dimensions; rethinking from scratch flipped the unit from scoring the person to mapping where to help").
+- **Origin notes** when a design reversed course: a short quote-block telling the story
+  ("the brainstorm had 3 dev-centric dimensions; rethinking from scratch flipped the unit
+  from scoring the person to mapping where to help").
 - **Cross-references** to sibling specs by filename and section ("see founderlens-product-strategy.md §4").
-- **Deliberate exclusions get a section.** What was kept OUT on purpose, and where it lives instead ("domain familiarity → asked at project start, not global onboarding"). Prevents future sessions from re-adding what was consciously removed.
-- **Empty states are always documented.** Every spec that defines a screen, list, feed, or data-backed view states its empty/zero-data state explicitly: what the user sees before any data exists, after they clear all data, and on first run. Cover the empty, loading, and error variants where they apply. This is mandatory, not optional — the UI is built from these states, so an undocumented empty state is a missing requirement.
+- **Deliberate exclusions get a section.** What was kept OUT on purpose, and where it
+  lives instead ("domain familiarity → asked at project start, not global onboarding").
+  Prevents future sessions from re-adding what was consciously removed.
+- **Empty states are always documented.** Every spec that defines a screen, list, feed,
+  or data-backed view states its empty/zero-data state explicitly: what the user sees
+  before any data exists, after they clear all data, and on first run. Cover the empty,
+  loading, and error variants where they apply. This is mandatory, not optional — the UI
+  is built from these states, so an undocumented empty state is a missing requirement.
 
 ## Feature specs may need an extra header
 
@@ -45,7 +59,10 @@ its work — akios' ALVA "Contract & Foundation" header is one example; see
 
 ## The worked-example section
 
-Every spec that defines process behavior includes the living example's run through that block: the actual answers given, scores produced, refinements applied. Real data (from grounding) appears with its sources. This section is what makes the spec testable against reality instead of aspirational.
+Every spec that defines process behavior includes the living example's run through that
+block: the actual answers given, scores produced, refinements applied. Real data (from
+grounding) appears with its sources. This section is what makes the spec testable against
+reality instead of aspirational.
 
 ## Risks are marked, not buried
 
