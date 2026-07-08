@@ -68,6 +68,10 @@ When a block's ingredients are complete, pause and present the handoff before mo
 
 Blocks lock on approval. Reopening later is allowed but triggers the dependency remodel (below). Never silently reopen.
 
+> **WARNING (Context Size):** Long sessions can overflow the AI context window. After
+> finishing a spec, explicitly compact the conversation. Generate a compressed summary of
+> the locked decisions and drop the turn-by-turn history before moving to the next phase.
+
 ## The dependency remodel ("what changed")
 
 When a locked decision is reopened and changed:
