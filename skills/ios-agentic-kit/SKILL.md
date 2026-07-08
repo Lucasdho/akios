@@ -7,6 +7,10 @@ metadata:
   version: "2.0.0"
 ---
 
+> **Scope: akios-exclusive.** This skill is the meta-documentation for the akios kit itself
+> (what it installs, how it routes, how to set it up). It is not intended to operate standalone
+> outside the akios ecosystem. All content below is akios-specific by design.
+
 # iOS Agentic Kit
 
 A meta-system you plug into any Swift/iOS repo to make agentic coding efficient and
