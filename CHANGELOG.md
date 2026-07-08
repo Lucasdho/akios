@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added — Codex plugin manifest
+- **Codex-ready plugin support.** Added `.codex-plugin/plugin.json` so Codex can install Akios
+  and load the shared `skills/` family while Claude Code remains the full command/setup host.
+- **Smoke-test coverage for Codex.** `scripts/test-kit.sh` now validates the Codex manifest,
+  `skills` path, semver, and version sync with `VERSION`.
+- **Docs for partial parity.** README and architecture docs now distinguish full Claude Code
+  support from the first Codex layer; `/akios:*` commands and setup/hooks stay Claude-first
+  until the `.codex/` migration is designed.
+
 ## 0.8.2 (2026-07-03)
 
 ### Added — subagent context chaining

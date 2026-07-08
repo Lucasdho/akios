@@ -5,9 +5,9 @@
 
 ## What this repo is
 
-akios is a Claude Code plugin + skill family for iOS/Swift development. This repo IS the
-plugin — it ships skills, commands, templates, and scripts. There is no Swift source code,
-no Xcode project, and no app to build or run here.
+akios is a Claude Code plugin + Codex-ready plugin + skill family for iOS/Swift development.
+This repo IS the plugin — it ships skills, commands, templates, and scripts. There is no Swift
+source code, no Xcode project, and no app to build or run here.
 
 ## Stack
 
@@ -22,7 +22,8 @@ no Xcode project, and no app to build or run here.
 - Smoke-test install: check that `~/.claude/skills/<skill>/SKILL.md` exists for each skill
 - Validate YAML: `python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" akios/workflow.yml`
 - Check for orphaned refs: `grep -ri '<old-term>' --include=*.md --include=*.sh --include=*.yml .`
-- Publish (plugin marketplace): handled via the `.claude-plugin/` manifest (if present)
+- Publish (Claude plugin marketplace): handled via the `.claude-plugin/` manifest (if present)
+- Validate Codex plugin manifest: `python3 /Users/lucasoliveira/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .`
 
 ## Architecture
 
@@ -52,6 +53,11 @@ no Xcode project, and no app to build or run here.
 ├── CHANGELOG.md     ← version history
 └── VERSION          ← installed semver, compared against a consumer repo's stamped version
 ```
+
+Codex support currently exposes the shared `skills/` tree via `.codex-plugin/plugin.json`.
+The `/akios:*` command wrappers and setup hook wiring are still Claude-first; do not claim full
+Codex command/setup parity until `.codex/`, `~/.codex/akios`, and Codex-native hook behavior are
+designed and implemented.
 
 No `archive/` or `code-references/` yet — this repo hasn't archived a completed spec or ingested
 a code-reference pack, so neither directory exists on disk (they materialize under `akios/` the

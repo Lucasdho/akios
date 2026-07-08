@@ -1,0 +1,38 @@
+{
+  "name": "akios",
+  "version": "0.8.2",
+  "description": "Agentic workflow kit for Swift/iOS repos: spec-driven idea-to-ship pipeline, skill gates, and repo onboarding.",
+  "author": {
+    "name": "Lucas Oliveira",
+    "url": "https://github.com/Lucasdho"
+  },
+  "homepage": "https://github.com/Lucasdho/akios",
+  "repository": "https://github.com/Lucasdho/akios",
+  "license": "MIT",
+  "keywords": [
+    "swift",
+    "ios",
+    "swiftui",
+    "agentic",
+    "workflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Akios",
+    "shortDescription": "Spec-driven Swift/iOS workflow kit for Codex",
+    "longDescription": "Use Akios to brainstorm, plan, design, deliver, review, and maintain Swift/iOS features through an agent-readable workflow. Codex support currently exposes the shared skill family; Claude Code remains the full command and setup host.",
+    "developerName": "Lucas Oliveira",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Lucasdho/akios",
+    "defaultPrompt": [
+      "Use Akios to plan this iOS feature.",
+      "Review this Swift task with Akios.",
+      "Turn this iOS idea into a spec."
+    ],
+    "brandColor": "#0A84FF"
+  }
+}

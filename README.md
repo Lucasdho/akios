@@ -1,8 +1,12 @@
 # AKIOS - Agentic Kit for IOS
 
-A Claude Code plugin that gives your agent a structured, repeatable workflow for building
-Swift / iOS apps — brainstorm, plan, design, deliver — so features ship clean instead of being
-improvised session by session.
+An agent workflow kit for building Swift / iOS apps: brainstorm, plan, design, deliver,
+and keep the work grounded in specs instead of improvising session by session.
+
+Akios is currently a full Claude Code plugin and a Codex-ready plugin. Claude Code gets the
+complete `/akios:*` command surface, setup flow, and `.claude` hooks; Codex support exposes the
+shared skill family through `.codex-plugin/plugin.json` while command/setup parity is still in
+progress.
 
 ## What it does
 
@@ -18,6 +22,8 @@ for the current set), a phase contract (`akios/workflow.yml`), and a SessionStar
 re-states the workflow gates every session so the agent never drifts.
 
 ## Install
+
+### Claude Code
 
 Inside Claude Code:
 
@@ -35,6 +41,13 @@ Then, inside the repo you want to set up:
 `setup` interviews you, scans the repo, fills in templates, creates the `akios/` folder tree
 (`akios/specs/`, `akios/tasks/`, `akios/archive/`), and wires the hook. No external dependencies required.
 
+### Codex
+
+Codex can install Akios as a plugin through the `.codex-plugin/plugin.json` manifest and use the
+shared skills in `skills/`. This first Codex release does not claim full command parity yet:
+`/akios:setup` and the rest of the slash-command flow are still Claude-first because they depend
+on `CLAUDE.md`, `.claude/`, `~/.claude`, and Claude Code hook environment variables.
+
 ## Commands
 
 | Command | What it does |
@@ -49,6 +62,9 @@ Then, inside the repo you want to set up:
 | `/akios:handoff` | Write a handoff doc for another agent session, or return results |
 
 All commands are typed-only (`disable-model-invocation`) — they never auto-fire.
+
+Codex note: treat the commands above as the Claude Code interface for now. In Codex, use the
+installed Akios skills directly until the setup/hooks layer is ported to Codex-native paths.
 
 ## Who it's for
 

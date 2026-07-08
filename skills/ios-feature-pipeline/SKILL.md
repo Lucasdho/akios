@@ -1,11 +1,21 @@
 ---
 name: ios-feature-pipeline
-description: Workflow orchestrator for taking a raw iOS feature idea all the way to working, reviewed code. Use whenever a user has a new feature idea for an iOS app and needs a structured path from concept to implementation. Triggers include: "I want to add X to the app", "let's build this feature", "new feature: ...", or any request to implement something non-trivial in a Swift/SwiftUI codebase. This skill does NOT write code itself — it reads akios/workflow.yml and routes you through the phases in order.
+description: >-
+  Workflow orchestrator for taking a raw iOS feature idea all the way to working, reviewed code.
+  Use whenever a user has a new feature idea for an iOS app and needs a structured path from
+  concept to implementation. Triggers include: "I want to add X to the app", "let's build this
+  feature", "new feature: ...", or any request to implement something non-trivial in a
+  Swift/SwiftUI codebase. This skill does NOT write code itself — it reads akios/workflow.yml and
+  routes you through the phases in order.
 license: MIT
 metadata:
   author: Lucas Oliveira
   version: "3.0.0"
 ---
+
+> **Scope: akios-exclusive.** This skill is the akios workflow orchestrator — it reads
+> `akios/workflow.yml` and routes through akios phases. It is not intended to operate standalone.
+> The anti-drift rules (§ "Staying in flow") are generic and may be extracted separately in the future.
 
 # iOS Feature Pipeline — Idea to Working Code
 
