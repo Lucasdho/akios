@@ -29,12 +29,22 @@ done
 
 # 3. Plugin artifacts: manifests parse, plugin is named akios, commands present.
 if command -v jq >/dev/null; then
-  for m in .claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+  for m in .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json; do
     if jq -e . "$KIT/$m" >/dev/null 2>&1; then echo "ok   $m"
     else echo "FAIL: $m missing or not valid JSON"; fail=1; fi
   done
-  name="$(jq -r '.name // empty' "$KIT/.claude-plugin/plugin.json" 2>/dev/null || true)"
-  [ "$name" = "akios" ] || { echo "FAIL: plugin.json name is '$name', expected 'akios'"; fail=1; }
+  claude_name="$(jq -r '.name // empty' "$KIT/.claude-plugin/plugin.json" 2>/dev/null || true)"
+  [ "$claude_name" = "akios" ] || { echo "FAIL: .claude-plugin/plugin.json name is '$claude_name', expected 'akios'"; fail=1; }
+  codex_name="$(jq -r '.name // empty' "$KIT/.codex-plugin/plugin.json" 2>/dev/null || true)"
+  [ "$codex_name" = "akios" ] || { echo "FAIL: .codex-plugin/plugin.json name is '$codex_name', expected 'akios'"; fail=1; }
+  codex_skills="$(jq -r '.skills // empty' "$KIT/.codex-plugin/plugin.json" 2>/dev/null || true)"
+  [ "$codex_skills" = "./skills/" ] || { echo "FAIL: .codex-plugin/plugin.json skills is '$codex_skills', expected './skills/'"; fail=1; }
+  version="$(tr -d '[:space:]' < "$KIT/VERSION")"
+  codex_version="$(jq -r '.version // empty' "$KIT/.codex-plugin/plugin.json" 2>/dev/null || true)"
+  claude_version="$(jq -r '.version // empty' "$KIT/.claude-plugin/plugin.json" 2>/dev/null || true)"
+  echo "$codex_version" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$' || { echo "FAIL: .codex-plugin/plugin.json version '$codex_version' is not semver"; fail=1; }
+  [ "$codex_version" = "$version" ] || { echo "FAIL: .codex-plugin/plugin.json version '$codex_version' does not match VERSION '$version'"; fail=1; }
+  [ "$claude_version" = "$version" ] || { echo "FAIL: .claude-plugin/plugin.json version '$claude_version' does not match VERSION '$version'"; fail=1; }
 else
   echo "warn jq not found — skipping plugin manifest JSON validation"
 fi
