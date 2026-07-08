@@ -26,10 +26,11 @@
 
 ## Parte 0 — O que é akios
 
-**akios (Agentic Kit for iOS)** é um plugin do Claude Code + uma família de skills que
-transforma o Claude Code num **teammate disciplinado** para construir apps Swift/iOS. Em vez
-de improvisar sessão a sessão, o kit instala um **fluxo repetível dirigido por spec**, do
-idea bruto ao código revisado e pronto para produção.
+**akios (Agentic Kit for iOS)** é um plugin do Claude Code, um plugin Codex-ready e uma família
+de skills para construir apps Swift/iOS. No Claude Code, ele transforma o agente num
+**teammate disciplinado** com comandos `/akios:*`, setup e hooks. No Codex, esta primeira camada
+expõe a família de skills compartilhada; paridade completa de setup/comandos ainda é trabalho
+futuro.
 
 ### North star
 
@@ -353,9 +354,15 @@ nunca na Parte I.
 ### 2.2 O que o kit é (natureza do repositório)
 
 **Este repositório É o plugin** — não é um app iOS. Ele ship skills, commands, templates e
-scripts. Não há código Swift, nem projeto Xcode, nem build system aqui. Artefatos: `.md`,
-`.yml`, `.sh`, `.json`. "Testes" = auditorias de DoD (grep por refs órfãs, validação de YAML,
-smoke-test de instalação de skill).
+scripts para Claude Code e um manifesto Codex que aponta para a mesma família de skills. Não há
+código Swift, nem projeto Xcode, nem build system aqui. Artefatos: `.md`, `.yml`, `.sh`, `.json`.
+"Testes" = auditorias de DoD (grep por refs órfãs, validação de YAML, smoke-test de instalação
+de skill e validação dos manifestos de plugin).
+
+> **Estado do suporte Codex.** `.codex-plugin/plugin.json` torna o Akios instalável/validável
+> pelo Codex e reaproveita `skills/`. Os comandos `/akios:*`, `/akios:setup`, templates `CLAUDE.md`
+> e hooks `.claude/` permanecem Claude-first até a migração explícita para caminhos `.codex/`,
+> `~/.codex/akios` e comportamento de hooks compatível.
 
 > **Nota de nomenclatura (importante).** O repo git chama-se `akios`; ele **também** contém
 > uma subpasta literalmente chamada `akios/` — a mesma pasta de housekeeping que
