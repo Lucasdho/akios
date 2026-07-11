@@ -4,7 +4,7 @@ description: Autonomous akios run. Drives the whole feature pipeline (brainstorm
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Just Vibes — Autonomous Run
@@ -135,7 +135,8 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
            CRITICAL: run skills directly; every interactive gate is waived (see UNATTENDED RULES).
 
            a. NO SPEC → brainstorm (idea-to-spec, DEEPTHINK MODE):
-              - Read MEMORY.md + archive/Archive.md for prior decisions to reuse.
+              - Read MEMORY.md + archive/Archive.md for previously delivered high-quality specs;
+                mirror their patterns and decisions — consistency with proven work beats novelty.
               - Make every decision yourself via deepthink (no waiting, no handing back).
               - Record chosen + rejected options + reasoning in the spec.
               - Write spec to akios/specs/<name>.md. Register in akios/Roadmap.md at status designed.

@@ -4,7 +4,7 @@ description: Collaborative design process for taking a raw product/system idea t
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Idea to Spec — Collaborative System Design
@@ -149,37 +149,6 @@ tradeoffs deeply", "deepthink this"), turn up the rigor **on that one decision o
   option — marked as a deepthink decision so the "why" survives. See
   `references/spec-format.md` for where it lands.
 - **Then exit.** Return to the normal short-turn economy for subsequent decisions; deepthink is a per-decision gear, not a mode you stay in.
-
-### Unattended (just-vibes) — no human in the loop
-
-When there's no human in the loop (unattended runs — inside akios that's
-**`/akios:just-vibes`**; see `references/akios-integration.md`) there is no user to answer
-or approve decisions. The collaborative loop above assumes a human at every turn; here you
-must design **alone** and leave a trail the human can review *after*. The rules don't
-relax — the human-in-the-loop is replaced by **rigor on disk**:
-
-- **Deepthink every material decision.** Don't fast-pick to keep moving. For each decision
-  run the full deepthink protocol above (second-order consequences, reversible vs one-way,
-  what it forecloses). The absent human is exactly why the *why* must be thorough.
-- **Ground with research.** Web-search competitor/solution approaches and platform
-  constraints where external facts would change the answer — golden rule #4 still binds,
-  harder (no one's here to catch an invented "research shows").
-- **Reuse what shipped well.** Before designing from scratch, check whatever the project
-  uses to store prior decisions/specs (inside akios: `akios/archive/Archive.md`,
-  `MEMORY.md`, `akios/code-references/` — see `references/akios-integration.md`) for
-  **previously delivered high-quality specs** and mirror their patterns and decisions.
-  Consistency with proven work beats novelty.
-- **Resolve via the priority chain, then your best judgment.** Pick the recommendation
-  you'd have pre-marked. Where genuinely 50/50, choose the **reversible** option.
-- **Record every decision** (chosen + rejected + why) as a deepthink decision record in
-  the spec — this *is* the review surface; the human reads it post-run and can override.
-  A silently-decided spec is a failure here.
-- **Flag, don't smooth.** Tensions and unverifiable assumptions get marked as open risks
-  in the spec, not quietly resolved — the human triages them when they review.
-
-This posture applies **only** unattended. The moment a human is present (normal
-interactive use), revert to the collaborative one-decision-at-a-time loop — never
-auto-decide over a present user.
 
 ### Completion is earned, not counted
 

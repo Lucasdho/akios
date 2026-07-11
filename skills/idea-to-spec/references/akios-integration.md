@@ -16,13 +16,6 @@ phase; `akios/specs/operating-modes.md` for the source design.
 Each spec gets its own `akios/specs/<name>.md` and a row in `akios/Roadmap.md`'s `## Specs`
 table the moment it's framed, so the set stays visible across the whole kit.
 
-## Unattended runs (`/akios:just-vibes`)
-
-Triggered by `/akios:just-vibes`, as opposed to interactive `/akios:brainstorm`. Before designing
-from scratch, read `akios/archive/Archive.md` (and `MEMORY.md`, `akios/code-references/`) for
-previously delivered high-quality specs and mirror their patterns and decisions — consistency
-with proven work beats novelty. Resolve ties via the priority chain, then best judgment.
-
 ## Contract & Foundation header (ALVA)
 
 Any spec that `spec-to-tasks` will decompose into an ALVA feature slice (i.e. it describes a
