@@ -24,7 +24,7 @@ structure.
 
 ## Deepthink turns
 
-When the user flags a decision as high-stakes (see "Deepthink mode" in `SKILL.md`), the turn expands while keeping the same skeleton:
+When a decision is flagged high-stakes — by the user, or offered by you on detecting a one-way / high-blast-radius decision (see "Deepthink mode" in `SKILL.md`) — the turn expands while keeping the same skeleton:
 
 1. **Frame** as usual.
 2. **Grounded facts** — if external facts would move the answer, the searched-and-cited

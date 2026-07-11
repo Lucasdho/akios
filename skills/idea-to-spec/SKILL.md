@@ -4,7 +4,7 @@ description: Collaborative design process for taking a raw product/system idea t
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "1.4.0"
+  version: "1.5.0"
 ---
 
 # Idea to Spec — Collaborative System Design
@@ -22,7 +22,7 @@ versioned spec file; every change remodels what depends on it.
 
 1. **One thing at a time.** One decision, one question, one refinement per turn. Never
    dump a full design and ask "thoughts?". End almost every turn by handing control back.
-2. **Propose, then check.** For each decision, offer **up to 3** coherent positions (2–3).
+2. **Propose, then check.** For each decision, offer **3** coherent positions.
    Pre-mark your recommendation **with the reason**. Never decide silently, never bury
    your opinion, never present options you don't believe in just to fill the list. Fewer,
    sharper positions beat more, weaker ones.
@@ -47,11 +47,10 @@ versioned spec file; every change remodels what depends on it.
 
 ## Posture (learning vs. delivery)
 
-A `posture` flag, if the surrounding project has one (inside akios: `akios/Roadmap.md`'s
-`posture`, default `delivery` — see `references/akios-integration.md`), picks the
-narration style; standalone, default to delivery unless the user asks to hear the
-reasoning as you go. Either way the design itself never changes, only how much of the
-"why" gets said aloud:
+A `posture` flag, if the surrounding project defines one (inside akios, see
+`references/akios-integration.md`), picks the narration style; standalone, default to
+delivery unless the user asks to hear the reasoning as you go. Either way the design itself
+never changes, only how much of the "why" gets said aloud:
 
 - **Delivery (default):** the decision loop runs exactly as documented above — recommendation,
   reason, decide, move on. The spec already records the alternatives and reasoning; nothing extra
@@ -83,8 +82,8 @@ the first one, and don't mash them into one spec.
    ("spec-name is locked — switching to **second-spec**").
 5. **Register as you go.** Each spec gets its own file and an entry in whatever index the
    project keeps, the moment it's framed, so the set is visible and they don't overlap
-   (inside akios: `akios/specs/<name>.md` + a row in the `## Specs` table — see
-   `references/akios-integration.md`).
+   (inside akios, see `references/akios-integration.md` for the exact file path + index
+   location).
 
 This is the design-time twin of the pipeline's *anti-drift* rule: anti-drift catches a new
 spec that surfaces **mid-flow**; intake catches the specs that were all in the **opening
@@ -97,25 +96,20 @@ Work proceeds in **blocks** — one subsystem, phase, or feature per session-chu
 "the onboarding", "the audit", "phase X of the pipeline"). For each block:
 
 ```
-1. FRAME      What is this block? What must it produce? (1 short turn)
+1. FRAME      What is this block, and what must it produce? Emit and register its required ingredients — the checklist of decisions that must exist before the block is done. (1 short turn)
 2. GROUND     If the block needs external anchoring (what to measure, what competitors do, what theory applies) — research first, then present 3-5 anchors with sources. Skip if pure interaction design.
 3. DECIDE     The decision loop (below), one decision at a time, until the block's open questions are closed.
 4. STRESS     Run the block against the living worked example (below).
 5. SEAM       Summarize what's now locked + what stayed open. Flag any tension with previously locked blocks. Wait for explicit approval.
-6. SPEC       Write/update the versioned spec file (see references/spec-format.md).
+6. SPEC       Write/update the versioned spec file (see references/spec-format.md), then lint it against the mandatory elements before presenting (see "Spec files" below).
 ```
 
 ### The decision loop (step 3, the heart of it)
 
-For each open question inside a block:
+Run each decision as the four-part turn defined in golden rules #2–3 and
+`references/session-patterns.md` ("Presenting a decision"). Beyond that skeleton, three
+moves recur:
 
-- Present **up to 3 coherent positions** each one internally consistent, with its real
-  cost stated ("more value, more risk", "cleaner but loses the confidence signal").
-- **Pre-mark the recommendation** and give the reason in one or two sentences.
-- Offer interactive choices when the environment supports it (widgets, buttons); numbered
-  options in plain text otherwise. **Always show the open path alongside the options as a
-  first-class peer** — an explicit "…or write your own" line, never a buried footnote —
-  so answering in their own words is as available as picking.
 - When the user picks **multiple** conflicting options: keep all, then **rank or merge**
   — rank when genuinely distinct, merge when they're facets of one thing. Never silently
   flatten.
@@ -129,9 +123,20 @@ For each open question inside a block:
 ### Deepthink mode (high-stakes decisions)
 
 The default loop runs on a short-turn economy — one or two sentences of reason, then hand
-back. Some decisions deserve more. When the user signals a decision is high-stakes and
-wants the full tradeoffs ("this one's really important", "I want to understand the
-tradeoffs deeply", "deepthink this"), turn up the rigor **on that one decision only**:
+back. Some decisions deserve more. There are two ways in:
+
+- **The user flags it** — "this one's really important", "I want to understand the
+  tradeoffs deeply", "deepthink this".
+- **You offer it — don't wait to be asked.** When you detect a decision is **one-way or
+  high-blast-radius** — hard to reverse, forecloses other options, or hurts downstream if
+  wrong — say so and offer to go deep before closing, even when the user hasn't asked
+  ("this one looks irreversible — the format locks every later spec; want to go deep before
+  we close it?"). The user still decides whether to accept; you surface the stakes, you
+  never force the gear. This is load-bearing: the person who can't see the blast radius is
+  exactly the one who won't ask for depth, so the short-turn economy would otherwise wave a
+  one-way decision through.
+
+Either way, turn up the rigor **on that one decision only**:
 
 - **Ground it.** If external facts would change the answer (prices, platform limits, what
   established tools do, regulations), web-search and cite before presenting — reuse golden
@@ -141,9 +146,8 @@ tradeoffs deeply", "deepthink this"), turn up the rigor **on that one decision o
   option: what it **forecloses** (doors it closes), whether it's **reversible or
   one-way**, and **who it helps or hurts** downstream. This is the analysis the
   short-turn economy normally compresses away.
-- **The rules don't change — only the depth.** Still up to 3 positions, recommendation
-  pre-marked with its reason, open path first-class, one decision, same handback.
-  Deepthink buys more thinking, not a different process and not your deciding for them.
+- **The rules don't change, only the depth** — see golden rules #2–3. Deepthink buys more
+  thinking, not a different process and not your deciding for them.
 - **Capture a decision record.** When they choose, write the *reasoning* into the spec —
   the alternatives considered and why the others were rejected, not just the winning
   option — marked as a deepthink decision so the "why" survives. See
@@ -152,10 +156,11 @@ tradeoffs deeply", "deepthink this"), turn up the rigor **on that one decision o
 
 ### Completion is earned, not counted
 
-Each block has explicit **required ingredients** (decisions that must exist before it's
-done). Show progress against that checklist, announce when it's complete, but let the user
-keep refining — and let them exit early with a warning of what's missing. Soft gates,
-never hard locks.
+Each block's **required ingredients** are the checklist emitted at FRAME (step 1) — the
+decisions that must exist before it's done, fixed when the block is framed so the done-bar
+doesn't drift between runs of the same block. Show progress against that checklist,
+announce when it's complete, but let the user keep refining — and let them exit early with
+a warning of what's missing. Soft gates, never hard locks.
 
 ## The living worked example
 
@@ -194,12 +199,14 @@ settled-vs-open convention, changelog, worked-example section). Key rules:
   each other.
 - Specs record **decisions and their reasons**, not aspirations. "Settled unless marked
   open."
-- Updates bump the version and add a one-line changelog at the top.
-- Always include the worked example's run through that block.
-- Always document **edge cases** for anything. Example: UI/data-backed view (empty,
-  first-run, post-clear; plus loading/error where relevant) so the UI can be built
-  properly from them. Mandatory — see `references/spec-format.md`.
-- A spec describing a buildable feature opens with the Contract & Foundation header — see `references/spec-format.md`.
+- Follow `references/spec-format.md` for the mandatory elements — version+changelog on
+  update, the worked-example run through the block, empty/edge states, and the Contract &
+  Foundation header for buildable-feature specs.
+- **Self-check before presenting.** Once the file is written, lint it against those
+  mandatory elements before showing it: Contract & Foundation header (buildable-feature
+  specs), a reason on every decision, empty/edge states for every screen or data-backed
+  view, the worked-example run, and the closing `## N. Open / next`. Fix any omission before
+  presenting — a silently missing empty state is a missing requirement, not a small gap.
 
 ## Turn-by-turn conduct
 
@@ -210,10 +217,8 @@ skill.
 
 ## Anti-patterns (the failure modes this process exists to prevent)
 
-- Generating a complete spec in one shot and asking for feedback on the whole thing.
-- Recommending without a reason, or hiding the recommendation to seem neutral.
-- Inventing market data, competitor features, or "research shows" claims.
-- Resolving the user's contradictions silently instead of surfacing them.
-- Reopening a decision without remodeling its dependents.
-- Letting politeness suppress a real disagreement — the user chose this process *for* the honesty.
-- Asking permission for things already decided ("should I keep using the format we agreed on?").
+The failure modes the golden rules exist to prevent (each is the inverse of one): one-shot
+spec dumps · reason-less or hidden recommendations · invented market/research claims ·
+silently resolving the user's contradictions · reopening without remodeling dependents ·
+politeness suppressing a real disagreement. 
+Asking permission for things already decided ("should I keep using the format we agreed on?").
