@@ -2,9 +2,11 @@
 id: T000
 spec: akios/specs/{{spec}}.md
 est_tokens: {{rough estimate ≈ Σ touched-file sizes + description weight}}
-runner: {{orchestrator (≤20k) | subagent (>20k)}}
+runner: {{orchestrator (≤20k) | subagent-eligible (>20k)}}
 parallel: {{true | false}}   # true = [P], shares no files/symbols with siblings in this checkpoint
-area: {{file / module / concern — same-area tasks serialize}}
+area: {{Features/<F>/domain|data|presentation/<View>|contract|tests — slice sub-folder; same-area tasks serialize}}
+checkpoint: {{n}}            # [major] checkpoints run the test battery
+swift_dev: {{sub-skill}}     # domain sub-skill the cold subagent must load
 ---
 
 # T000 — {{one-line goal}}

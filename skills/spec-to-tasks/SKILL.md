@@ -1,6 +1,6 @@
 ---
 name: spec-to-tasks
-description: Turn an approved spec into a lean, executable backlog of task files under akios/tasks/todo/ in a single pass — replaces speckit's clarify/specify/plan/tasks phases for Swift/iOS work. Use after idea-to-spec has produced akios/specs/<feature>.md and you need the execution backlog, or when a user runs /akios:plan. Produces atomic task files with est_tokens + runner, parallel markers, checkpoint barriers, definitions of done, and per-task UI-state coverage. Does NOT write app code — it writes the plan that task-execution runs.
+description: Turn an approved spec into a lean, executable backlog of task files under akios/tasks/todo/ in a single pass — the plan phase for Swift/iOS work. Use after idea-to-spec has produced akios/specs/<feature>.md and you need the execution backlog, or when a user runs /akios:plan. Produces atomic task files with est_tokens + runner, parallel markers, checkpoint barriers, definitions of done, and per-task UI-state coverage. Does NOT write app code — it writes the plan that task-execution runs.
 license: MIT
 metadata:
   author: Lucas Oliveira
@@ -10,8 +10,8 @@ metadata:
 # Spec to Tasks — one pass, spec → akios/tasks/todo/
 
 Turns an approved spec into the execution backlog for `task-execution`: **one task file per task
-under `akios/tasks/todo/`**. One skill, one pass, one human confirm — this replaces speckit's four
-phases and its `.specify/` + constitution machinery, none of which this skill creates or needs.
+under `akios/tasks/todo/`**. One skill, one pass, one human confirm — no multi-phase ceremony and no
+scaffold directory or second spec format to bootstrap; this skill neither creates nor needs one.
 
 **Why it exists:** `idea-to-spec` already resolves ambiguity decision-by-decision upstream, and
 the kit's gates (`AGENTS.md` house rules, `swift-dev`, `/code-review`) enforce quality downstream.
@@ -21,7 +21,7 @@ This skill does the one thing that was missing: decompose the spec into runnable
 - **In:** one or more approved `akios/specs/<feature>.md` (passed as `$ARGUMENTS`), plus `akios/Context.md`
   (architecture/conventions) and `MEMORY.md` (locked decisions). Read **only** these.
 - **Out:** task files in `akios/tasks/todo/` (`T<NNN>-<slug>.md`, see the `task.md` template), and the
-  spec's status set to `planned` in `akios/Roadmap.md`. No single `tasks.md`, no `.specify/`, no constitution.
+  spec's status set to `planned` in `akios/Roadmap.md`. No single `tasks.md`.
 
 ## The pass (do this in order, once)
 
@@ -92,7 +92,7 @@ One file per task in `akios/tasks/todo/`, following `templates/task.md`:
 id: T001
 spec: akios/specs/<feature>.md
 est_tokens: 14k
-runner: orchestrator        # ≤20k orchestrator · >20k subagent
+runner: orchestrator        # ≤20k orchestrator · >20k subagent-eligible
 parallel: true              # true = [P]; shares no files/symbols with siblings this checkpoint
 area: Squad/presentation/SquadList   # slice sub-folder; same-area tasks serialize
 checkpoint: 1               # [major] checkpoints run the test battery
@@ -120,23 +120,22 @@ State is the **containing folder**; `task-execution` moves the file `todo → in
 | VoiceOver, Dynamic Type, a11y | `ios-accessibility` |
 | Run / build / debug behavior | `ios-debugger-agent` |
 | UI polish, widgets, design | `swiftui-design-principles` |
-| Figma → SwiftUI | `figma-to-swiftui` |
 
 ## Posture (learning vs. delivery)
-Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override wins for this session
-without rewriting the Roadmap value — same rule as `collaboration`). In **learning** mode, the
-step-10 confirm also states *why* the graph came out this way: why these checkpoint boundaries,
-why a task is `[P]` (or isn't), why a task carries the `pack:<domain>` tag it does. **Delivery**
-(default) shows the graph without the running commentary, as documented above. Never changes the
-decomposition itself — same tasks, same checkpoints, same tags in both postures. See
-`AGENTS.md` "Operating posture" / `akios/specs/operating-modes.md` §3.
+Read `akios/Roadmap.md`'s `posture` flag the same way every phase does (see `AGENTS.md`
+"Operating posture" / `akios/specs/operating-modes.md` §3 for the flag mechanic). The
+phase-specific delta: in **learning** mode the step-10 confirm also states *why* the graph came
+out this way — why these checkpoint boundaries, why a task is `[P]` (or isn't), why it carries the
+`pack:<domain>` tag it does. **Delivery** (default) shows the graph without that commentary. Never
+changes the decomposition — same tasks, checkpoints, and tags in both postures.
 
 ## Hand-off
 `akios/tasks/todo/` is the sole input to `task-execution` (`/akios:deliver`). Stop after writing the
 files + updating `akios/Roadmap.md`; tell the user the backlog is ready and that `/akios:deliver` ships it.
 
 ## Anti-patterns
-- Creating `.specify/`, a constitution, or any second formal spec format. Don't.
-- Re-clarifying a spec `idea-to-spec` already settled.
-- A task without `est_tokens`/`runner`, without a DoD, or a UI task without empty/loading/error coverage.
-- More than one human confirm. One review, then write.
+Each is the inverse of a step above:
+- Creating a scaffold directory or any other second formal spec format.
+- Re-clarifying what the spec already settled.
+- A task missing `est_tokens`/`runner`, a DoD, or (UI/data task) empty/loading/error coverage.
+- **More than one human confirm** — one review, then write. *(net-new)*

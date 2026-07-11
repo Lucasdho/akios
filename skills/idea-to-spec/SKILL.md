@@ -217,8 +217,11 @@ skill.
 
 ## Anti-patterns (the failure modes this process exists to prevent)
 
-The failure modes the golden rules exist to prevent (each is the inverse of one): one-shot
-spec dumps · reason-less or hidden recommendations · invented market/research claims ·
-silently resolving the user's contradictions · reopening without remodeling dependents ·
-politeness suppressing a real disagreement. 
-Asking permission for things already decided ("should I keep using the format we agreed on?").
+Each is the inverse of a golden rule:
+- One-shot spec dumps.
+- Reason-less or hidden recommendations.
+- Invented market/research claims.
+- Silently resolving the user's contradictions.
+- Reopening without remodeling dependents.
+- Politeness suppressing a real disagreement.
+- Asking permission for things already decided ("should I keep using the format we agreed on?"). *(net-new)*
