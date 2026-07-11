@@ -46,7 +46,7 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 
 | Scope of the change | Read this guide |
 |---|---|
-| Scaffolding a NEW feature/slice, wiring DI (Container/factories), navigation/coordinators, or "where does this file go" | `skills/alva-architecture/GUIDE.md` |
+| Scaffolding a NEW feature/slice, wiring DI (Container/factories), navigation/coordinators, or "where does this file go" — **`architecture: alva` projects only** | `skills/alva-architecture/GUIDE.md` |
 | Any SwiftUI view code — writing, editing, or reviewing | `skills/swiftui-pro/GUIDE.md` |
 | Building NEW UI: screens, navigation, TabView, stacks/grids, custom modifiers, @State/@Binding design | `skills/swiftui-ui-patterns/GUIDE.md` |
 | Native polish: spacing/typography/semantic-color systems, component sizing, grouped content, WidgetKit, or UI that "looks AI-generated" | `skills/swiftui-design-principles/GUIDE.md` |
@@ -62,10 +62,13 @@ Classify the scope and **read every matching guide** (Read tool, paths relative 
 
 **Selection rules:**
 
-- **`alva-architecture` fires on structure, not syntax**: load it whenever the change creates a
-  new feature/slice, adds a repository/use case that needs a home, wires DI or navigation, or
-  the request is ambiguous about "where does this go." It's the folder-shape and boundary law —
-  load it *before* the code-level guides below, since it decides where their output lands.
+- **`alva-architecture` is opt-in — check `akios/Context.md` `## Architecture` first.** It applies
+  **only when the project declares `architecture: alva`**. When it does, it fires on structure, not
+  syntax: load it whenever the change creates a new feature/slice, adds a repository/use case that
+  needs a home, wires DI or navigation, or the request is ambiguous about "where does this go" — it's
+  the folder-shape and boundary law, loaded *before* the code-level guides below since it decides
+  where their output lands. When the project uses any other architecture, **don't load it** — follow
+  the structure described in `akios/Context.md` and skip the Foundation ledger entirely.
 - **`swiftui-pro` is the baseline**: if the change touches any SwiftUI view at all, load it, in addition to whatever more specific guide applies. Pure non-UI Swift (a parser, a network layer) doesn't need it.
 - **New UI vs refactor**: creating views → `swiftui-ui-patterns`; restructuring existing views without changing behavior → `swiftui-view-refactor`. A redesign that does both loads both.
 - **Native polish / WidgetKit**: load `swiftui-design-principles` when the goal is making UI look native and intentional (a new screen, a redesign, "this looks AI-generated"), or for any WidgetKit work — not for every incidental view edit. It is opinionated toward a minimal, data-focused aesthetic; apply judgment for expressive UIs.

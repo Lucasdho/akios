@@ -89,7 +89,14 @@ Ask in one batched pass (skip what the scan in step 2 answers confidently; confi
   rewriting this default. See `AGENTS.md` "Delivery autonomy" / `akios/specs/collaboration-autonomy.md`.
 - **Stack** — language / framework / runtime / DB (`{{LANGUAGE / FRAMEWORK / RUNTIME / DB}}`)
 - **Commands** — install / run-dev / test / lint / build (`{{install}}` `{{dev}}` `{{test}}` `{{lint}}` `{{build}}`)
-- **Architecture** — one paragraph: entry points, key dirs, data flow
+- **Architecture** — one paragraph: entry points, key dirs, data flow. **Also resolve the
+  `architecture:` signal** written to `akios/Context.md` `## Architecture` (the flag every skill
+  reads): `alva` if the user opts into this kit's optional iOS vertical-slice doctrine (ALVA —
+  `akios/specs/alva-architecture-doctrine.md`), otherwise `none` or a named architecture the project
+  already uses (`mvvm`, `tca`, …). **Default `none` — ALVA is opt-in, never assumed.** Ask plainly:
+  "Adopt ALVA (this kit's vertical-slice architecture, scaffolds `Router/ Container/ Foundation/` +
+  a usage-ledger), or keep your own architecture?" A `mode: new` run may resolve this via the
+  skeleton tag in step 1a instead (an `architecture: alva` skeleton implies `alva`).
 - **Conventions** — naming, error handling, commit/branch style
 - **Gotchas** — the thing that bites a newcomer or the agent
 - **Project-specific gate** (AGENTS.md) — e.g. "always /security-review when touching auth"
@@ -135,8 +142,10 @@ the option is never even shown outside `mode: new`.
 
 This step does not change or duplicate the existing ALVA scaffold instructions in step 3
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/`, `usage-ledger.json`) —
-those run unconditionally either way; a chosen skeleton's own tree may itself already contain an
-ALVA shape (if tagged `architecture: alva`), and step 3's skip-if-exists rules cover the overlap.
+those run **only under `architecture: alva`** (step 3's ALVA-conditional block). A chosen skeleton
+tagged `architecture: alva` resolves the signal to `alva` and its own tree may already contain the
+slice shape; step 3's skip-if-exists rules cover the overlap. A skeleton tagged for any other
+architecture resolves the signal accordingly and step 3 skips the ALVA scaffold entirely.
 
 No ingestion path exists yet for skeletons (unlike snippets' `/akios:learn --kind snippet`) —
 `~/.claude/akios/skeletons/<name>/manifest.yml` + tree is hand-assembled, manual work today.
@@ -186,8 +195,8 @@ continuing or guessing at the repo's state.
 | `.claude/hooks/akios-instance.sh` | `scripts/akios-instance.sh` | always copy; make executable (per-file `chmod`; instance signature for just-vibes + claims) |
 | `.claude/hooks/post-checkpoint-verify.sh` | `scripts/hook/post-checkpoint-verify.sh` | always copy; make executable (per-file `chmod`; the auto-build/test hook — `task-execution` calls it at `[major]` checkpoints; degrades to a graceful no-op if there's no build tool) |
 | `.claude/.agentic-kit-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
-| `.claude/scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | always copy; make executable (per-file `chmod`). **Namespaced under `.claude/` (`init-reliability-and-ux.md` §5) — not a bare root-level `scripts/` folder**, which a consumer repo is likely to already own for its own scripts. |
-| `.git/hooks/pre-commit` | append a call to `.claude/scripts/alva-usage-ledger.sh` | if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
+| `.claude/scripts/alva-usage-ledger.sh` | `${CLAUDE_PLUGIN_ROOT}/scripts/alva-usage-ledger.sh` | **ALVA only** (`architecture: alva`); skip entirely otherwise. When copied: make executable (per-file `chmod`). **Namespaced under `.claude/` (`init-reliability-and-ux.md` §5) — not a bare root-level `scripts/` folder**, which a consumer repo is likely to already own for its own scripts. |
+| `.git/hooks/pre-commit` | append a call to `.claude/scripts/alva-usage-ledger.sh` | **ALVA only**; skip otherwise. When applied: if a pre-commit hook already exists, append a line calling the script rather than overwrite it; if none exists, create one that just calls it (make executable) |
 
 **Footprint — the three-way line (`akios-footprint-consolidation.md` §1, supersedes
 `init-reliability-and-ux.md` §5).** Not everything this command writes is the same *kind* of
@@ -198,9 +207,9 @@ thing:
 - **akios housekeeping** — `Context.md`, `Roadmap.md`, `Vision.md`, `workflow.yml`, `specs/`,
   `tasks/`, `archive/`, `code-references/`, the runtime journal — moves into one folder,
   **`akios/`**. Read only by akios's own skills/commands; no other tool cares where it lives.
-- **User's own application source** — the ALVA scaffold (`Router/ Container/ Foundation/
-  scratchs/`) — stays at root. It's the deliverable Xcode/SPM must find in a normal layout, not
-  akios's paperwork.
+- **User's own application source** — under `architecture: alva`, the ALVA scaffold (`Router/
+  Container/ Foundation/ scratchs/`); otherwise whatever the project's own architecture defines —
+  stays at root. It's the deliverable Xcode/SPM must find in a normal layout, not akios's paperwork.
 
 **Create the `akios/` folder tree** (empty, with a `.gitkeep` if your tooling needs it):
 ```
@@ -220,8 +229,9 @@ akios/
 └── .local/                      # gitignored — runtime journal
 ```
 Root, after this step, holds only: `CLAUDE.md`, `AGENTS.md`, `.claude/` (untouched), `akios/`, the
-ALVA scaffold (`Router/ Container/ Foundation/ scratchs/`, untouched), and whatever the user's own
-project already has (their Xcode project, `README.md`, etc. — akios never generated these).
+ALVA scaffold (`Router/ Container/ Foundation/ scratchs/`, untouched — **only if `architecture:
+alva`**), and whatever the user's own project already has (their Xcode project, `README.md`, etc. —
+akios never generated these).
 
 (`akios/.local/` is created at runtime for the local journal/trace — the renamed, now-nested form
 of the old sibling `.akios/` — and stays **unconditionally** gitignored — no yes/no prompt
@@ -231,7 +241,10 @@ asking a question with only one sane answer. The rest of `akios/` is **never** o
 gitignorable — it's committed work product a team reads and reviews. Multi-instance claims live
 in **committed** files instead: task frontmatter `owner:` and the `akios/Roadmap.md` spec line.)
 
-**Scaffold the ALVA composition root** (skip any piece that already exists):
+**Scaffold the ALVA composition root — `architecture: alva` only.** If the signal resolved to
+anything else, **skip this entire scaffold block** (no `Router/`, no `Foundation/`, no
+`usage-ledger.json`, no design-token stubs); the project keeps its own structure and step 5 asserts
+none of it. Under `architecture: alva` (skip any piece that already exists):
 `Router/ Container/ Foundation/Design-tokens/ Foundation/Code-tokens/ scratchs/`, plus a starter
 `Foundation/usage-ledger.json` (`{"generated": null, "candidates_promote": [], "candidates_demote":
 []}`) so `.claude/scripts/alva-usage-ledger.sh` has a file to overwrite on the first commit. **Do not**
@@ -240,8 +253,8 @@ its spec; an empty `Features/` folder is dead scaffolding no one asked for yet. 
 rejected `ui-variations` rounds and is excluded from the Xcode target (`akios/Context.md` gets a line
 noting this, so a fresh session doesn't have to re-derive it).
 
-Also copy the two design-token stubs into `Foundation/Design-tokens/` (skip if either already
-exists): `templates/foundation/DesignSystem.swift` and `templates/foundation/RoleModifiers.swift`
+Also (ALVA only) copy the two design-token stubs into `Foundation/Design-tokens/` (skip if either
+already exists): `templates/foundation/DesignSystem.swift` and `templates/foundation/RoleModifiers.swift`
 — a minimal `DesignSystem` token enum + `.textStyle`/`.imageStyle` role-modifier placeholder, so
 the folder isn't empty on day one. Both point back at `swift-dev`'s `swiftui-design-system` guide
 for the full shape (ui-overhaul-implementation.md Phase 1.4 / Phase 4.1).
@@ -271,11 +284,15 @@ Otherwise, confirm: the `akios/` context files (incl. `akios/Vision.md`) + `akio
 `CLAUDE.md` imports both `@AGENTS.md` and `@akios/Context.md`; both hooks +
 `.claude/hooks/akios-instance.sh` + `.claude/hooks/post-checkpoint-verify.sh` are present;
 `akios/Roadmap.md` has a `mode:`, a `collaboration:`,
-a `posture:`, **and** an `autonomy:` value; `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
-`akios/Context.md` / `AGENTS.md` / `CLAUDE.md` / `akios/Roadmap.md` / `akios/Vision.md`; and the ALVA scaffold
+a `posture:`, **and** an `autonomy:` value; `akios/Context.md` `## Architecture` carries a resolved
+`architecture:` line (no `{{alva | none}}` token left); `~/.claude/akios/preferences.md` exists;
+**no `{{...}}` placeholder remains** in
+`akios/Context.md` / `AGENTS.md` / `CLAUDE.md` / `akios/Roadmap.md` / `akios/Vision.md`. **Only when
+`architecture: alva`:** the ALVA scaffold
 (`Router/ Container/ Foundation/{Design-tokens,Code-tokens}/ scratchs/` + a valid
 `Foundation/usage-ledger.json` + the pre-commit hook calling `.claude/scripts/alva-usage-ledger.sh`)
-is in place. **If a skeleton was copied (step 1a):** confirm it did not overwrite `AGENTS.md`,
+is in place — under any other architecture, assert instead that **none** of that scaffold was created.
+**If a skeleton was copied (step 1a):** confirm it did not overwrite `AGENTS.md`,
 `akios/Context.md`, `akios/Roadmap.md`, `akios/Vision.md`, or `.claude/` — those must still be the plugin's own
 templates, not skeleton-sourced files. Report any miss.
 
@@ -284,6 +301,6 @@ The kit has **no required external plugins** — everything the spine routes to 
 `idea-to-spec`, `spec-to-tasks`, `task-execution`, `oss-first`, `ios-feature-pipeline`,
 `just-vibes`) ships with akios. **Optional:** `ponytail` (efficiency overlay) —
 `/plugin marketplace add DietrichGebert/ponytail` → `/plugin install ponytail`. The kit works
-without it. No speckit needed.
+without it.
 
 Finish with: the repo is onboarded; next step is `/akios:brainstorm "<your feature idea>"`.

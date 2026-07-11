@@ -20,22 +20,27 @@ Two internal routers, no external plugin dependencies:
   and loads the right bundled guide before any code: `swiftui-pro` (views/layout) ·
   `swift-concurrency-pro` (async/await/actors/Sendable) · `swift-testing-pro` (Swift
   Testing) · `swiftdata-pro` (SwiftData) · `ios-accessibility` · `ios-debugger-agent`
-  (run/debug) · `alva-architecture` (new feature / slice scaffolding, DI, coordinators) ·
+  (run/debug) · `alva-architecture` (new feature / slice scaffolding, DI, coordinators —
+  **only when this project adopted ALVA**, see `## Architecture` below) ·
   plus performance/refactor/figma guides on demand. Replaces the old axiom gate.
 - **`task-execution`** — owns the execution loop (Phase 3): branch per spec, folder-state
   task lifecycle, checkpoint commits, TDD-first, human gate before push/merge. Absorbs the
   execution discipline the kit used to borrow from superpowers.
 
-## Architecture (ALVA)
-Every new feature is a **vertical slice**, not a shared app-wide layer. A feature lives
-entirely under `Features/<Feature>/{domain,data,presentation,contract,tests,Feature-spec.md}`;
-cross-feature composition happens only at the top (`Router/`, `Container/`), and shared leaf
-code graduates into `Foundation/{Design-tokens,Code-tokens}` on evidence of reuse (a
-deterministic usage ledger), never by upfront guess. This supersedes any shared
-`DomainLayer/DataLayer/PresentationLayer` split — package-by-layer is not the folder law here.
-Load `swift-dev`'s `alva-architecture` guide before scaffolding any new feature or slice; the
-full portable doctrine (ALVA — Agent-Legible Vertical Architecture) is this kit's own
-ground-truth reference, publishable standalone from the akios-specific realization.
+## Architecture
+This project's architecture is described in `akios/Context.md` `## Architecture` — that section
+carries the `architecture:` signal every skill reads. **Follow the project's own architecture;
+akios does not impose one.**
+
+**ALVA is opt-in, not the default.** ALVA (Agent-Legible Vertical Architecture) is this kit's
+*optional* iOS vertical-slice doctrine — every feature a self-contained slice
+(`Features/<Feature>/{domain,data,presentation,contract,tests}`), cross-feature composition only at
+the top (`Router/`, `Container/`), shared leaf code graduating into `Foundation/` by a deterministic
+usage ledger rather than upfront guess. It applies **only when `akios/Context.md` declares
+`architecture: alva`** (set at `/akios:setup`). When it does, load `swift-dev`'s `alva-architecture`
+guide before scaffolding any feature or slice; the full portable doctrine (publishable standalone
+from the akios realization) is `akios/specs/alva-architecture-doctrine.md`. When it doesn't, there is
+no slice-shape law and no Foundation ledger — follow the architecture in `akios/Context.md`.
 
 **Optional (not required):** `ponytail` — efficiency overlay (no over-building, no rewriting
 what works). The kit has no external dependency on it; install it for yourself if you like.
@@ -272,7 +277,7 @@ tasks only: `ui-variations` explores + remixes + graduates a screen into
 heuristics checklist; non-UI tasks skip straight to `deliver`) → `deliver` (branch per spec,
 folder-state lifecycle, TDD-first, commit at each checkpoint, `/verify` + `/code-review`,
 human gate before push/merge). See `ios-feature-pipeline` for the conduct; `akios/workflow.yml` for the
-contract. No speckit, no `.specify/`, no constitution.
+contract. No scaffold directory and no second spec format.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
 **plan mode** (read-only; review the spec/backlog before a single edit lands). `design` and

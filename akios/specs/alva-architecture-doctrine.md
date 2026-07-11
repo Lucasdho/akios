@@ -35,7 +35,7 @@ O nome de trabalho é **ALVA — Agent-Legible Vertical Architecture**.
 ALVA não nasce do vácuo. Ela é uma **síntese** de movimentos que já convergiam
 desde ~2024–2025:
 
-- **Spec-driven development** — GitHub *Spec Kit*, AWS *Kiro*, o padrão
+- **Spec-driven development** — AWS *Kiro*, o padrão
   `specs/ → tasks/ → execution`.
 - **AGENTS.md** — convenção cross-tool de mapa/regras para o agente
   (`CLAUDE.md`, `.cursorrules` são a mesma família).

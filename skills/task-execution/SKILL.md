@@ -66,8 +66,9 @@ for each task (by checkpoint, respecting [P]/area):
     realization is its own INDEX.md-selected reference)
   [Snippet gate] if the pack lookup resolves to a `kind: snippet` entry (not `kind: reference`)
     → copy-and-adapt-and-prune (below) instead of writing the pattern from scratch
-  [Foundation gate] before writing any new helper/protocol/component → consult ONLY
-    Foundation/ (never the whole repo); see "Foundation ledger" below
+  [Foundation gate] (architecture: alva only) before writing any new helper/protocol/component →
+    consult ONLY Foundation/ (never the whole repo); see "Foundation ledger" below. Non-ALVA
+    repos: reuse follows the project's own convention, no ledger.
   [Hurdles gate] before starting a task in a domain that has one → load the matching-tag slice of
     akios/code-references/hurdles.md (below) so a known hurdle is avoided by consulting the ledger
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
@@ -150,7 +151,11 @@ is **not** a registered snippet.
 code as the pipeline does today — no error, no forced match; same graceful degradation as "no
 user packs" (`knowledge-architecture.md` §7).
 
-## Foundation ledger (ALVA — read, never count)
+## Foundation ledger (`architecture: alva` only — read, never count)
+**This whole section applies only when `akios/Context.md` declares `architecture: alva`.** Under any
+other architecture there is no `Foundation/`, no usage-ledger, and no boundary lint — reuse and
+folder placement follow the project's own architecture (`akios/Context.md`); skip to the next section.
+
 Before creating any new helper, protocol, or shared component, consult **only**
 `Foundation/Design-tokens/` and `Foundation/Code-tokens/` — a small, bounded search — never the
 whole repo (`swift-dev`'s `alva-architecture` guide, doctrine P6). If nothing there fits, the code

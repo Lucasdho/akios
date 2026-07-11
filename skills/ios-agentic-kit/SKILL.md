@@ -42,8 +42,8 @@ interactions/heuristics); non-UI tasks (domain/data/contract) skip straight from
 
 For any end-to-end feature, **start with `ios-feature-pipeline`** (a skill, invoked by description
 or by name — not a `/akios:*` slash command) — the entry point that reads
-`akios/workflow.yml`, detects the current phase per spec, and walks the hand-offs. (No speckit: design
-rigor lives in `idea-to-spec`, quality in `AGENTS.md` + `swift-dev` + `/code-review`.)
+`akios/workflow.yml`, detects the current phase per spec, and walks the hand-offs. (Design rigor
+lives in `idea-to-spec`, quality in `AGENTS.md` + `swift-dev` + `/code-review`.)
 
 ## What it installs (per repo)
 

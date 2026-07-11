@@ -70,260 +70,25 @@ com segurança).
 
 ## Parte 1 — Arquitetura geral: ALVA (o padrão portátil)
 
-> **ALVA — Agent-Legible Vertical Architecture.** Esta parte não menciona nenhuma ferramenta
-> específica. É adotável com git + qualquer editor + o build system da sua stack. É o
-> "padrão" publicável, seguível por quem **não** usa akios. Origem: sessão de co-design de
-> 2026-06-30 sobre "arquitetura para agentes".
+> **ALVA — Agent-Legible Vertical Architecture** é o padrão portátil deste kit: adotável com git +
+> qualquer editor + o build system da sua stack, seguível por quem **não** usa akios. **É opcional —
+> não se aplica a todo projeto**; um repo só o adota se declarar `architecture: alva` (ver Parte 2).
 
-### 1.1 Por que ALVA existe
+**A doutrina completa vive num único arquivo — não é repetida aqui.** Fonte canônica (497 linhas,
+standalone, publicável): [`akios/specs/alva-architecture-doctrine.md`](../akios/specs/alva-architecture-doctrine.md).
+Este documento é o mapa; aquele arquivo é a verdade. Em resumo:
 
-Arquiteturas maduras — MVVM, MVVM-C, Clean Architecture — foram desenhadas otimizando uma
-**função de custo humana**:
+- **A régua.** Toda decisão minimiza **tokens-até-uma-mudança-correta-e-verificável** — o custo de
+  contexto que um agente reúne para alterar algo com segurança e provar que está certo.
+- **A forma.** Vertical slices (Clean *dentro* do slice), fronteira por contrato imposta pela
+  toolchain, composição só no topo (`Router/`/`Container/`), e DRY **por evidência** — código gradua
+  para `Foundation/` quando um ledger determinístico prova reuso, nunca por palpite.
+- **O que é original** (publicável como padrão próprio): (1) promoção DRY automatizada por evidência
+  com lifecycle completo — a *Rule of Three* de Fowler virada métrica mecânica; (2) design-token
+  thinking estendido ao código, com POP como métrica semântica de uso.
 
-- memória de trabalho limitada → *separation of concerns*;
-- coordenação de time → contratos e fronteiras rígidas;
-- onboarding → convenções;
-- mudança ao longo de anos → desacoplamento.
-
-Agentes de IA conseguem *seguir* essas arquiteturas, mas elas **não foram pensadas com
-agentes em mente**. O agente tem uma função de custo diferente, e nenhuma arquitetura de
-aplicação foi formalizada nativamente em torno dela. ALVA é a ponte: um padrão que IAs sigam
-com facilidade, garantindo qualidade de código, sem jogar fora o que MVVM/Clean acertaram.
-
-### 1.2 Posicionamento na indústria
-
-ALVA não nasce do vácuo. É uma **síntese** de movimentos que já convergiam desde ~2024–2025:
-
-- **Spec-driven development** — GitHub *Spec Kit*, AWS *Kiro*, o padrão `specs/ → tasks/ →
-  execution`.
-- **AGENTS.md** — convenção cross-tool de mapa/regras para o agente (`CLAUDE.md`,
-  `.cursorrules` são a mesma família).
-- **Vertical Slice Architecture** (Jimmy Bogard) e **package-by-feature**.
-- **Locality of Behaviour** — ensaio de Carson Gross (htmx); a peça teórica central, mesmo
-  sem falar de IA.
-- **Context engineering** — escritos da Anthropic sobre design de agentes.
-
-Em termos de indústria, ALVA é **Modular Monolith + Vertical Slices + Clean-within-slice +
-SDD/TDD**. O que é **original** (e publicável como padrão próprio) são dois pedaços:
-
-1. **Promoção DRY automatizada por evidência**, com lifecycle (promoção *e* demoção) — a
-   *Rule of Three* de Fowler transformada em métrica mecânica.
-2. **Design-token thinking estendido ao código**, com gate de graduação e *Protocol-Oriented
-   Programming* como métrica semântica.
-
-### 1.3 A função de custo (a régua)
-
-Toda decisão arquitetural em ALVA é avaliada contra uma única régua:
-
-> **Minimizar tokens-até-uma-mudança-correta-e-verificável** — a quantidade de contexto que
-> um agente precisa reunir para alterar algo com segurança **e provar que está certo**.
-
-Enquanto as clássicas otimizam cognição humana e coordenação de time, ALVA otimiza **o custo
-de contexto por mudança**. Todo trade-off é resolvido a favor de reduzir esse custo.
-
-Corolário: o agente nunca deveria precisar carregar o repositório inteiro (nem uma feature
-inteira alheia) para fazer uma mudança correta. O raio de contexto de qualquer alteração deve
-ser **local e limitado**.
-
-### 1.4 Por que as clássicas brigam com o agente
-
-Três atritos concretos:
-
-1. **Espalhamento por camada.** Uma feature em Clean vive em
-   entity/usecase/repository/datasource/presenter/viewmodel/view — 6 a 8 arquivos em
-   diretórios distintos. O humano navega isso com o mapa mental; o agente precisa *carregar
-   todos no contexto*. O custo de tokens explode e a chance de alucinação sobe.
-2. **Abstração como indireção.** DRY foi feito para reduzir custo de manutenção humana. Mas
-   cada abstração é um *hop* que o agente precisa rastrear. **Localidade > DRY** para código
-   mantido por agente: repetição consistente é mais barata que uma abstração "esperta" a
-   perseguir por vários arquivos.
-3. **Conhecimento que mora fora do código.** O humano pergunta pro time. O agente não. Se a
-   decisão não está no código, no tipo ou num doc adjacente, ela **não existe** para o agente.
-
-### 1.5 Os 7 princípios
-
-Cada princípio é consequência direta da função de custo.
-
-- **P1 — Localidade sobre camadas.** Uma mudança de feature ≈ um diretório aberto. A
-  separação estilo Clean vive **dentro** do slice, não espalhada. Preserva testabilidade e
-  inversão de dependência, mas colapsa o raio de contexto para dentro de uma pasta.
-- **P2 — Convenção como compressão.** Toda feature tem **exatamente a mesma forma**. O agente
-  aprende a forma uma vez e a reproduz sempre. Uniformidade > flexibilidade. A estrutura
-  repetida é, na prática, um *prompt* implícito.
-- **P3 — Fronteira por contrato, imposta pela toolchain.** Uma feature importa apenas o
-  **contrato público** (`contract/`) e a `Foundation/` de outra — nunca os internos
-  (`domain/`, `data/`) alheios. E a fronteira é **imposta pela ferramenta, não pela
-  disciplina**: o build deve *recusar* compilar o acesso indevido. Convenção que depende de
-  boa-vontade, o agente fura; parede física, não.
-- **P4 — Composição no topo.** Só o topo do projeto conhece mais de uma feature. `Router/`
-  resolve navegação cross-feature; `Container/` injeta contratos. Nenhuma feature "conhece"
-  outra diretamente — elas se encontram no ponto de composição.
-- **P5 — DRY por evidência, não por palpite.** Código nasce dentro da feature. Só **gradua**
-  para `Foundation/` quando há prova mecânica de uso ≥ X (a *Rule of Three* automatizada).
-  Abstração deixa de ser julgamento e vira métrica — trocando onde o agente é fraco (julgar)
-  por onde ele é forte (executar uma decisão já tomada).
-- **P6 — O ledger é ferramenta, não julgamento.** A contagem de uso que dispara a promoção é
-  **determinística** (produzida por tooling), nunca estimada pelo agente. O agente apenas
-  **lê** o resultado. Antes de escrever um helper novo, consulta só a `Foundation/` (pequena
-  e indexada) — nunca o repo inteiro.
-- **P7 — Loop de verificação curto.** Cada slice carrega, co-localizados, **a intenção e a
-  prova**: uma spec (SDD) e testes (TDD) ao lado do código. É o que fecha a função de custo —
-  torna *barato provar* que a mudança está certa.
-
-### 1.6 Estrutura de pastas (referência)
-
-```
-Project/
-  Router/                    → navegação (composição cross-feature)
-  Container/                 → injeção de dependência
-  Foundation/                → código graduado, compartilhado
-    Design-tokens/           → FOLHA visual: componentes, modifiers, utils, enums de UI
-    Code-tokens/             → PROTOCOLOS + helpers, casos de uso e serviços compartilhados
-    usage-ledger.json        → contagem determinística de uso (o "arquivo B")
-  Specs/
-    Features.md              → índice das features
-
-  Features/
-    User/
-      domain/                → regras e entidades da feature
-      data/                  → fontes de dados, repositórios concretos
-      presentation/          → UI + estado da feature
-      tests/                 → TDD co-localizado
-      contract/              → PÚBLICO: a interface + DTOs que outras features importam
-      Feature-spec.md        → SDD: intenção + declaração do que a feature consome
-    Purchase/                → mesma estrutura, exatamente
-    Feature-N/               → mesma estrutura, exatamente
-```
-
-`domain / data / presentation / tests` = Clean Architecture **dentro** do slice. `contract/`
-é o único ponto de acesso externo. `Feature-spec.md` declara, no cabeçalho, quais contratos e
-símbolos da `Foundation/` a feature consome.
-
-### 1.7 Fronteira por contrato & composição cross-feature
-
-O maior risco de vertical slices é o momento em que features precisam conversar. Se mal
-resolvido, os slices enfiam a mão nas tripas uns dos outros e o acoplamento fica **pior** que
-camadas. ALVA resolve com três ideias de DDD:
-
-- **Bounded Context.** O `User` visto por `Purchase` **não é** o mesmo `User` do Perfil.
-  `Purchase` define sua própria visão — ex.: `Buyer { id, nome, meioDePagamentoPadrão }` —
-  com só o que precisa. É o *anti-corruption layer*: mudar os internos de `User` não propaga,
-  e o agente que mexe em `Purchase` nunca precisa do modelo completo de `User`.
-- **Contrato / Facade.** Cada feature expõe uma interface pública estreita e tipada
-  (`contract/`: protocolo + DTOs). Comunicação cruzada passa **só** pelo contrato. Ao
-  trabalhar em `Purchase`, o agente carrega o slice de `Purchase` inteiro + o `contract/` de
-  `User` (pequeno) — **não** a implementação de `User`. O contrato é a **unidade de contexto
-  entre slices**.
-- **Composição no topo.** `Container/` injeta o *contrato* de `User` dentro de `Purchase`;
-  `Router/` resolve navegação cross-feature. As features se encontram apenas ali.
-
-**Posse de tela multi-domínio.** Uma tela que envolve mais de um domínio pertence à feature
-cuja **intenção** ela serve; consome as outras por contrato:
-
-- "Minhas compras" → intenção é Compras → vive em `Purchase`, consome `User.contract`.
-- "Perfil com compras recentes" → intenção é Perfil → vive em `User`, consome
-  `Purchase.contract`.
-
-Sinal de alarme: se um slice precisa importar o *interno* de outro para funcionar, o contrato
-está errado (ou a fronteira está no lugar errado).
-
-**Dois problemas distintos — não confundir:**
-
-| Problema | Solução em ALVA |
-|---|---|
-| Código *leaf* repetido (modifier, formatter) | Foundation / promoção |
-| Feature A precisa do *domínio* da Feature B | Contrato / bounded context |
-
-A `Foundation/` resolve **compartilhamento de folhas**; ela **não** resolve composição de
-domínios. Mecanismos diferentes, ambos necessários.
-
-### 1.8 DRY por evidência — a mecânica da Foundation
-
-Este é o coração original de ALVA. Em vez de abstrair por antecipação (indireção cara para o
-agente), o código **prova que merece** ser compartilhado.
-
-**O ciclo de graduação:**
-
-1. Código nasce **dentro** de uma feature.
-2. Uma ferramenta determinística conta em quantas features distintas ele é usado.
-3. Ao cruzar um threshold X, vira **candidato a promoção** para `Foundation/`.
-4. A promoção é **sugerida** (não automática) e executada como uma tarefa revisável.
-5. Se o uso cair abaixo de X, vira **candidato a demoção** — volta pra única feature que
-   ainda usa, ou é removido.
-
-É a **Rule of Three** de Fowler ("não abstraia até ver 3 vezes"), só que mecânica e medida —
-remove o julgamento humano/agente, que é a parte não confiável.
-
-**Duas gavetas, regras diferentes** (porque o risco de compartilhar difere):
-
-- **Design-tokens** — reutilização visual: componentes, view modifiers, utils e enums de UI.
-  São **folha**: puros, sem dependências, blast radius ≈ zero. **Promova liberalmente**;
-  threshold baixo (2 já serve).
-- **Code-tokens** — **protocolos** (a espinha do POP), além de helpers, casos de uso e
-  serviços compartilhados. Carregam **comportamento e dependências**. Promover um serviço é
-  declará-lo **domínio central**: bar alto, e ele sobe **atrás de um contrato**, não só
-  "movido de pasta". Senão recria-se o `utils/`-lixão.
-
-> Regra derivada: **promover coisa pura é barato e bom; promover coisa com comportamento é
-> raro e passa por contrato.**
-
-**POP como métrica semântica.** Colocar protocolos em Code-tokens torna a contagem
-**semântica**: para um protocolo, "uso" = número de **conformances**, não de ocorrências
-textuais do nome (frágil). A escolha por Protocol-Oriented Programming transforma a métrica de
-"quantas vezes esse nome aparece" (impreciso) em "quantos tipos conformam a este protocolo"
-(exato e semântico).
-
-**O usage-ledger** (requisito portátil + implementação de referência): deve existir uma
-**contagem determinística de uso, produzida por ferramenta**; a promoção resultante é
-**sugerida**. O agente **lê** o ledger; nunca conta na mão. O princípio-chave:
-
-> O custo de investigação sai de *por-run-do-agente* (caro, repetido) para
-> *por-commit-determinístico* (barato, cacheado). A investigação some do contexto do agente.
-
-Estratégias de contagem (da mais barata à mais precisa; combináveis): **A** textual
-(git-hook + ripgrep, impreciso mas trivial) → **B** índice do compilador (preciso, semântico,
-zero token de agente) → **C** grafo de módulos (grátis, granularidade de módulo) → **D**
-declaração explícita no `Feature-spec.md` (barato, legível, cruza com B). Recomendação:
-começar em A, evoluir para B, cruzar com C/D. O mesmo hook que conta para cima conta para
-baixo (lifecycle completo).
-
-**Por que "sugerida" e não "automática":** promover é uma mudança de blast radius alto (vira
-dependência de N features) e quase irreversível. Não deve acontecer silenciosamente num run.
-A promoção sugerida mantém o agente no papel que ele faz bem (executar), transforma o ledger
-num **ponto de revisão**, e faz cada promoção ser uma **tarefa** rastreável.
-
-### 1.9 Verificação (TDD + SDD)
-
-- **SDD:** cada feature tem uma `Feature-spec.md` co-localizada — a *intenção* ao lado do
-  código, legível sem sair do slice.
-- **TDD:** cada feature tem `tests/` co-localizados — a *prova*.
-
-Juntos fecham a função de custo: intenção + prova locais tornam barato entender **e**
-verificar a mudança dentro do próprio slice.
-
-### 1.10 O que é original em ALVA (resumo publicável)
-
-1. **Promoção DRY automatizada por evidência**, com lifecycle completo (promoção *e* demoção)
-   — Rule of Three virada métrica mecânica.
-2. **Design-token thinking estendido ao código**, com gate de graduação e POP como métrica
-   semântica de uso.
-
-O resto é montagem deliberada de coisas que já funcionam, reorganizadas sob uma função de
-custo nova.
-
-### 1.11 Realização da fronteira por ecossistema (P3)
-
-| Ecossistema | Unidade de fronteira |
-|---|---|
-| Swift | módulo / local package (SPM) |
-| Kotlin/Android | módulo Gradle |
-| TypeScript | package de workspace + `exports`, ou dependency-cruiser/ESLint boundaries |
-| Rust | crate |
-| Java/.NET | módulo/assembly + `internal` (ou ArchUnit) |
-| Python (sem enforce nativo) | import-linter / architectural lint |
-
-Degradê honesto: linguagem que não impõe no compilador cai para **lint de arquitetura**. O
-princípio sobrevive; muda o executor.
+Os 7 princípios, a mecânica da Foundation, a estrutura de pastas e a realização por ecossistema estão
+todos no arquivo canônico acima.
 
 ---
 
@@ -449,8 +214,8 @@ SwiftData, acessibilidade, performance, `alva-architecture`, `figma-to-swiftui`,
 
 Para qualquer feature end-to-end, **começa-se pelo `ios-feature-pipeline`** (uma skill,
 invocada por descrição ou nome — não um slash command): ele lê o `workflow.yml`, detecta a
-fase atual por spec, e caminha os hand-offs. Sem speckit: o rigor de design vive no
-`idea-to-spec`, a qualidade no `AGENTS.md` + `swift-dev` + `/code-review`.
+fase atual por spec, e caminha os hand-offs. O rigor de design vive no `idea-to-spec`, a
+qualidade no `AGENTS.md` + `swift-dev` + `/code-review`.
 
 > **Gotcha operacional recorrente:** `install-skills.sh` tem um array `SKILLS=(...)`
 > hard-coded — esquecer de adicionar um skill novo ali é o erro mais comum. `skill-author` +

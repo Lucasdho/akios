@@ -29,6 +29,11 @@ is a hard stop.
 
 ## 2. DRY — deferred to the evidence ledger, never eager
 
+**The ledger mechanism below applies only under `architecture: alva`** (read the signal from
+`akios/Context.md` `## Architecture`). Under any other architecture there is no `Foundation/` ledger:
+DRY is judged per the project's own convention, and — absent a project rule — stays **silent** rather
+than demanding extraction on gut feel.
+
 Never demand extraction on sight. ALVA's thesis is *locality > DRY for agent-maintained code* —
 consistent repetition is cheaper for an agent than an abstraction it must chase across files.
 
@@ -53,6 +58,11 @@ ACID is a property of *transactions*, not of iOS in general.
   doctrine bug, not a finding.
 
 ## 4. ALVA + UI conformance checks — the akios-specific findings
+
+**Gate: `architecture: alva` only** (`akios/Context.md` `## Architecture`). The slice-shape,
+boundary, and Foundation-first rows below are meaningless without ALVA; on any other architecture
+they are **advisory visibility notes, not blocks** (see §7). The UI/token rows still apply where the
+project uses the design-token convention.
 
 | Check | Rule | Class |
 |---|---|---|
@@ -84,8 +94,9 @@ downstream every time.
 
 ## 7. Empty / edge states
 
-- **Non-ALVA repo:** §4's checks are advisory visibility notes, not blocks — SOLID/DRY-via-ledger/
-  ACID and the folder/SRP check still apply (architecture-agnostic).
+- **Non-ALVA repo (`akios/Context.md` `## Architecture` ≠ `alva`, or no `Foundation/`):** §4's
+  slice/boundary/Foundation checks are advisory visibility notes, not blocks — SOLID, ACID, and the
+  folder/SRP check still apply (architecture-agnostic); DRY follows §2's non-ALVA path.
 - **Plugin/docs repo (no Swift):** the Swift-specific checks are N/A; review degrades to the DoD
   audit (grep for orphaned refs, YAML validity, install smoke-test) per `akios/Roadmap.md` project-type.
 - **A finding the human disputes:** record as a warn or a project override, not forced; a
