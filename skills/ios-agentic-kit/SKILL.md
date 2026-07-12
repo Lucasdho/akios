@@ -36,14 +36,19 @@ that read it:
 brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → deliver (task-execution)
 ```
 
-`design` fires for UI-scoped tasks (explore/remix/graduate a screen, resolve states/
-interactions/heuristics); non-UI tasks (domain/data/contract) skip straight from `plan` to
-`deliver`.
+Which phases fire for which task (e.g. `design` runs only for UI-scoped work; non-UI tasks skip
+straight from `plan` to `deliver`) is the phase contract in **`akios/workflow.yml`** — read there,
+not restated here.
 
 For any end-to-end feature, **start with `ios-feature-pipeline`** (a skill, invoked by description
 or by name — not a `/akios:*` slash command) — the entry point that reads
 `akios/workflow.yml`, detects the current phase per spec, and walks the hand-offs. (Design rigor
 lives in `idea-to-spec`, quality in `AGENTS.md` + `swift-dev` + `/code-review`.)
+
+> **Boundary:** this skill (`ios-agentic-kit`) is the kit's self-knowledge — *what it is, installs,
+> routes, and how to set it up*. `ios-feature-pipeline` is the runtime *conduct* that walks one
+> feature through the phases. The **phase contract itself lives only in `akios/workflow.yml`**;
+> both skills point to it rather than restating it.
 
 ## What it installs (per repo)
 

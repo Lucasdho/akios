@@ -24,20 +24,16 @@ is the single source of truth** (the machine-readable contract: each phase's com
 prereqs, outputs). This skill is the *conduct*: it reads `akios/workflow.yml`, figures out where you
 are, and walks you through the phases in order, handing off the right artifact between them.
 
+> For *what the kit installs, how routing/priority works, and how to set it up*, see
+> `ios-agentic-kit` (the kit's self-knowledge). This skill is only the runtime conduct.
+
 **Spine (from `akios/workflow.yml`):** `brainstorm → plan → design → deliver`
 
-| Phase | Command | Skill | Mode | Produces |
-|---|---|---|---|---|
-| brainstorm | `/akios:brainstorm` | `idea-to-spec` | **Interactive — user present** | `akios/specs/<feature>.md` |
-| plan | `/akios:plan` | `spec-to-tasks` | One pass, one confirm | `akios/tasks/todo/*.md` |
-| design | `/akios:design` | `ui-variations` (+ `align-ui`) | Explore → remix → graduate; states/interactions/heuristics resolved | A graduated `presentation/<View>/` screen + `akios/tasks/ui-alignment/*.md` |
-| deliver | `/akios:deliver` | `task-execution` | Branch, folder-state lifecycle, verify+review | Implemented, reviewed feature |
-
-`design` sits between `plan` and `deliver`: no separate approval-gate mechanism exists — a
-screen can't enter `deliver`'s make-it-live stage until `ui-variations` has graduated a winner
-into `presentation/<View>/`, which is `alva-adoption.md`'s A3 build-order (components → dumb
-screen → make-it-live) already enforcing the order. Non-UI tasks (domain/data/contract work
-with no screen) skip `design` and go straight from `plan` to `deliver`.
+Each phase's command, skill, prereqs, and outputs live in **`akios/workflow.yml`** — this skill
+reads them at runtime.
+`design` runs between `plan` and `deliver` and fires only for UI-scoped work; non-UI tasks
+skip it and go straight from `plan` to `deliver` — the mechanics are the `design` phase's comment in
+`akios/workflow.yml`.
 
 > Bootstrap first: if the repo isn't initialized (`AGENTS.md` + `akios/workflow.yml` + the folder
 > tree), run `/akios:setup` — it is **not** a phase (see `akios/workflow.yml` `bootstrap`).
