@@ -236,6 +236,7 @@ source dirs are described in `akios/Context.md` `## Architecture`.
 | Product vision | `akios/` | `akios/Vision.md` | north star + prioritized wishlist; top-tier `just-vibes` fuel |
 | Specs | `akios/specs/` | `<domain>.md`, one file per domain | `akios/Roadmap.md` `## Specs` table |
 | Tasks | `akios/tasks/<state>/` | `T<NNN>-<slug>.md`; state = folder (`todo/ in-progress/ review/ done/`) | moved between folders = state change |
+| UI alignment doc | `akios/tasks/ui-alignment/` | `<ScreenName>.md` (not a task state — a sibling folder) | written by `align-ui` (`/akios:design` or the deliver `[UI gate]`); loaded as the UI task's highest-priority visual reference |
 | Archived specs | `akios/archive/` | `<spec>.md` + `Archive.md` (summary index) | read `Archive.md` first; open full file on demand |
 | Code references | `akios/code-references/` | user-uploaded `.swift` + `INDEX.md` (tags) | loaded on-demand by matching domain tag |
 | User preferences | `~/.claude/akios/preferences.md` (not in repo) | — | priority chain tier 3 |

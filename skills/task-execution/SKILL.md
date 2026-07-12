@@ -83,7 +83,9 @@ for each task (by checkpoint, respecting [P]/area):
 - **UI alignment gate.** A task is UI-scoped when its title or scope mentions View, Screen,
   SwiftUI, layout, or UI. Before writing any implementation code, run the `align-ui` skill:
   it resolves every visual and interaction decision with the user and writes
-  `akios/tasks/ui-alignment/<ScreenName>.md`. Load that file as the highest-priority reference for
+  `akios/tasks/ui-alignment/<ScreenName>.md`. **If the `design` phase (`/akios:design`) already wrote
+  that doc, don't re-grill** — reuse it and run only `align-ui`'s post-wiring check after make-it-live.
+  Load that file as the highest-priority reference for
   the task — it overrides `swift-dev` and `akios/code-references/` for visual decisions.
   Under just-vibes the **interactive grilling** is skipped — `align-ui` still runs, in auto-decide
   mode, and writes the alignment doc unattended (every auto-decision marked `[auto]`).

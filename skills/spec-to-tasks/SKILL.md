@@ -100,6 +100,7 @@ runner: orchestrator        # ≤20k orchestrator · >20k subagent-eligible
 parallel: true              # true = [P]; shares no files/symbols with siblings this checkpoint
 area: Squad/presentation/SquadList   # slice sub-folder; same-area tasks serialize
 checkpoint: 1               # [major] checkpoints run the test battery
+pack: pack:ios              # knowledge pack(s) the cold subagent loads; default pack:ios, add a 2nd (pack:ios pack:ddd) for a cross-domain task
 swift_dev: swiftui-pro      # domain sub-skill the cold subagent must load
 ---
 

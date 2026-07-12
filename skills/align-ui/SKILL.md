@@ -13,7 +13,11 @@ Runs before any SwiftUI View task is implemented. The spec defines *what* the sc
 this skill aligns *how* it looks and behaves — resolving every UI decision with the user before
 a single line of SwiftUI is written.
 
-**Invocation:** automatic gate inside `task-execution` when a task is UI-scoped. Never manual.
+**Invocation (two paths, same skill):** (1) the `design`-phase command `/akios:design` runs it right
+after `ui-variations` graduates a screen; (2) the deliver-phase `[UI gate]` inside `task-execution`
+runs it before any UI-scoped task is implemented. Both write the same alignment doc — if `/akios:design`
+already produced it, the deliver-phase gate reuses it and re-runs only the post-wiring check, it does
+not re-grill. It is never invoked ad-hoc mid-task outside these two paths.
 **Auto-decide under `/akios:just-vibes`:** the gate itself never skips — only the interactive
 grilling does. Unattended, the agent decides every question itself and records rationale (see
 "Just-vibes posture" below).

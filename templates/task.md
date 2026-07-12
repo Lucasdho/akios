@@ -6,6 +6,7 @@ runner: {{orchestrator (≤20k) | subagent-eligible (>20k)}}
 parallel: {{true | false}}   # true = [P], shares no files/symbols with siblings in this checkpoint
 area: {{Features/<F>/domain|data|presentation/<View>|contract|tests — slice sub-folder; same-area tasks serialize}}
 checkpoint: {{n}}            # [major] checkpoints run the test battery
+pack: {{pack:ios}}           # knowledge pack(s) the cold subagent loads; default pack:ios, add a 2nd domain (e.g. pack:ios pack:ddd) when the task spans one
 swift_dev: {{sub-skill}}     # domain sub-skill the cold subagent must load
 ---
 

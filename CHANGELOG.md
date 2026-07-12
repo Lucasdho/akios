@@ -366,14 +366,14 @@
 
 ## 0.4.0 (2026-06-19)
 
-### Changed — speckit dropped; lean 3-phase spine
+### Changed — lean 3-phase spine
 - **New spine:** `idea-to-spec → spec-to-tasks → task-execution → verify + /code-review`.
-  The four speckit phases (clarify/specify/plan/tasks) + the constitution bootstrap are gone —
+  The old multi-phase planning ceremony + constitution bootstrap are gone —
   they re-did rigor the kit already has (design happens decision-by-decision in `idea-to-spec`;
   quality is gated by `AGENTS.md` house rules + axiom + ponytail + `/code-review`). A real run
-  showed speckit producing ~9 files for a `tasks.md` that one pass now produces as 1.
+  showed that path producing ~9 files for a `tasks.md` that one pass now produces as 1.
 - **`/akios:plan`** now runs `spec-to-tasks` (one pass, one confirm); **`/akios:deliver`** now
-  runs `task-execution`. No `.specify/`, no web/backend folder trees.
+  runs `task-execution`. No scaffold directory, no web/backend folder trees.
 
 ### Added
 - **`spec-to-tasks` skill** — one pass from an approved spec to `tasks.md`: atomic tasks with
@@ -392,9 +392,9 @@
   No test runs in the hook itself.
 
 ### Migration
-- Repos with an existing `.specify/` keep working — those files just go unused; `/akios:plan`
-  stops invoking speckit. Re-run `/akios:init` (or `install.sh`) to pick up the new hook + house
-  rules and gitignore `.akios/`.
+- Repos with an existing scaffold directory keep working — those files just go unused; `/akios:plan`
+  no longer invokes the old planning framework. Re-run `/akios:init` (or `install.sh`) to pick up
+  the new hook + house rules and gitignore `.akios/`.
 
 ## 0.3.0 (2026-06-18)
 
@@ -409,8 +409,8 @@
     materialize the context files → wire the gate hook → check dependencies. The
     intelligent layer over `install.sh`.
   - `/akios:define` — pipeline Phase 1 (`idea-to-spec`).
-  - `/akios:plan` — pipeline Phases 2-5 (speckit clarify→specify→plan→tasks; degraded path
-    if no `.specify/`).
+  - `/akios:plan` — pipeline Phases 2-5 (multi-phase clarify→specify→plan→tasks; degraded path
+    if no scaffold directory).
   - `/akios:deliver` — pipeline Phase 6 (`superpowers:subagent-driven-development` + verify
     + `/code-review`).
   The three wrappers invoke `ios-feature-pipeline` at the named phase and do not duplicate
