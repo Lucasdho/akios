@@ -199,7 +199,8 @@ each. Ask if any should be split, merged, or renamed. Wait.
 ### Writing the specs
 
 Once grouping is confirmed, write all specs **in one pass** — do not write one at a time
-and ask for approval after each. Each spec follows the `templates/spec.md` format.
+and ask for approval after each. Each spec follows `idea-to-spec`'s `references/spec-format.md`
+(scaffolded from `templates/spec.md`).
 
 For each spec, fill in:
 - **Status:** `designed`

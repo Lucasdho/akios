@@ -15,9 +15,11 @@ v2.0: everything happens **directly in SwiftUI**, as named `#Preview` blocks bui
 already exists in the project (`Foundation/Design-tokens/` tokens, promoted components, and
 copy-and-adapt snippets) — there is no external medium (Figma/Stitch/HTML) to translate from.
 
-**Invocation:** automatic inside `task-execution`'s A3 build-order (components → `ui-variations`
-dumb-screen → make-it-live), for any task whose scope is a `presentation/<View>/` screen or
-component. Also reachable directly via `/akios:design`.
+**Invocation:** the `design`-phase command `/akios:design` runs it between `plan` and `deliver`,
+for any UI-scoped task whose target is a `presentation/<View>/` screen or component. It occupies the
+explore→remix→graduate steps of `alva-adoption.md`'s A3 build-order (components → `ui-variations`
+dumb-screen → make-it-live); `deliver`/`task-execution` does not re-invoke it — the make-it-live
+stage consumes the already-graduated screen. Not triggered ad-hoc mid-task outside `/akios:design`.
 
 ## Why no external medium
 
