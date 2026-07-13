@@ -11,14 +11,24 @@ source code, no Xcode project, and no app to build or run here.
 
 ## Stack
 
-- **Artifact types:** Markdown (`.md`), YAML (`.yml`), Bash (`.sh`), JSON (`.json`)
-- **No compiler, no test runner, no build system.** There is no `xcodebuild`, no `swift test`,
-  no package.json, no Makefile.
+- **Skill/kit artifact types:** Markdown (`.md`), YAML (`.yml`), Bash (`.sh`), JSON (`.json`).
+  `skills/`, `commands/`, `templates/`, `scripts/` are docs+bash only — no compiler, no test
+  runner, no build system, no `xcodebuild`, no `swift test`.
+- **Exception: `artifacts/`.** A small number of skills (currently `data-modeling-canvas`) drive
+  a real, standalone npm/web app live in the browser rather than just emitting instructions. That
+  app's full source (its own `package.json`, build tooling, node deps) lives under
+  `artifacts/<name>/` — the one place in this repo with a real build system. It is installed to
+  `~/.akios/artifacts/<name>/` by `scripts/install-artifacts.sh` (mirrors `install-skills.sh`,
+  but preserves `node_modules/` across refreshes and only runs `npm install` once). Do not
+  confuse this with the `akios/` skill/spec pipeline — an `artifacts/` app has no relationship to
+  specs/tasks.
 - **Version control:** git (GitHub remote at `Lucasdho/akios` or equivalent)
 
 ## Commands
 
 - Install skills: `bash scripts/install-skills.sh`
+- Install artifacts (runnable apps a skill drives, e.g. data-modeling-canvas):
+  `bash scripts/install-artifacts.sh`
 - Smoke-test install: check that `~/.claude/skills/<skill>/SKILL.md` exists for each skill
 - Validate YAML: `python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" akios/workflow.yml`
 - Check for orphaned refs: `grep -ri '<old-term>' --include=*.md --include=*.sh --include=*.yml .`
@@ -36,10 +46,14 @@ source code, no Xcode project, and no app to build or run here.
 ```
 <repo root>/
 ├── skills/          ← one directory per skill; each has SKILL.md (+ optional references/)
+├── artifacts/       ← full npm/web apps a skill drives live (own package.json/build); installed
+│   │                  to ~/.akios/artifacts/<name>/ by install-artifacts.sh — the one exception
+│   │                  to "no build system" (see Stack section)
+│   └── data-modeling-canvas/  ← React/Vite app driven by the data-modeling-canvas skill
 ├── commands/        ← one .md per /akios:<command>; thin wrappers that load the skill
 ├── templates/       ← scaffold files dropped into iOS projects by /akios:setup
 │   └── rules/       ← .claude/rules/ templates (e.g. swift.md gate)
-├── scripts/         ← install-skills.sh and other maintenance scripts
+├── scripts/         ← install-skills.sh, install-artifacts.sh, and other maintenance scripts
 ├── akios/           ← this repo's own housekeeping (akios-footprint-consolidation.md)
 │   ├── Context.md       ← this file
 │   ├── Roadmap.md       ← spec-level status table for akios development
@@ -72,6 +86,8 @@ first time either is needed, same as in a consumer repo).
   `metadata.version`. Commands have `description:` and `disable-model-invocation: true`.
 - **Install script:** `scripts/install-skills.sh` has a hard-coded `SKILLS=(...)` array —
   add new skill names there whenever a new skill is created.
+- **Artifact install script:** `scripts/install-artifacts.sh` has a hard-coded `ARTIFACTS=(...)`
+  array — add new artifact-app names there whenever a new `artifacts/<name>/` is created.
 - **Commit style:** `feat:`, `fix:`, `chore:`, `docs:` prefixes. Short imperative subject.
   `Co-Authored-By:` trailer if Claude authored or co-authored the commit.
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.9.0 (2026-07-13)
+
+### Added — data-modeling-canvas skill + artifacts/ (new kit concept)
+- **`artifacts/` — a new top-level directory** for the one exception to "skills are
+  markdown+docs only": full npm/web apps that a skill drives live in the browser. The first
+  occupant, `artifacts/data-modeling-canvas/` (React/Vite/Zustand/`@xyflow/react`), ships its own
+  `package.json`/build tooling. `scripts/install-artifacts.sh` (new, mirrors
+  `install-skills.sh`) installs it once to `~/.akios/artifacts/data-modeling-canvas/` — a single
+  user-level location shared across every project on the machine, not tied to one project
+  folder. Source is refreshed on every install run; `node_modules/` is preserved across runs and
+  only `npm install`ed the first time. `akios/Context.md` documents the scope of this exception.
+- **`data-modeling-canvas` skill.** Drives that app live in the browser via `claude-in-chrome`
+  MCP tools (starting the dev server itself if it isn't already running, then calling the app's
+  `window.agentTools` API) instead of asking the user to paste snippets into DevTools. API
+  surface documented in `skills/data-modeling-canvas/references/agent-tools-api.md`.
+- **`/akios:data-modeling-canvas` command wrapper** added; skill registered in
+  `install-skills.sh`; artifact registered in `install-artifacts.sh`.
+
 ## 0.8.3 (2026-07-12)
 
 ### Changed — handmade audit: ALVA made opt-in across the kit

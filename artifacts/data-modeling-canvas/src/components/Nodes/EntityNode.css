@@ -1,0 +1,223 @@
+.entity-node {
+  min-width: 280px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+}
+
+.entity-header {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 8px;
+  position: relative;
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
+}
+
+.entity-header-drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.entity-header-drag-handle:active {
+  cursor: grabbing;
+}
+
+.entity-title-input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  outline: none;
+  width: 100%;
+}
+
+.entity-title-input:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.entity-attributes {
+  display: flex;
+  flex-direction: column;
+}
+
+.attribute-row {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.attribute-row:last-child {
+  border-bottom: none;
+}
+
+.attribute-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  gap: 8px;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.attribute-content:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.primary-key-icon {
+  color: #fbbf24; /* Amber */
+}
+
+.attribute-name-input {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  flex: 1;
+  min-width: 80px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+
+.attribute-name-input:focus, .attribute-name-input:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.attribute-type-select {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.attribute-type-select:focus {
+  border-color: var(--accent-primary);
+}
+
+.attribute-remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+.attribute-row:hover .attribute-remove-btn {
+  opacity: 1;
+}
+
+.attribute-remove-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444; /* Red */
+}
+
+.entity-footer {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom-left-radius: 11px;
+  border-bottom-right-radius: 11px;
+}
+
+.add-attribute-btn {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: var(--text-secondary);
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.add-attribute-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+/* Handle custom styles */
+.attribute-handle, .entity-handle {
+  width: 14px;
+  height: 14px;
+  background: var(--accent-secondary);
+  border: 2px solid var(--bg-node);
+  border-radius: 50%;
+  opacity: 0;
+  transition: width 0.2s, height 0.2s, background 0.2s, opacity 0.2s;
+}
+
+/* Mostrar handles da entidade apenas quando o mouse está sobre ela */
+.entity-node:hover > .entity-handle {
+  opacity: 1;
+}
+
+/* Mostrar handles dos atributos apenas quando o mouse está sobre o atributo */
+.attribute-row:hover .attribute-handle {
+  opacity: 1;
+}
+
+.attribute-handle:hover, .entity-handle:hover {
+  width: 20px;
+  height: 20px;
+  background: var(--accent-secondary);
+  opacity: 1 !important;
+}
+
+/* Empurrar as bolinhas mais para fora do card (externalizar) */
+.react-flow__handle-top {
+  top: -16px !important;
+}
+
+.react-flow__handle-bottom {
+  bottom: -16px !important;
+  top: auto !important;
+}
+
+.react-flow__handle-left {
+  left: -16px !important;
+}
+
+.react-flow__handle-right {
+  right: -16px !important;
+  left: auto !important;
+}
+
+.entity-handle {
+  background: var(--accent-secondary);
+}
+
+.target-handle {
+  left: -5px;
+}
+
+.source-handle {
+  right: -5px;
+}
