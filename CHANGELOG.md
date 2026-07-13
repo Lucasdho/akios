@@ -1,6 +1,19 @@
 # Changelog
 
-## Unreleased
+## 0.8.3 (2026-07-12)
+
+### Changed — handmade audit: ALVA made opt-in across the kit
+- **ALVA is now opt-in, not the kit's universal default.** The Agent-Legible Vertical
+  Architecture doctrine is gated on an `architecture: alva` signal in `akios/Context.md` rather
+  than being imposed on every repo. Skill docs (`deep-brainstorm`, `idea-to-spec`, `spec-to-tasks`,
+  `task-execution`, `ui-variations`, `swift-dev`, `knowledge-ingest`, `ios-agentic-kit`) now
+  reference ALVA through per-skill `references/alva-integration.md` files instead of restating the
+  doctrine, keeping `alva-architecture-doctrine.md` the single source of truth.
+- **UI-alignment gate docs.** `align-ui` and the pipeline docs clarify the pre-implementation
+  UI-alignment contract and how it is invoked from the UI; pack metadata updated to match.
+- **Doc consolidation.** Unattended-mode docs folded into the `just-vibes` skill; `idea-to-spec`
+  refined (v1.5.0) and `spec-to-tasks` updated; phase-contract wording clarified in the iOS
+  skill docs; the ALVA usage-ledger wording clarified.
 
 ### Added — Codex plugin manifest
 - **Codex-ready plugin support.** Added `.codex-plugin/plugin.json` so Codex can install Akios

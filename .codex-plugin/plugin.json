@@ -1,6 +1,6 @@
 {
   "name": "akios",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Agentic workflow kit for Swift/iOS repos: spec-driven idea-to-ship pipeline, skill gates, and repo onboarding.",
   "author": {
     "name": "Lucas Oliveira",
