@@ -76,16 +76,18 @@ Everything else is unchanged: the **same propose-before-live confirm gate** from
 attended; under `just-vibes`, auto-adopt with the rationale journaled, same as any pack). The
 **same provenance retention** (`pack.yml` + optional `sources/`) applies unchanged.
 
-**The `target:` field.** Each snippet's `usage.md` (or an `INDEX.md` row field) declares one of:
-- **`Foundation/Design-tokens`** — visual, meant to be shared from day one (a card component, a
+**The `target:` field.** Each snippet's `usage.md` (or an `INDEX.md` row field) declares **one**
+target location, in one of two classes:
+- **Shared-from-day-one** — visual, meant to be reused across features (a card component, a
   design-system template). `task-execution` copies it once and reuses it thereafter.
-- **`Features/<F>/data`** or **`.../domain`** — behavior, inherently per-feature (a repository
-  template, a use case, a gateway protocol). `task-execution` copies it fresh into each feature
-  that needs one, with entity names adapted per feature.
+- **Feature-local** — behavior, inherently per-feature (a repository template, a use case, a
+  gateway protocol). `task-execution` copies it fresh into each feature that needs one, with entity
+  names adapted per feature.
 
-This is a **human decision made at registration time** (this confirm-before-live step) — it does
-not bypass or mutate the ALVA usage-ledger's own evidence-based Foundation-promotion rules
-(`task-execution`'s Foundation ledger governs everything that is **not** a registered snippet).
+This is a **human decision made at registration time** (this confirm-before-live step). Under
+`architecture: alva` the two classes map to concrete slice folders, and the decision does not bypass
+or mutate the usage-ledger's evidence-based Foundation-promotion rules — see
+`references/alva-integration.md`.
 
 A snippet that isn't valid/parseable Swift (wrong path, a non-code file dropped by mistake) is
 **declined** — ingestion never writes a broken file into `snippets/`.

@@ -56,6 +56,11 @@ Project/
                                 target (prototype-first-workflow.md v2.0 §3; top-level, per-view/-component)
 ```
 
+**The doctrine's `Specs/Features.md` index (Part I §4) has no row here on purpose** — in the akios
+realization the kit's own `Roadmap.md` plus the per-slice `Feature-spec.md` files subsume a central
+feature index, so the scaffold (§7.9) doesn't emit one. This is the single portable-tree item the
+reconciliation drops; every other node is preserved or re-homed.
+
 **Components nest per-view, not in a flat `presentation/Components/`.** A component is born inside the
 view/screen that first needed it — `presentation/<View>/components/<Component>/`. It promotes to
 `Foundation/Design-tokens/` through the ledger (D3) on its 2nd distinct use, **wherever that use comes
@@ -113,10 +118,10 @@ the flat rule-of-two collapsed.
 
 ## 3. The Foundation ledger — akios realization (D3)
 
-ALVA §6.4 specifies a deterministic usage ledger and lists four counting strategies (A ripgrep → B
+ALVA §6.4 specifies a deterministic usage ledger and lists four counting strategies (A textual-grep → B
 compiler index → C module graph → D declared consumption). This decides how akios *ships* it.
 
-- **Ship strategy A first (ripgrep + git-hook), as an `oss-first` candidate.** A pre-commit hook counts
+- **Ship strategy A first (`grep` + git-hook), as an `oss-first` candidate.** A pre-commit hook counts
   Foundation symbol occurrences across `Features/*/` and rewrites `Foundation/usage-ledger.json`. It is
   imprecise (name collisions) but trivial, deterministic, and proves the concept. `oss-first` runs first —
   if a maintained dead-code/index tool (which already walks the compiler index) can be repurposed to count,
@@ -209,7 +214,7 @@ to a decision above or an ALVA principle. Sequenced so each depends only on earl
   writing a helper" (ALVA P6). Replaces the `swift-dev` architecture reference that `ui-overhaul-
   implementation` 3.4 was going to write — it now encodes the *reconciled* structure. *DoD:* guide exists;
   `swift-dev` router points to it; it shows the slice tree, the contract rule, and the Foundation-first rule.
-- [ ] **7.3 — Foundation ledger PoC (§3).** `oss-first` check → ripgrep+git-hook writing
+- [ ] **7.3 — Foundation ledger PoC (§3).** `oss-first` check → `grep`+git-hook writing
   `Foundation/usage-ledger.json`; the JSON schema from ALVA §6.4. *DoD:* hook runs on commit; ledger
   regenerates; a seeded 3-feature symbol shows up as a `candidates_promote` entry.
 - [ ] **7.4 — `spec-to-tasks` slice shape.** UI/feature tasks emit on the ALVA slice

@@ -27,13 +27,11 @@ This skill does the one thing that was missing: decompose the spec into runnable
 
 1. **Read** the spec(s) + `akios/Context.md` + `MEMORY.md`. Nothing else. Don't re-clarify what the spec
    already settled — if something is genuinely ambiguous, ask one direct question, no clarify ceremony.
-2. **Decompose by similarity + size.** (The area convention below assumes `architecture: alva`; for
-   any other architecture, `area` follows the project's own structure as described in `akios/Context.md`.)
-   - **Group by similarity** — same file / area / concern travels together. Under `architecture: alva`,
-     for a new or touched feature, `area` follows the slice sub-folder it belongs to
-     (`Features/<F>/domain`, `.../data`, `.../presentation/<View>`, `.../contract`, `.../tests`) — not
-     an app-wide layer; a task never spans two features' internals, and cross-feature work is a
-     `contract/` change on one side and a consumer change on the other, as separate tasks.
+2. **Decompose by similarity + size.**
+   - **Group by similarity** — same file / area / concern travels together. `area` follows the
+     project's own structure (`akios/Context.md`); under `architecture: alva` see
+     `references/alva-integration.md` for the slice-folder convention that governs `area` and
+     cross-feature boundaries.
    - **Bound by size** — estimate each task's cost and keep it under the **80k soft ceiling**; split
      a task that would exceed it. Atomic = one coherent change with one Definition of Done.
 3. **Estimate cost (rough proxy).** `est_tokens ≈ Σ touched-file sizes + description weight`. For
@@ -70,21 +68,19 @@ This skill does the one thing that was missing: decompose the spec into runnable
      needs a one-line justification in the task.
    - **Protocol-first repositories** — `protocol` + defaults; concretes inherit. A repository task's
      DoD includes "protocol defined, defaults provided, `Hashable` + JSON↔object round-trip covered."
-8. **Foundation-consult step (`architecture: alva` only; every task that creates a helper, protocol,
-   or component).** Add a DoD line: "consulted `Foundation/Design-tokens`/`Code-tokens` before writing
-   new shared code — reused if found, else born inside this feature." This is the executable form of
-   ALVA P6 (`swift-dev`'s `alva-architecture` guide) — the task, not the agent's judgment, is what
-   carries the reminder forward into execution. **Under any other architecture, omit this DoD line**
-   and let reuse follow the project's own convention.
+8. **Foundation-consult step (`architecture: alva` only).** Under `architecture: alva`, every task
+   that creates a helper, protocol, or component gets a Foundation-consult DoD line — see
+   `references/alva-integration.md` for the exact wording. **Under any other architecture, omit this
+   DoD line** and let reuse follow the project's own convention.
 9. **Tag each task with its knowledge pack + domain sub-skill** (routing below) — the executor's
    subagent starts cold and must load it. Every task carries a `pack:<domain>` tag, defaulting to
    `pack:ios` for a Swift repo; a task also touching a second domain (e.g. a DDD-modeled feature)
    carries both (`pack:ios` + `pack:ddd`). For the `ios` pack, the concrete reference is
    `swift-dev`'s bundled guide — tag the `swift_dev:` sub-skill exactly as before; a non-`ios`
    pack's concrete reference is its own `INDEX.md`-selected file (`knowledge-architecture.md`
-   §1/§2). **Under `architecture: alva`**, a task that scaffolds a new feature/slice, or touches
-   `Router/`/`Container/`, is tagged `alva-architecture` first, alongside whatever code-level guide
-   also applies; under any other architecture there is no such tag.
+   §1/§2). **Under `architecture: alva`**, a slice-scaffolding or `Router/`/`Container/` task is
+   tagged `alva-architecture` first — see `references/alva-integration.md`; under any other
+   architecture there is no such tag.
 10. **One interactive confirm.** Show the checkpoint/task graph + est_tokens/runner + designer's-eye
     coverage compactly. Get a yes or adjustments. *Then* write the task files into `akios/tasks/todo/`.
 

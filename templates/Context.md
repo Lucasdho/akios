@@ -14,7 +14,7 @@
 
 ## Architecture
 - `architecture: {{alva | none}}` — the opt-in signal every skill reads. `alva` = this project
-  adopted the kit's optional iOS vertical-slice doctrine (ALVA; full doctrine:
+  adopted the kit's **recommended** iOS vertical-slice doctrine (ALVA; full doctrine:
   `akios/specs/alva-architecture-doctrine.md`), so the ALVA scaffold, the Foundation usage-ledger,
   and the `alva-architecture` guide/gates apply. Anything else (`none` or a named architecture, e.g.
   `mvvm`, `tca`) means the agent follows the description below and **skips** the ledger and slice-shape

@@ -32,8 +32,9 @@ This project's architecture is described in `akios/Context.md` `## Architecture`
 carries the `architecture:` signal every skill reads. **Follow the project's own architecture;
 akios does not impose one.**
 
-**ALVA is opt-in, not the default.** ALVA (Agent-Legible Vertical Architecture) is this kit's
-*optional* iOS vertical-slice doctrine — every feature a self-contained slice
+**ALVA is opt-in but strongly recommended.** ALVA (Agent-Legible Vertical Architecture) is this
+kit's **recommended** iOS vertical-slice architecture, adopted via `architecture: alva` — every
+feature a self-contained slice
 (`Features/<Feature>/{domain,data,presentation,contract,tests}`), cross-feature composition only at
 the top (`Router/`, `Container/`), shared leaf code graduating into `Foundation/` by a deterministic
 usage ledger rather than upfront guess. It applies **only when `akios/Context.md` declares

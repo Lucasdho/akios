@@ -12,12 +12,13 @@ metadata:
 Runs inside the `design` phase (`akios/workflow.yml`), between `plan` and `deliver`. It is the **one
 skill** that owns the whole prototype-first loop introduced by `prototype-first-workflow.md`
 v2.0: everything happens **directly in SwiftUI**, as named `#Preview` blocks built from what
-already exists in the project (`Foundation/Design-tokens/` tokens, promoted components, and
-copy-and-adapt snippets) — there is no external medium (Figma/Stitch/HTML) to translate from.
+already exists in the project (existing components, tokens, and copy-and-adapt snippets) — there is
+no external medium (Figma/Stitch/HTML) to translate from. Under `architecture: alva` the inputs and
+graduation paths are the slice tree's — see `references/alva-integration.md`.
 
 **Invocation:** the `design`-phase command `/akios:design` runs it between `plan` and `deliver`,
-for any UI-scoped task whose target is a `presentation/<View>/` screen or component. It occupies the
-explore→remix→graduate steps of `alva-adoption.md`'s A3 build-order (components → `ui-variations`
+for any UI-scoped task whose target is a screen or component in the project's view location. It
+occupies the explore→remix→graduate steps of the UI build-order (components → `ui-variations`
 dumb-screen → make-it-live); `deliver`/`task-execution` does not re-invoke it — the make-it-live
 stage consumes the already-graduated screen. Not triggered ad-hoc mid-task outside `/akios:design`.
 
@@ -34,9 +35,9 @@ is nothing left to converge later.
 ### 1. Explore round
 
 - **Default: 3–5 named `#Preview`s**, divergent styles from one prompt (the screen's features +
-  any mood/style parameters given), each a runnable variation built from existing
-  components/tokens/snippets in `Foundation/Design-tokens/` and the feature's own
-  `presentation/<View>/components/`.
+  any mood/style parameters given), each a runnable variation built from the project's existing
+  components, tokens, and snippets (under `architecture: alva`, sourced from the slice tree — see
+  `references/alva-integration.md`).
 - **User-specified count always wins.** If the user states a quantity, use it — the default only
   fires when they don't.
 - **Edge-case guard, warn-don't-block:** if the requested count is far outside a reasonable range
@@ -58,17 +59,13 @@ is nothing left to converge later.
 
 ### 3. Approve and graduate
 
-- The approved variation **lands directly in its final file** — no translation step, because it
-  is already the target code:
-  ```
-  Features/<Feature>/presentation/<View>/<View>View.swift        ← next to <View>Model.swift
-  Features/<Feature>/presentation/<View>/components/<Component>/  ← view-local components
-  ```
-  (ALVA-reconciled path — components nest **per-view**, not in a flat
-  `Features/<Feature>/Components/`.)
-- This *is* `alva-adoption.md`'s A3 build-order (components → dumb screen → make-it-live)
-  already enforcing the order — a screen cannot enter `deliver`'s make-it-live stage until a
-  variation has graduated here. No separate approval-gate mechanism exists.
+- The approved variation **lands directly in its final file** in the project's view location — no
+  translation step, because it is already the target code. Under `architecture: alva` that file is
+  the per-view slice path (`Features/<Feature>/presentation/<View>/…`, components nested per-view) —
+  see `references/alva-integration.md` for the exact paths.
+- This *is* the UI build-order (components → dumb screen → make-it-live) already enforcing the
+  order — a screen cannot enter `deliver`'s make-it-live stage until a variation has graduated
+  here. No separate approval-gate mechanism exists.
 
 ### 4. Archive losers to scratch
 

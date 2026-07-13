@@ -66,9 +66,9 @@ for each task (by checkpoint, respecting [P]/area):
     realization is its own INDEX.md-selected reference)
   [Snippet gate] if the pack lookup resolves to a `kind: snippet` entry (not `kind: reference`)
     → copy-and-adapt-and-prune (below) instead of writing the pattern from scratch
-  [Foundation gate] (architecture: alva only) before writing any new helper/protocol/component →
-    consult ONLY Foundation/ (never the whole repo); see "Foundation ledger" below. Non-ALVA
-    repos: reuse follows the project's own convention, no ledger.
+  [Foundation gate] under architecture: alva, a Foundation-only reuse gate applies before writing
+    any new shared helper/protocol/component — see references/alva-integration.md; otherwise reuse
+    follows the project's own convention, no ledger.
   [Hurdles gate] before starting a task in a domain that has one → load the matching-tag slice of
     akios/code-references/hurdles.md (below) so a known hurdle is avoided by consulting the ledger
   [UI gate] if task is UI-scoped → run align-ui (auto-decide mode under just-vibes; grilling skipped, gate itself is not)
@@ -146,36 +146,21 @@ entire point of registering one is to skip re-deriving boilerplate that already 
 
 This target split is a **human decision made at snippet-registration time**
 (`knowledge-ingest`'s confirm-before-live gate) — it does not bypass or shortcut the Foundation
-ledger's own evidence-based promotion/demotion rules below, which still govern everything that
-is **not** a registered snippet.
+ledger's own evidence-based promotion/demotion rules (under `architecture: alva`, see
+`references/alva-integration.md`), which still govern everything that is **not** a registered snippet.
 
 **No match, no problem.** If a task could plausibly use a snippet but none matches, write fresh
 code as the pipeline does today — no error, no forced match; same graceful degradation as "no
 user packs" (`knowledge-architecture.md` §7).
 
-## Foundation ledger (`architecture: alva` only — read, never count)
-**This whole section applies only when `akios/Context.md` declares `architecture: alva`.** Under any
-other architecture there is no `Foundation/`, no usage-ledger, and no boundary lint — reuse and
-folder placement follow the project's own architecture (`akios/Context.md`); skip to the next section.
-
-Before creating any new helper, protocol, or shared component, consult **only**
-`Foundation/Design-tokens/` and `Foundation/Code-tokens/` — a small, bounded search — never the
-whole repo (`swift-dev`'s `alva-architecture` guide, doctrine P6). If nothing there fits, the code
-is born inside the current feature; it is not shared preemptively.
-
-- **You read `Foundation/usage-ledger.json`; you never count.** The count is produced by a
-  deterministic tool (`.claude/scripts/alva-usage-ledger.sh` or its consumer-repo git-hook installation) —
-  investigating usage across features is not something you do by grepping the repo per-run.
-- **Each ledger entry becomes a task, not a silent move.** Every `candidates_promote` /
-  `candidates_demote` entry in the ledger gets written as a new `akios/tasks/todo/T<NNN>-*.md` (promote:
-  move the symbol to its `target` behind a contract if it's a Code-token; demote: return it to its
-  sole remaining feature). Promotion is **suggested**, reviewed like any other task — never mutate
-  `Foundation/` because the ledger said so without a task and a DoD.
-- **Boundary lint runs at the checkpoint barrier.** A feature importing another feature's
-  `domain/`/`data/` internals (instead of its `contract/`) fails the barrier audit — fix the import
-  or extend the contract before the checkpoint commits. This is the lint realization of doctrine
-  P3 (folder-first + lint by default; compiler-enforced local SPM modules only once the app has
-  earned it — a recurring violation, or the user asks).
+## Foundation reuse gate (`architecture: alva` only)
+Under `architecture: alva`, before creating any new helper, protocol, or shared component, a
+Foundation-only reuse gate applies (consult only `Foundation/`, read the usage-ledger, never count
+by grepping the repo) and a boundary lint runs at each checkpoint barrier. The full mechanics —
+the ledger read, the promote/demote-becomes-a-task rule, and the boundary lint — live in
+`references/alva-integration.md`, read only under ALVA. Under any other architecture there is no
+`Foundation/`, no usage-ledger, and no boundary lint — reuse and folder placement follow the
+project's own architecture (`akios/Context.md`).
 
 ## Hurdles ledger (`akios/code-references/hurdles.md` — tier 2 of the priority chain)
 A solved recurring problem is curated project knowledge, so it lives in the project's **code

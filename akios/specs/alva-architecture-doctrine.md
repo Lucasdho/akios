@@ -281,7 +281,7 @@ some do contexto do agente.
 **Como contar sem gastar tokens de investigação — alternativas** (da mais barata à
 mais precisa; a implementação de referência pode combiná-las):
 
-- **A — Contagem textual (git-hook + ripgrep).** Um pre-commit hook conta
+- **A — Contagem textual (git-hook + grep/ripgrep).** Um pre-commit hook conta
   ocorrências dos símbolos da `Foundation/` pelos diretórios de feature e reescreve
   o ledger. Impreciso (colisão de nomes), mas trivial e determinístico. Bom para
   **provar o conceito** e *flaggar* candidatos.
@@ -404,7 +404,7 @@ ecossistema, o *conceito* sobe para ALVA e a *realização* desce para o akios.*
 | Rodar o ledger no pre-commit; ler `usage-ledger.json`; regra "só Foundation, nunca repo inteiro"; sugestão de promoção → tarefa | `task-execution` |
 | Disciplina de Design-tokens (folha visual) na fase de UI | `align-ui` |
 | Ao mapear o app: features como slices, fronteiras de contrato, semear Foundation | `deep-brainstorm` |
-| Construir o ledger tool (ripgrep → índice do compilador) | candidato `oss-first`; git-hook + `Foundation/usage-ledger.json` |
+| Construir o ledger tool (grep/ripgrep → índice do compilador) | candidato `oss-first`; git-hook + `Foundation/usage-ledger.json` |
 | Fronteira imposta pelo compilador | scaffold: um SPM module por feature |
 
 ## 12. O ledger no fluxo akios
@@ -421,7 +421,7 @@ ecossistema, o *conceito* sobe para ALVA e a *realização* desce para o akios.*
 |---|---|---|
 | 1 | Escrever a doutrina versionada (este doc) e importá-la | `specs/`, `AGENTS.md`/`Context.md` |
 | 2 | Carregar a doutrina como guia de arquitetura | `swift-dev` |
-| 3 | Construir o ledger tool (ripgrep → índice) — prova de conceito | `oss-first` + git-hook |
+| 3 | Construir o ledger tool (grep/ripgrep → índice) — prova de conceito | `oss-first` + git-hook |
 | 4 | Task shape impõe o slice + "consultar Foundation antes de criar helper" | `spec-to-tasks` |
 | 5 | Execução roda o ledger, lê o resultado, gera tarefas de promoção | `task-execution` |
 | 6 | Spec de feature declara contrato/Foundation | `idea-to-spec` |
@@ -485,7 +485,7 @@ arquitetura**. O princípio sobrevive; muda o executor.
 | D10 | Promoção de comportamento | Bar alto + atrás de contrato | Serviço compartilhado = domínio central; blast radius alto | Mover serviço "de pasta" livremente |
 | D11 | Gatilho de promoção | **Sugerida**, não automática | Alto blast radius e ~irreversível; agente executa, não decide | Hook move código e reescreve imports sozinho |
 | D12 | Lifecycle | Promoção **e** demoção | Sem demoção, Foundation vira cemitério (`utils/`-lixão) | Só contar para cima |
-| D13 | Contagem | Ferramenta determinística (ripgrep → índice do compilador), fora do loop do agente | Custo de investigação vira per-commit cacheado, não per-run | Agente conta grepando o repo (caro, repetido) |
+| D13 | Contagem | Ferramenta determinística (grep → índice do compilador), fora do loop do agente | Custo de investigação vira per-commit cacheado, não per-run | Agente conta grepando o repo (caro, repetido) |
 | D14 | Nome da gaveta de código | "Foundation" | "token" está triplamente carregado (design/LLM/léxico) | Manter "Code-tokens" como nome guarda-chuva |
 | D15 | Estrutura do doc | Duas camadas separadas (ALVA portátil / ALVA+akios) | Torna ALVA publicável sozinha; akios é implementação conforme | Doc único acoplado ao akios |
 

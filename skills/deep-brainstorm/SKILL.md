@@ -124,16 +124,12 @@ Camera/Photo Library, HealthKit, Sign in with Apple, etc.
 After all 6 dimensions are locked, produce a **compact app map** — one section per dimension,
 one bullet per item. This is the source of truth for Phase 3.
 
-**Slice cartography (ALVA).** Each item that will become its own buildable domain is a future
-`Features/<Domain>/` slice, not a shared layer — note this while mapping, not as an afterthought
-later. Two things to capture right here:
-- **Contract boundaries.** When two items on the map will need to talk to each other (e.g. "Home
-  Feed" needs `User`'s auth state), mark which owns the *intention* (doctrine §5.4) and which side
-  will consume the other via `contract/`. Don't resolve every cross-reference now — just flag them
-  so Phase 4 doesn't have to rediscover them.
-- **Foundation seeds.** Cross-cutting items from dimension 4 (Theming/Design System, shared
-  utilities) are `Foundation/` candidates from day one — call them out so the spec family doesn't
-  reinvent them per-domain.
+**Map seeds and boundaries while mapping, not later.** While enumerating, capture two things that
+otherwise get rediscovered downstream: cross-item **boundaries** (when two items will need to talk
+to each other, flag which owns the interaction and which consumes it) and **cross-cutting seeds**
+(shared design-system / utility items that shouldn't be reinvented per-domain). Under
+`architecture: alva` these are slice contract boundaries and `Foundation/` seeds — see
+`references/alva-integration.md`.
 
 ---
 
@@ -169,10 +165,10 @@ to shuffle anything.
 
 **Purpose:** Translate the scoped app map into a complete family of `akios/specs/*.md` files.
 Each spec represents one coherent domain — the unit that `spec-to-tasks` will later decompose
-into an ALVA feature slice (`Features/<Domain>/{domain,data,presentation,contract,tests}`). Carry
-forward the contract-boundary and Foundation-seed notes from Phase 2 into each spec's Contract &
-Foundation header (`idea-to-spec`'s `spec-format.md`) — this is where those flags get resolved
-into an actual declaration instead of staying loose notes.
+into tasks. Carry forward the boundary and seed notes from Phase 2 into each spec
+(`idea-to-spec`'s `spec-format.md`) — this is where those flags get resolved into an actual
+declaration instead of staying loose notes. Under `architecture: alva` that resolution is the
+spec's Contract & Foundation header — see `references/alva-integration.md`.
 
 ### Grouping into specs
 
