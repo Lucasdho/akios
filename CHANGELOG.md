@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.9.1 (2026-07-19)
+
+### Added — data-modeling-canvas: complex/nested types + optional fields
+- **`reference` attribute type.** An attribute can now be typed as another entity (e.g.
+  `Clube.financas: Financas`) instead of only the flat primitives. Setting `refEntityId` draws
+  and keeps in sync a composition line from the attribute to the target entity on the canvas —
+  no manual `addRelation` call needed. Renaming/removing the attribute, changing its type away
+  from `reference`, or deleting the target entity all clean the line up automatically; deleting
+  a referenced entity falls any attribute pointing at it back to `string` rather than leaving a
+  dangling reference.
+- **`isOptional` flag** on any attribute (e.g. `Jogador.clube` — a player may not belong to a
+  club). Renders as a dashed composition line for `reference` attributes, a toggle otherwise.
+- Both fields are exposed through `window.agentTools` (`addEntity`/`addAttribute`/
+  `updateAttribute`) and documented with a worked example in
+  `skills/data-modeling-canvas/references/agent-tools-api.md`.
+
+### Fixed — data-modeling-canvas
+- **Entity-level relations silently failed to render.** `addRelation()` and spec re-import
+  defaulted whole-entity connections to a `sourceHandle`/`targetHandle` (`'entity-source'`/
+  `'entity-target'`) that didn't match any Handle actually rendered on the node (the real ones
+  are suffixed `-top`/`-bottom`) — React Flow drops an edge whose handle doesn't resolve, with
+  only a console warning and no visible error, so the line just never appeared. Both defaults
+  now point at real handles.
+- **Entity cards blew out from ~280px to 500px+ wide** whenever an attribute used the new
+  `reference` type. Root cause: `.attribute-row`'s flex direction (row) let the new reference
+  picker sit *beside* the name/type row instead of stacking under it; a native `<select>`'s
+  intrinsic width in Chromium is also driven by its widest `<option>` (not just the selected
+  value), inflating things further. Fixed in `EntityNode.css`.
+- `SKILL.md`'s verification step now calls out that `getSpec()` proves the data model is right
+  but not that a relation actually rendered — check the DOM (or a screenshot) too.
+- **Row columns jumped left/right depending on whether an attribute was the primary key.** The
+  key icon was only rendered for `isPrimary` attributes, so the name/type/`?`/reference columns
+  didn't line up between rows within the same card. It's now rendered into a fixed-width slot on
+  every row (empty when not primary) so all rows align.
+
 ## 0.9.0 (2026-07-13)
 
 ### Added — data-modeling-canvas skill + artifacts/ (new kit concept)

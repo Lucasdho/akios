@@ -35,6 +35,10 @@
   font-weight: 600;
   outline: none;
   width: 100%;
+  /* Same uncapped-preferred-width issue as .attribute-name-input below — bound it so a long
+     entity name can't inflate the whole card past the attribute rows' own width. */
+  min-width: 0;
+  max-width: 210px;
 }
 
 .entity-title-input:focus {
@@ -49,7 +53,11 @@
 
 .attribute-row {
   display: flex;
-  align-items: center;
+  /* column, not row: .attribute-content and the conditional .attribute-reference-row (shown
+     for 'reference'-type attributes) are meant to stack, not sit side by side. With row
+     direction (the default this inherited when there was only ever one child) the reference
+     row added its own width alongside attribute-content's 100%, inflating the whole card. */
+  flex-direction: column;
   position: relative;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -72,6 +80,16 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+.primary-key-slot {
+  /* Rendered on every row (empty when not primary) so the name/type/reference columns line up
+     the same whether or not a given row happens to be the primary key. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  flex-shrink: 0;
+}
+
 .primary-key-icon {
   color: #fbbf24; /* Amber */
 }
@@ -84,6 +102,10 @@
   outline: none;
   flex: 1;
   min-width: 80px;
+  /* entity-node has no fixed width — it shrinks/grows to fit its widest row — and a flex item's
+     preferred (max-content) contribution to that isn't bounded by min-width, only its shrink
+     floor is. Without a cap here, the row's own intrinsic sizing inflates the whole card. */
+  max-width: 140px;
   padding: 2px 4px;
   border-radius: 4px;
   transition: border-color 0.2s;
@@ -107,6 +129,72 @@
 }
 
 .attribute-type-select:focus {
+  border-color: var(--accent-primary);
+}
+
+.attribute-optional-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.attribute-optional-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.attribute-optional-btn.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #fff;
+}
+
+.attribute-reference-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px 8px 34px;
+}
+
+.attribute-reference-arrow {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.attribute-reference-select {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  /* Chromium sizes a native <select>'s intrinsic/preferred width by its widest <option>
+     (including the unselected placeholder and every other entity name in the dropdown), not
+     just the selected value. Since entity-node has no fixed width (only min-width — it sizes
+     to fit its content), that preferred width becomes the whole card's width. flex: 1 +
+     min-width: 0 only bounds the *minimum* shrink target, not this preferred/max-content size,
+     so it doesn't help — an explicit width does. The browser ellipsizes the closed selection
+     if it's longer than this.
+  */
+  width: 130px;
+}
+
+.attribute-reference-select:focus {
   border-color: var(--accent-primary);
 }
 

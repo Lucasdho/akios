@@ -51,7 +51,10 @@ const InlineInput = ({ value, onChange, className, placeholder }: any) => {
 };
 
 const EntityNode = ({ id, data, selected }: EntityNodeProps) => {
-  const { updateNodeColor } = useModelingStore();
+  const { updateNodeColor, nodes } = useModelingStore();
+  const entityOptions = nodes
+    .filter((n) => n.id !== id)
+    .map((n) => ({ id: n.id, label: n.data.label }));
 
   return (
     <div 
@@ -98,8 +101,10 @@ const EntityNode = ({ id, data, selected }: EntityNodeProps) => {
             />
 
             <div className="attribute-content">
-              {attr.isPrimary && <Key size={14} className="primary-key-icon" />}
-              
+              <span className="primary-key-slot">
+                {attr.isPrimary && <Key size={14} className="primary-key-icon" />}
+              </span>
+
               <InlineInput
                 value={attr.name}
                 onChange={(val: string) => data.onUpdateAttribute(id, attr.id, { name: val })}
@@ -109,7 +114,14 @@ const EntityNode = ({ id, data, selected }: EntityNodeProps) => {
               
               <select
                 value={attr.type}
-                onChange={(e) => data.onUpdateAttribute(id, attr.id, { type: e.target.value as any })}
+                onChange={(e) => {
+                  const newType = e.target.value as any;
+                  data.onUpdateAttribute(id, attr.id, {
+                    type: newType,
+                    // Dropping out of "reference" clears the dangling target pointer
+                    refEntityId: newType === 'reference' ? attr.refEntityId : undefined
+                  });
+                }}
                 className="attribute-type-select"
               >
                 <option value="string">String</option>
@@ -118,9 +130,19 @@ const EntityNode = ({ id, data, selected }: EntityNodeProps) => {
                 <option value="date">Date</option>
                 <option value="uuid">UUID</option>
                 <option value="json">JSON</option>
+                <option value="reference">Reference</option>
               </select>
 
-              <button 
+              <button
+                type="button"
+                onClick={() => data.onUpdateAttribute(id, attr.id, { isOptional: !attr.isOptional })}
+                className={`attribute-optional-btn ${attr.isOptional ? 'active' : ''}`}
+                title={attr.isOptional ? 'Opcional — clique para tornar obrigatório' : 'Obrigatório — clique para tornar opcional'}
+              >
+                ?
+              </button>
+
+              <button
                 onClick={() => data.onRemoveAttribute(id, attr.id)}
                 className="attribute-remove-btn"
                 title="Remover atributo"
@@ -128,6 +150,22 @@ const EntityNode = ({ id, data, selected }: EntityNodeProps) => {
                 <X size={14} />
               </button>
             </div>
+
+            {attr.type === 'reference' && (
+              <div className="attribute-reference-row">
+                <span className="attribute-reference-arrow">→</span>
+                <select
+                  value={attr.refEntityId || ''}
+                  onChange={(e) => data.onUpdateAttribute(id, attr.id, { refEntityId: e.target.value || undefined })}
+                  className="attribute-reference-select"
+                >
+                  <option value="" disabled>Selecionar entidade…</option>
+                  {entityOptions.map((opt) => (
+                    <option key={opt.id} value={opt.id}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Source handle for outgoing connections */}
             <Handle

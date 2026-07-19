@@ -78,16 +78,28 @@ export const initAgentInterface = () => {
 State reading:
 - getSpec() => Returns JSON representation of the entire canvas.
 
+Attribute types: 'string' | 'number' | 'boolean' | 'date' | 'uuid' | 'json' | 'reference'
+- 'reference' means the field's value IS another entity (a nested/complex type, e.g.
+  Clube.financas: Financas) — set refEntityId to the target entity's id. This auto-draws/updates
+  a composition line from the attribute to that entity on the canvas (dashed if isOptional).
+  Removing the attribute, changing its type away from 'reference', or deleting the target entity
+  cleans the line up automatically.
+- isOptional: true means the field may be absent/null (e.g. Jogador.clube being optional because
+  a player may not belong to a club). Works on any attribute type, not just 'reference'. Shown as
+  a dashed composition line for references, and as a toggle in the UI otherwise.
+
 Create:
-- addEntity(name: string, attributes?: {name: string, type: string, isPrimary?: boolean}[]) => returns entityId
+- addEntity(name: string, attributes?: {name: string, type: string, isPrimary?: boolean, isOptional?: boolean, refEntityId?: string}[]) => returns entityId
+  * For 'reference' attributes pointing at an entity created earlier in the same batch, refEntityId works immediately. If the target doesn't exist yet, create it first (or addAttribute/updateAttribute afterward once it does).
 - addRelation(sourceEntityId: string, targetEntityId: string, options?: {markerType?: string, color?: string, sourceHandle?: string, targetHandle?: string}) => returns relationId
   * Note: sourceHandle/targetHandle should be the Attribute IDs if connecting specific fields.
-- addAttribute(entityId: string, data?: {name: string, type: string, isPrimary?: boolean}) => returns attributeId
+  * Use this for hand-drawn FK-style relations. For "entity A contains/optionally-contains entity B" composition, prefer a 'reference' attribute instead (see above) — it draws itself.
+- addAttribute(entityId: string, data?: {name: string, type: string, isPrimary?: boolean, isOptional?: boolean, refEntityId?: string}) => returns attributeId
 
 Update:
 - updateEntity(entityId: string, newName: string)
 - updateEntityColor(entityId: string, colorHex: string)
-- updateAttribute(entityId: string, attributeId: string, data: {name?: string, type?: string, isPrimary?: boolean})
+- updateAttribute(entityId: string, attributeId: string, data: {name?: string, type?: string, isPrimary?: boolean, isOptional?: boolean, refEntityId?: string})
 - updateRelation(relationId: string, options: {markerType?: string, color?: string, width?: number})
 
 Delete:

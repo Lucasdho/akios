@@ -13,7 +13,7 @@ description: >-
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # Data Modeling Canvas — Driving the Visual Schema Canvas
@@ -63,7 +63,13 @@ never needs to touch the console.
      `javascript_tool` calls as practical, but always read back ids you'll need later in the same
      batch rather than re-deriving them.
 6. **Verify.** After structural changes, call `window.agentTools.getSpec()` and check the
-   returned JSON matches what you intended before reporting success to the user.
+   returned JSON matches what you intended before reporting success to the user. `getSpec()`
+   proves the data model is right but **not** that a relation actually rendered — React Flow
+   silently drops an edge whose `sourceHandle`/`targetHandle` doesn't resolve to a real Handle
+   in the DOM (logged only as a console warning, easy to miss). After adding a relation, confirm
+   it's actually visible — a screenshot, or `document.querySelector('[data-id="<relationId>"]
+   path.react-flow__edge-path')?.getAttribute('d')` returning a non-empty string — rather than
+   trusting `getSpec()` alone.
 7. **Report back in plain language** — which entities/attributes/relations were created or
    changed — not the raw JS you ran.
 
@@ -93,3 +99,7 @@ the wrong result, prefer `undo()` over manually reconstructing the prior state.
 
 - `references/agent-tools-api.md` — full `window.agentTools` method reference, adapted from the
   app's own `agentInterface.ts` (kept here as documentation only, not runnable source).
+- `references/xcode-mcp-setup.md` — how to register a `chrome-devtools-mcp` MCP server for
+  Xcode 26.3+'s embedded Claude agent, so this skill's golden path can be driven from an Xcode
+  project too (that agent has no `claude-in-chrome` tools of its own). Includes
+  `scripts/register_xcode_chrome_mcp.sh`, the reusable install script.

@@ -14,12 +14,32 @@ window.agentTools.addEntity("User", [
 ]);
 ```
 
+## Attribute types
+
+`'string' | 'number' | 'boolean' | 'date' | 'uuid' | 'json' | 'reference'`
+
+- `reference` means the attribute's value **is another entity** — a nested/complex type, e.g.
+  `Clube.financas: Financas`. Set `refEntityId` to the target entity's id. The canvas
+  auto-draws (and keeps in sync) a composition line from the attribute to that entity — no
+  manual `addRelation` call needed. Changing the attribute's type away from `'reference'`,
+  removing the attribute, or deleting the target entity all clean the line up automatically.
+- `isOptional: true` marks a field that may be absent/null, e.g. `Jogador.clube` being optional
+  because a player may not belong to a club. Works on any attribute type. For `reference`
+  attributes it renders the composition line **dashed**; for others it's just a flag in the
+  spec/UI toggle.
+
+Use a `reference` attribute (not `addRelation`) whenever the request is "entity A contains /
+optionally contains entity B" — that's composition, not a hand-drawn FK. Reach for `addRelation`
+for FK-style connections between two independent entities instead.
+
 ## Create
 
-- `addEntity(name: string, attributes?: {name: string, type: string, isPrimary?: boolean}[])`
+- `addEntity(name: string, attributes?: {name: string, type: string, isPrimary?: boolean, isOptional?: boolean, refEntityId?: string}[])`
   → returns `entityId`. Triggers `autoLayout()` automatically.
-  Types: `'string' | 'number' | 'boolean' | 'date' | 'uuid' | 'json'`.
-- `addAttribute(entityId: string, data?: {name: string, type: string, isPrimary?: boolean})`
+  If a `reference` attribute's `refEntityId` points at an entity that doesn't exist yet in the
+  same batch, the composition line won't appear until you `updateAttribute` with that id after
+  creating the target — order entity creation so referenced entities exist first when possible.
+- `addAttribute(entityId: string, data?: {name: string, type: string, isPrimary?: boolean, isOptional?: boolean, refEntityId?: string})`
   → returns `attributeId`. Does **not** auto-layout.
 - `addRelation(sourceEntityId: string, targetEntityId: string, options?: {markerType?: string, color?: string, sourceHandle?: string, targetHandle?: string})`
   → returns `relationId`. Triggers `autoLayout()` automatically.
@@ -36,7 +56,7 @@ window.agentTools.addEntity("User", [
 
 - `updateEntity(entityId: string, newName: string)`
 - `updateEntityColor(entityId: string, colorHex: string)`
-- `updateAttribute(entityId: string, attributeId: string, data: {name?: string, type?: string, isPrimary?: boolean})`
+- `updateAttribute(entityId: string, attributeId: string, data: {name?: string, type?: string, isPrimary?: boolean, isOptional?: boolean, refEntityId?: string})`
 - `updateRelation(relationId: string, options: {markerType?: string, color?: string, width?: number})`
   `markerType`: `'arrow' | 'arrowclosed' | 'bidirectional'`.
 
@@ -73,4 +93,30 @@ const authorAttrId = window.agentTools.addAttribute(postId, { name: "author_id",
 window.agentTools.addRelation(postId, userId, {
   sourceHandle: authorAttrId
 });
+```
+
+## Worked example — complex/optional types
+
+"Um Clube contém um modelo Financas. Um Jogador pode ou não pertencer a um Clube."
+
+```js
+// Create the referenced entities first so refEntityId resolves immediately.
+const financasId = window.agentTools.addEntity("Financas", [
+  { name: "id", type: "uuid", isPrimary: true },
+  { name: "saldo", type: "number" }
+]);
+
+const clubeId = window.agentTools.addEntity("Clube", [
+  { name: "id", type: "uuid", isPrimary: true },
+  { name: "nome", type: "string" },
+  // Composition — Clube always contains a Financas. Draws a solid line.
+  { name: "financas", type: "reference", refEntityId: financasId }
+]);
+
+const jogadorId = window.agentTools.addEntity("Jogador", [
+  { name: "id", type: "uuid", isPrimary: true },
+  { name: "nome", type: "string" },
+  // Optional composition — a player may not belong to a club. Draws a dashed line.
+  { name: "clube", type: "reference", refEntityId: clubeId, isOptional: true }
+]);
 ```

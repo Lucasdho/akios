@@ -19,13 +19,17 @@ import type {
 import { v4 as uuidv4 } from 'uuid';
 import { getLayoutedElements } from '../utils/layout';
 
-export type AttributeType = 'string' | 'number' | 'boolean' | 'date' | 'uuid' | 'json';
+export type AttributeType = 'string' | 'number' | 'boolean' | 'date' | 'uuid' | 'json' | 'reference';
 
 export interface Attribute {
   id: string;
   name: string;
   type: AttributeType;
   isPrimary?: boolean;
+  /** True when the field may be absent/null (e.g. Swift `Type?`). */
+  isOptional?: boolean;
+  /** Set when type === 'reference': id of the entity this attribute's value is an instance of. */
+  refEntityId?: string;
 }
 
 export type EntityNodeData = {
@@ -75,7 +79,51 @@ interface ModelingState {
 
 export const useModelingStore = create<ModelingState>()(
   temporal(
-    (set, get) => ({
+    (set, get) => {
+      // Reference-type attributes (e.g. Clube.financas: Financas) represent a nested/composed
+      // model, not a hand-drawn FK relation. We keep one derived edge per such attribute in
+      // sync automatically — id'd off the attribute so it can be found/updated/removed without
+      // scanning, and cleaned up for free by removeAttribute's existing sourceHandle filter.
+      const syncReferenceEdge = (nodeId: string, attrId: string) => {
+        const state = get();
+        const node = state.nodes.find((n) => n.id === nodeId);
+        const attr = node?.data.attributes.find((a) => a.id === attrId);
+        const edgeId = `refedge_${attrId}`;
+        const targetExists = !!attr && !!attr.refEntityId && state.nodes.some((n) => n.id === attr.refEntityId);
+
+        if (attr && attr.type === 'reference' && attr.refEntityId && targetExists) {
+          const color = 'var(--accent-secondary)';
+          const dashed = !!attr.isOptional;
+          const newEdge: Edge = {
+            id: edgeId,
+            source: nodeId,
+            target: attr.refEntityId,
+            sourceHandle: attrId,
+            targetHandle: 'entity-target-top',
+            animated: false,
+            type: 'custom',
+            data: { markerType: 'arrowclosed', isComposition: true },
+            markerEnd: { type: MarkerType.ArrowClosed, width: 18, height: 18, color },
+            style: {
+              stroke: color,
+              strokeWidth: 2,
+              strokeDasharray: dashed ? '6 4' : undefined
+            }
+          };
+          set((s) => {
+            const exists = s.edges.some((e) => e.id === edgeId);
+            return {
+              edges: exists
+                ? s.edges.map((e) => (e.id === edgeId ? newEdge : e))
+                : [...s.edges, newEdge]
+            };
+          });
+        } else {
+          set((s) => ({ edges: s.edges.filter((e) => e.id !== edgeId) }));
+        }
+      };
+
+      return {
       nodes: [],
       edges: [],
       clipboard: null,
@@ -118,7 +166,7 @@ export const useModelingStore = create<ModelingState>()(
   addAttribute: (nodeId, data = {}) => {
     const newAttrId = data.id || `attr_${uuidv4()}`;
     let success = false;
-    
+
     set((state) => {
       const newNodes = state.nodes.map((node) => {
         if (node.id === nodeId) {
@@ -129,11 +177,13 @@ export const useModelingStore = create<ModelingState>()(
               ...node.data,
               attributes: [
                 ...node.data.attributes,
-                { 
-                  id: newAttrId, 
-                  name: data.name || 'novo_atributo', 
+                {
+                  id: newAttrId,
+                  name: data.name || 'novo_atributo',
                   type: data.type || 'string',
-                  isPrimary: data.isPrimary
+                  isPrimary: data.isPrimary,
+                  isOptional: data.isOptional,
+                  refEntityId: data.refEntityId
                 }
               ]
             }
@@ -143,7 +193,11 @@ export const useModelingStore = create<ModelingState>()(
       });
       return { nodes: newNodes };
     });
-    
+
+    if (success) {
+      syncReferenceEdge(nodeId, newAttrId);
+    }
+
     return success ? newAttrId : undefined;
   },
   updateAttribute: (nodeId, attrId, data) => {
@@ -163,6 +217,10 @@ export const useModelingStore = create<ModelingState>()(
         return node;
       })
     }));
+
+    if ('type' in data || 'refEntityId' in data || 'isOptional' in data) {
+      syncReferenceEdge(nodeId, attrId);
+    }
   },
   removeAttribute: (nodeId, attrId) => {
     set((state) => ({
@@ -285,7 +343,10 @@ export const useModelingStore = create<ModelingState>()(
         position: n.position,
         color: n.data.color
       })),
-      relations: edges.map(e => {
+      // Composition edges (from reference-type attributes) are derived from entity.attributes
+      // above and re-synced on import, not hand-authored — exclude them here so they don't show
+      // up twice in the spec.
+      relations: edges.filter(e => !e.data?.isComposition).map(e => {
         const isEntitySource = e.sourceHandle?.startsWith('entity-source');
         const isEntityTarget = e.targetHandle?.startsWith('entity-target');
 
@@ -304,7 +365,16 @@ export const useModelingStore = create<ModelingState>()(
   importSpec: (specJson) => {
     try {
       const spec = JSON.parse(specJson);
-      
+
+      // Reference-type attributes get their composition edge regenerated below, after nodes
+      // exist — skip any matching relation entries so we don't create a duplicate edge.
+      const referenceAttrIds = new Set<string>();
+      spec.entities.forEach((e: any) => {
+        (e.attributes || []).forEach((a: any) => {
+          if (a.type === 'reference' && a.refEntityId) referenceAttrIds.add(a.id);
+        });
+      });
+
       const importedNodes: AppNode[] = spec.entities.map((e: any) => ({
         id: e.id,
         type: 'entity',
@@ -320,9 +390,12 @@ export const useModelingStore = create<ModelingState>()(
         }
       }));
 
-      const importedEdges: Edge[] = spec.relations.map((r: any) => {
-        const sourceHandle = r.sourceAttribute || 'entity-source';
-        const targetHandle = r.targetAttribute || 'entity-target';
+      const importedEdges: Edge[] = spec.relations
+        .filter((r: any) => !(r.sourceAttribute && referenceAttrIds.has(r.sourceAttribute)))
+        .map((r: any) => {
+        // Same real-handle-id requirement as addSemanticRelation above.
+        const sourceHandle = r.sourceAttribute || 'entity-source-bottom';
+        const targetHandle = r.targetAttribute || 'entity-target-top';
         return {
           id: `edge_${uuidv4()}`,
           source: r.sourceEntity,
@@ -346,6 +419,16 @@ export const useModelingStore = create<ModelingState>()(
       });
 
       set({ nodes: importedNodes, edges: importedEdges });
+
+      // Regenerate composition edges for every reference-type attribute now that all
+      // entities exist, rather than trusting the JSON to have encoded them faithfully.
+      importedNodes.forEach((node) => {
+        node.data.attributes.forEach((attr) => {
+          if (attr.type === 'reference' && attr.refEntityId) {
+            syncReferenceEdge(node.id, attr.id);
+          }
+        });
+      });
     } catch (error) {
       console.error('Failed to import spec', error);
       alert('Erro ao importar arquivo JSON. O formato pode estar incorreto.');
@@ -442,7 +525,9 @@ export const useModelingStore = create<ModelingState>()(
       id: a.id || `attr_${uuidv4()}`,
       name: a.name || 'attr',
       type: a.type || 'string',
-      isPrimary: a.isPrimary
+      isPrimary: a.isPrimary,
+      isOptional: a.isOptional,
+      refEntityId: a.refEntityId
     })) : [
       { id: `attr_${uuidv4()}`, name: 'id', type: 'uuid', isPrimary: true }
     ];
@@ -460,8 +545,17 @@ export const useModelingStore = create<ModelingState>()(
         onChangeLabel: get().updateEntityLabel,
       },
     };
-    
+
     set({ nodes: [...get().nodes, newNode] });
+
+    // If any attribute is already typed as a reference to an entity that exists
+    // (e.g. created earlier in the same batch), wire up its composition edge now.
+    defaultAttributes.forEach((attr) => {
+      if (attr.type === 'reference' && attr.refEntityId) {
+        syncReferenceEdge(newNodeId, attr.id);
+      }
+    });
+
     return newNodeId;
   },
   addSemanticRelation: (sourceId, targetId, options = {}) => {
@@ -473,8 +567,13 @@ export const useModelingStore = create<ModelingState>()(
       id: newEdgeId,
       source: sourceId,
       target: targetId,
-      sourceHandle: options.sourceHandle || 'entity-source',
-      targetHandle: options.targetHandle || 'entity-target',
+      // Must be a real Handle id rendered on EntityNode — there is no bare 'entity-source'/
+      // 'entity-target' handle, only the '-top'/'-bottom' variants. The unsuffixed id used to
+      // be the default here, which silently failed to render (React Flow drops edges whose
+      // handle id doesn't resolve on either node) whenever a caller omitted sourceHandle/
+      // targetHandle for a whole-entity relation.
+      sourceHandle: options.sourceHandle || 'entity-source-bottom',
+      targetHandle: options.targetHandle || 'entity-target-top',
       animated: true,
       type: 'custom',
       data: { markerType },
@@ -494,7 +593,19 @@ export const useModelingStore = create<ModelingState>()(
   },
   removeEntity: (nodeId) => {
     set((state) => ({
-      nodes: state.nodes.filter((n) => n.id !== nodeId),
+      // Deleting an entity that other attributes point to as a complex type would leave a
+      // dangling reference — fall those attributes back to a plain string instead.
+      nodes: state.nodes
+        .filter((n) => n.id !== nodeId)
+        .map((n) => ({
+          ...n,
+          data: {
+            ...n.data,
+            attributes: n.data.attributes.map((a) =>
+              a.refEntityId === nodeId ? { ...a, type: 'string' as AttributeType, refEntityId: undefined } : a
+            )
+          }
+        })),
       edges: state.edges.filter((e) => e.source !== nodeId && e.target !== nodeId)
     }));
   },
@@ -508,7 +619,8 @@ export const useModelingStore = create<ModelingState>()(
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, 'LR');
     set({ nodes: [...layoutedNodes] as AppNode[], edges: [...layoutedEdges] });
   }
-}),
+      };
+    },
 {
   limit: 30,
   partialize: (state) => ({ nodes: state.nodes, edges: state.edges }),
