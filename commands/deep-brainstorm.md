@@ -1,6 +1,5 @@
 ---
-description: Map an entire subject — run whole-subject discovery and produce a complete family of specs covering every major dimension. The "zoom out first" complement to /akios:brainstorm.
-disable-model-invocation: true
+description: Map an entire subject — run whole-subject discovery and produce a complete family of specs covering every major dimension. The "zoom out first" complement to /akios:brainstorm. Use when the user wants the whole picture mapped before starting, not one feature designed.
 ---
 
 # /akios:deep-brainstorm — Whole-subject mapping (workflow.yml: deep-brainstorm)

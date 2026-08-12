@@ -1,6 +1,12 @@
 ---
 name: task-execution
-description: Drive a akios/tasks/todo/ backlog to implemented, verified, reviewed code — the kit's execution phase. Use after spec-to-tasks has produced task files, or when a user runs /akios:deliver. Stack-agnostic: it reads the project's own build/test commands from akios/Context.md. Moves task files through folder states, writes tests first, verifies at each checkpoint, manages the context window, and archives finished specs. Never writes to git — the finished work is left in the working tree for the user to review and commit.
+description: >-
+  Drive a akios/tasks/todo/ backlog to implemented, verified, reviewed code — the kit's execution
+  phase. Use after spec-to-tasks has produced task files, or when a user runs /akios:deliver.
+  Stack-agnostic: it reads the project's own build/test commands from akios/Context.md. Moves task
+  files through folder states, writes tests first, verifies at each checkpoint, manages the context
+  window, and archives finished specs. Never writes to git — the finished work is left in the
+  working tree for the user to review and commit.
 license: MIT
 metadata:
   author: Lucas Oliveira

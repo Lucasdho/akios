@@ -26,12 +26,16 @@ Two things follow from that, and they're the whole design:
 | `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
 | `/akios:handoff` | Write a handoff doc for another agent session, or return results |
 
-All commands are typed-only (`disable-model-invocation`) — a `/akios:*` command never auto-fires.
-The **skills** underneath are a separate layer and are model-invocable by design: describe a
-feature you want built and `feature-pipeline` may route you into the spine on its own. If you'd
-rather that never happen, disable the skills you don't want auto-triggering. Every command works
-**without** `/akios:setup`: it creates what it needs, asks only what it depends on, and offers
-setup at the end rather than as a gate.
+**Commands are model-invocable**, like the skills underneath them: you can type `/akios:plan`, or
+just say what you want and let Claude route there itself. Describe a feature and it may take you
+into the spine on its own. Two things stay true regardless of who invoked what — `brainstorm` is
+always interactive, and `just-vibes` runs unattended only when *you* asked to be left out of the
+loop, never because Claude decided to skip asking. If you'd rather nothing auto-fire, add
+`disable-model-invocation: true` to the commands you want typed-only, and disable the matching
+skills.
+
+Every command works **without** `/akios:setup`: it creates what it needs, asks only what it depends
+on, and offers setup at the end rather than as a gate.
 
 ## Install
 

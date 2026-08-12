@@ -1,6 +1,5 @@
 ---
-description: Implement and ship from the task backlog (pipeline Phase 3, task-execution + the two proofs).
-disable-model-invocation: true
+description: Implement the task backlog in akios/tasks/todo/ and hand the working tree back uncommitted (pipeline phase 3, task-execution + the two proofs). Use when a planned backlog exists and the user wants it built.
 ---
 
 # /akios:deliver — Deliver (workflow.yml: deliver)

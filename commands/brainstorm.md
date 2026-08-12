@@ -1,6 +1,5 @@
 ---
-description: Start a feature — turn an idea into an approved spec (pipeline Phase 1, idea-to-spec).
-disable-model-invocation: true
+description: Start a feature — turn an idea into an approved spec in akios/specs/ (pipeline phase 1, idea-to-spec). Use when the user wants to design or spec out one new feature before it gets built.
 ---
 
 # /akios:brainstorm — Brainstorm phase (workflow.yml: brainstorm)
