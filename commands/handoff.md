@@ -7,6 +7,9 @@ argument-hint: "What the next session will focus on (prefix with 'return:' to wr
 
 Load the `handoff` skill and write the handoff document to `akios/tasks/handoffs/`.
 
+**Works without `/akios:setup`.** Create `akios/tasks/handoffs/` if it doesn't exist and write
+there. A handoff is a summary of *this session*, so it needs no kit state at all.
+
 **Argument:** `$ARGUMENTS`
 
 - No argument → summarize current session state and write `akios/tasks/handoffs/<inferred-topic>.md`

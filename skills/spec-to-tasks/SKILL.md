@@ -1,10 +1,10 @@
 ---
 name: spec-to-tasks
-description: Turn an approved spec into a lean, executable backlog of task files under akios/tasks/todo/ in a single pass — the plan phase for Swift/iOS work. Use after idea-to-spec has produced akios/specs/<feature>.md and you need the execution backlog, or when a user runs /akios:plan. Produces atomic task files with est_tokens + runner, parallel markers, checkpoint barriers, definitions of done, and per-task UI-state coverage. Does NOT write app code — it writes the plan that task-execution runs.
+description: Turn an approved spec into a lean, executable backlog of task files under akios/tasks/todo/ in a single pass — the kit's plan phase. Use after idea-to-spec has produced akios/specs/<feature>.md and you need the execution backlog, or when a user runs /akios:plan. Stack-agnostic. Produces atomic task files with est_tokens + runner, parallel markers, checkpoint barriers, definitions of done, and per-task state coverage. Does NOT write code — it writes the plan that task-execution runs.
 license: MIT
 metadata:
   author: Lucas Oliveira
-  version: "2.0.0"
+  version: "3.0.0"
 ---
 
 # Spec to Tasks — one pass, spec → akios/tasks/todo/
@@ -14,8 +14,11 @@ under `akios/tasks/todo/`**. One skill, one pass, one human confirm — no multi
 scaffold directory or second spec format to bootstrap; this skill neither creates nor needs one.
 
 **Why it exists:** `idea-to-spec` already resolves ambiguity decision-by-decision upstream, and
-the kit's gates (`AGENTS.md` house rules, `swift-dev`, `/code-review`) enforce quality downstream.
+the kit's gates (`AGENTS.md` house rules, `/code-review`) enforce quality downstream.
 This skill does the one thing that was missing: decompose the spec into runnable, sized tasks.
+
+**Language-agnostic.** Areas, folders, and domain tags come from what `akios/Context.md` records
+about *this* project's architecture. Never assume a stack, a folder convention, or a test runner.
 
 ## Inputs / output
 - **In:** one or more approved `akios/specs/<feature>.md` (passed as `$ARGUMENTS`), plus `akios/Context.md`
@@ -29,9 +32,8 @@ This skill does the one thing that was missing: decompose the spec into runnable
    already settled — if something is genuinely ambiguous, ask one direct question, no clarify ceremony.
 2. **Decompose by similarity + size.**
    - **Group by similarity** — same file / area / concern travels together. `area` follows the
-     project's own structure (`akios/Context.md`); under `architecture: alva` see
-     `references/alva-integration.md` for the slice-folder convention that governs `area` and
-     cross-feature boundaries.
+     project's own structure as recorded in `akios/Context.md` `## Architecture`; never invent a
+     folder convention the project doesn't use.
    - **Bound by size** — estimate each task's cost and keep it under the **80k soft ceiling**; split
      a task that would exceed it. Atomic = one coherent change with one Definition of Done.
 3. **Estimate cost (rough proxy).** `est_tokens ≈ Σ touched-file sizes + description weight`. For
@@ -42,7 +44,7 @@ This skill does the one thing that was missing: decompose the spec into runnable
    **and** an isolatable task) before actually dispatching one.
 
    *Worked example:* a task editing two existing files (~3k + ~5k tokens) plus one new ~4k-token
-   view, with a two-sentence description (~0.1k) → `est_tokens ≈ 12k` → `runner: orchestrator`.
+   module, with a two-sentence description (~0.1k) → `est_tokens ≈ 12k` → `runner: orchestrator`.
    A task touching six files across a data layer + its tests (~9k) plus a new ~15k-token
    migration path, description weight ~0.5k → `est_tokens ≈ 25k` → `runner: subagent-eligible`.
 4. **Graph parallelism by area.** Tag a task `[P]` (`parallel: true`) only if it shares no files
@@ -51,36 +53,26 @@ This skill does the one thing that was missing: decompose the spec into runnable
 5. **Checkpoints = barriers.** Group tasks into checkpoints in execution order. A checkpoint is a
    point where all its in-flight `[P]` tasks must finish before continuing; each carries an
    **audit** (verify every DoD). Mark `[major]` when it completes a vertical slice — `[major]`
-   runs the unit + integration test battery before advancing.
-5b. **UI build-order stage shape.** A screen-touching task decomposes into the A3 stages,
-   named explicitly and homed where the project's architecture puts view code (under
-   `architecture: alva`, nested *inside* `presentation/<View>/`; otherwise the project's own UI folder):
-   `components [P] (swiftui-pro)` → `ui-variations dumb-screen (design phase)` → `make-it-live
-   (wiring, deliver phase)`. The middle stage is always `ui-variations` — never a retired skill
-   (`html-to-swiftui`, `visual-grounding`) or the parked `figma-to-swiftui`. Components tagged
-   `[P]` within the same checkpoint are independent leaf pieces; the dumb-screen and make-it-live
-   stages serialize after them.
-6. **Designer's-eye (mandatory for any UI- or data-backed task).** Translate the spec's empty
-   states into per-task acceptance criteria: every screen-touching task's DoD covers **happy ·
-   empty · loading/in-flight · error/offline**. A UI task whose DoD omits these is incomplete.
-7. **Apply the data house rules** when scoping model/persistence tasks:
-   - **Native types over wrappers** — Swift's own `id`/`UUID`/`Hashable`/`Codable` first; a wrapper
-     needs a one-line justification in the task.
-   - **Protocol-first repositories** — `protocol` + defaults; concretes inherit. A repository task's
-     DoD includes "protocol defined, defaults provided, `Hashable` + JSON↔object round-trip covered."
-8. **Foundation-consult step (`architecture: alva` only).** Under `architecture: alva`, every task
-   that creates a helper, protocol, or component gets a Foundation-consult DoD line — see
-   `references/alva-integration.md` for the exact wording. **Under any other architecture, omit this
-   DoD line** and let reuse follow the project's own convention.
-9. **Tag each task with its knowledge pack + domain sub-skill** (routing below) — the executor's
-   subagent starts cold and must load it. Every task carries a `pack:<domain>` tag, defaulting to
-   `pack:ios` for a Swift repo; a task also touching a second domain (e.g. a DDD-modeled feature)
-   carries both (`pack:ios` + `pack:ddd`). For the `ios` pack, the concrete reference is
-   `swift-dev`'s bundled guide — tag the `swift_dev:` sub-skill exactly as before; a non-`ios`
-   pack's concrete reference is its own `INDEX.md`-selected file (`knowledge-architecture.md`
-   §1/§2). **Under `architecture: alva`**, a slice-scaffolding or `Router/`/`Container/` task is
-   tagged `alva-architecture` first — see `references/alva-integration.md`; under any other
-   architecture there is no such tag.
+   runs the project's full test battery (`akios/Context.md` `## Commands`) before advancing.
+6. **Build-order shape (bottom-up).** Decompose a feature so leaf pieces land before the things
+   that compose them: independent leaf units (tagged `[P]` within a checkpoint) → the composition
+   that uses them → the wiring that connects it to real data/services. Home each task where *this*
+   project's architecture puts that kind of code, per `akios/Context.md` — never a folder shape
+   imported from another project.
+7. **Designer's-eye (mandatory for any user-facing or data-backed task).** Translate the spec's
+   empty states into per-task acceptance criteria: every user-facing task's DoD covers **happy ·
+   empty · loading/in-flight · error/offline**. A user-facing task whose DoD omits these is
+   incomplete.
+8. **Apply the data house rules** when scoping model/persistence tasks:
+   - **Native types over wrappers** — the language's own identity/equality/serialization
+     primitives first; a custom wrapper needs a one-line justification in the task.
+   - **Interface-first repositories** — define the abstraction plus defaults; concretes implement
+     it. A repository task's DoD includes "interface defined, defaults provided, equality +
+     serialization round-trip covered."
+9. **Point each task at the code it should follow** — the executor's subagent starts cold. When
+   an existing file in the repo is the pattern to mirror, name it in the task's `## Files` section.
+   When nothing in the repo is a precedent, say so; the executor falls through to its own general
+   knowledge, which is the documented floor of the priority chain.
 10. **One interactive confirm.** Show the checkpoint/task graph + est_tokens/runner + designer's-eye
     coverage compactly. Get a yes or adjustments. *Then* write the task files into `akios/tasks/todo/`.
 
@@ -94,40 +86,25 @@ spec: akios/specs/<feature>.md
 est_tokens: 14k
 runner: orchestrator        # ≤20k orchestrator · >20k subagent-eligible
 parallel: true              # true = [P]; shares no files/symbols with siblings this checkpoint
-area: Squad/presentation/SquadList   # slice sub-folder; same-area tasks serialize
+area: <project's own folder/module for this concern>   # same-area tasks serialize
 checkpoint: 1               # [major] checkpoints run the test battery
-pack: pack:ios              # knowledge pack(s) the cold subagent loads; default pack:ios, add a 2nd (pack:ios pack:ddd) for a cross-domain task
-swift_dev: swiftui-pro      # domain sub-skill the cold subagent must load
 ---
 
 # T001 — <one-line goal>
 > **State:** todo                       # state is the folder: todo→in-progress→review→done
 
-## Description … ## Files … ## Definition of Done … ## UI states … ## Notes
+## Description … ## Files … ## Definition of Done … ## States … ## Notes
 ```
 
 State is the **containing folder**; `task-execution` moves the file `todo → in-progress → review
 → done`. Checkpoint order and `[major]` markers are carried on each task's `checkpoint` field.
 
-## swift-dev domain routing (tag every task)
-
-| Task type | swift-dev sub-skill |
-|---|---|
-| New feature/slice scaffold, DI wiring, navigation/coordinators | `alva-architecture` |
-| Views, SwiftUI layouts, previews | `swiftui-pro` |
-| async/await, actors, Sendable, concurrency | `swift-concurrency-pro` |
-| Unit tests, Swift Testing | `swift-testing-pro` |
-| SwiftData, persistence, migrations | `swiftdata-pro` |
-| VoiceOver, Dynamic Type, a11y | `ios-accessibility` |
-| Run / build / debug behavior | `ios-debugger-agent` |
-| UI polish, widgets, design | `swiftui-design-principles` |
-
 ## Posture (learning vs. delivery)
 Read `akios/Roadmap.md`'s `posture` flag the same way every phase does (see `AGENTS.md`
-"Operating posture" / `akios/specs/operating-modes.md` §3 for the flag mechanic). The
+"Operating posture" for the flag mechanic). The
 phase-specific delta: in **learning** mode the step-10 confirm also states *why* the graph came
-out this way — why these checkpoint boundaries, why a task is `[P]` (or isn't), why it carries the
-`pack:<domain>` tag it does. **Delivery** (default) shows the graph without that commentary. Never
+out this way — why these checkpoint boundaries, why a task is `[P]` (or isn't), why its `## Files`
+name the precedents they do. **Delivery** (default) shows the graph without that commentary. Never
 changes the decomposition — same tasks, checkpoints, and tags in both postures.
 
 ## Hand-off
@@ -138,5 +115,6 @@ files + updating `akios/Roadmap.md`; tell the user the backlog is ready and that
 Each is the inverse of a step above:
 - Creating a scaffold directory or any other second formal spec format.
 - Re-clarifying what the spec already settled.
-- A task missing `est_tokens`/`runner`, a DoD, or (UI/data task) empty/loading/error coverage.
-- **More than one human confirm** — one review, then write. *(net-new)*
+- Assuming a folder layout, language, or test runner that `akios/Context.md` doesn't record.
+- A task missing `est_tokens`/`runner`, a DoD, or (user-facing/data task) empty/loading/error coverage.
+- More than one human confirm — one review, then write.

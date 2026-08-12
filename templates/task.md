@@ -4,10 +4,8 @@ spec: akios/specs/{{spec}}.md
 est_tokens: {{rough estimate ≈ Σ touched-file sizes + description weight}}
 runner: {{orchestrator (≤20k) | subagent-eligible (>20k)}}
 parallel: {{true | false}}   # true = [P], shares no files/symbols with siblings in this checkpoint
-area: {{Features/<F>/domain|data|presentation/<View>|contract|tests — slice sub-folder; same-area tasks serialize}}
-checkpoint: {{n}}            # [major] checkpoints run the test battery
-pack: {{pack:ios}}           # knowledge pack(s) the cold subagent loads; default pack:ios, add a 2nd domain (e.g. pack:ios pack:ddd) when the task spans one
-swift_dev: {{sub-skill}}     # domain sub-skill the cold subagent must load
+area: {{the project's own folder/module for this concern (see akios/Context.md "Module boundaries"); same-area tasks serialize}}
+checkpoint: {{n}}            # [major] checkpoints run the project's full test battery
 ---
 
 # T000 — {{one-line goal}}
@@ -26,8 +24,9 @@ swift_dev: {{sub-skill}}     # domain sub-skill the cold subagent must load
 - {{verifiable bullet}}
 - {{verifiable bullet}}
 
-## UI states  (UI / data-backed tasks only — else "N/A")
-- happy · empty · loading/in-flight · error/offline
+## States
+<!-- User-facing or data-backed task: happy · empty · loading/in-flight · error/offline.
+     Delete this section for a task with no user-facing surface. -->
 
 ## Notes
-<!-- swift-dev sub-skills to load by scope; gotchas; priority-chain references. -->
+<!-- Packs to load by scope; gotchas; priority-chain references. -->

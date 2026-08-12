@@ -127,9 +127,9 @@ one bullet per item. This is the source of truth for Phase 3.
 **Map seeds and boundaries while mapping, not later.** While enumerating, capture two things that
 otherwise get rediscovered downstream: cross-item **boundaries** (when two items will need to talk
 to each other, flag which owns the interaction and which consumes it) and **cross-cutting seeds**
-(shared design-system / utility items that shouldn't be reinvented per-domain). Under
-`architecture: alva` these are slice contract boundaries and `Foundation/` seeds — see
-`references/alva-integration.md`.
+(shared design-system / utility items that shouldn't be reinvented per-domain). Express both in
+whatever vocabulary `akios/Context.md` `## Architecture` uses for this project's module
+boundaries and shared code.
 
 ---
 
@@ -167,8 +167,8 @@ to shuffle anything.
 Each spec represents one coherent domain — the unit that `spec-to-tasks` will later decompose
 into tasks. Carry forward the boundary and seed notes from Phase 2 into each spec
 (`idea-to-spec`'s `spec-format.md`) — this is where those flags get resolved into an actual
-declaration instead of staying loose notes. Under `architecture: alva` that resolution is the
-spec's Contract & Foundation header — see `references/alva-integration.md`.
+declaration instead of staying loose notes. In a project with module boundaries that resolution
+is the spec's `## Contract` header (see `idea-to-spec`'s `references/akios-integration.md`).
 
 ### Grouping into specs
 

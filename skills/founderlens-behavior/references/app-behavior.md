@@ -61,4 +61,4 @@ A versioned markdown doc: header + v0.1, numbered sections for Discover / Define
 
 ## BYOK
 
-The real app is bring-your-own-key (Anthropic Console key in the Apple Keychain; no server inference). The simulator represents this honestly but runs AI through the artifact runtime so it works without setup.
+The real app is bring-your-own-key (an Anthropic Console key held in the platform's own credential store; no server inference). The simulator represents this honestly but runs AI through the artifact runtime so it works without setup.

@@ -14,40 +14,45 @@ for how to work here — the skill gates live below, not in a separate file.
 5. **Record** → save durable decisions to auto-memory (Claude writes it itself;
    tell it "remember that …" for anything that should survive the session).
 
-## Always on (Swift / iOS)
-Two internal routers, no external plugin dependencies:
-- **`swift-dev`** — Swift/iOS domain master router. Classifies the scope of a change
-  and loads the right bundled guide before any code: `swiftui-pro` (views/layout) ·
-  `swift-concurrency-pro` (async/await/actors/Sendable) · `swift-testing-pro` (Swift
-  Testing) · `swiftdata-pro` (SwiftData) · `ios-accessibility` · `ios-debugger-agent`
-  (run/debug) · `alva-architecture` (new feature / slice scaffolding, DI, coordinators —
-  **only when this project adopted ALVA**, see `## Architecture` below) ·
-  plus performance/refactor/figma guides on demand. Replaces the old axiom gate.
-- **`task-execution`** — owns the execution loop (Phase 3): branch per spec, folder-state
-  task lifecycle, checkpoint commits, TDD-first, human gate before push/merge. Absorbs the
-  execution discipline the kit used to borrow from superpowers.
+## akios never writes to git
+**Never run a git command that changes anything.** No commits, no branches, no `git add`, no
+pushes, no merges, no tags. Not at a checkpoint, not at the end of a task, not "so the work isn't
+lost", and not because the user approved the *work* — approving a change is not approving a commit,
+and those are different questions. Don't offer to commit either; leave the diff in the working tree
+and report what changed. If the user directly tells you to commit, that's an instruction and you
+follow it — but you never propose it.
+
+This holds in every mode, `/akios:just-vibes` included: running unattended removes the *questions*,
+not the human's ownership of their history. Every run ends the same way — changed files in the
+working tree, and a report of what changed.
+
+Reading git is fine and often useful (`git status`, `git diff`, `git log`); the prohibition is on
+writes.
+
+## Stack — read it, never assume it
+akios ships **no** language or framework knowledge, and assumes nothing about what kind of project
+this is — app, library, monorepo, infrastructure, docs, dataset, or something with no code in it
+at all. Everything this kit knows about *this* project lives in `akios/Context.md`: what the repo
+is, its stack, its architecture, and — most importantly — the exact install / run / test / lint /
+build commands under `## Commands`. A `none` there is a real answer: it means that step doesn't
+exist here, and the DoD audit stands in for it. Never fill a `none` with a guess.
+
+**Never guess an invocation.** Every phase reads its build and test commands from there. If a
+command is missing or stale, ask once and update `akios/Context.md` — don't improvise one and
+don't hardcode one into a task.
+
+Your own general knowledge of the language in play is the *floor* of the priority chain (tier 3),
+used only when the project and the user's preferences are both silent. To raise that floor for this
+project, record the decision — in `akios/Context.md`, in a spec, or in auto-memory — so it becomes
+tier 1 next session instead of being re-derived.
 
 ## Architecture
-This project's architecture is described in `akios/Context.md` `## Architecture` — that section
-carries the `architecture:` signal every skill reads. **Follow the project's own architecture;
+This project's architecture is described in `akios/Context.md` `## Architecture`, including the
+vocabulary it uses for module boundaries and shared code. **Follow the project's own architecture;
 akios does not impose one.**
 
-**ALVA is opt-in but strongly recommended.** ALVA (Agent-Legible Vertical Architecture) is this
-kit's **recommended** iOS vertical-slice architecture, adopted via `architecture: alva` — every
-feature a self-contained slice
-(`Features/<Feature>/{domain,data,presentation,contract,tests}`), cross-feature composition only at
-the top (`Router/`, `Container/`), shared leaf code graduating into `Foundation/` by a deterministic
-usage ledger rather than upfront guess. It applies **only when `akios/Context.md` declares
-`architecture: alva`** (set at `/akios:setup`). When it does, load `swift-dev`'s `alva-architecture`
-guide before scaffolding any feature or slice; the full portable doctrine (publishable standalone
-from the akios realization) is `akios/specs/alva-architecture-doctrine.md`. When it doesn't, there is
-no slice-shape law and no Foundation ledger — follow the architecture in `akios/Context.md`.
-
-**Optional (not required):** `ponytail` — efficiency overlay (no over-building, no rewriting
-what works). The kit has no external dependency on it; install it for yourself if you like.
-
 ## Operating posture (learning vs. delivery)
-`akios/Roadmap.md` carries a third flag beside `mode`/`collaboration`: `posture: learning | delivery`
+`akios/Roadmap.md` carries a second flag beside `mode`: `posture: learning | delivery`
 (default `delivery`, written by `/akios:setup`, overridable for one session via a command flag —
 `/akios:deliver --learning` — or a spoken switch, without rewriting the Roadmap default).
 Posture changes **only** how akios communicates and captures — never what it builds; a learning-
@@ -58,76 +63,52 @@ A closed, named **teaching surface** — everything else is identical between po
 | Behavior | Delivery (default) | Learning |
 |---|---|---|
 | Decision annotation | recorded to the artifact, no narration | inline one-liner: what, the principle, the tradeoff |
-| Principle citation | none | names the doctrine + the owning pack/spec |
+| Principle citation | none | names the doctrine + the owning reference/spec |
 | Alternatives shown | in the artifact only | surfaced briefly at the decision point |
 | Capture eagerness (prefs/hurdles) | propose at natural pauses, 2nd-occurrence rule | propose more eagerly + explain why it's worth remembering |
 | End-of-unit digest | outcome report only | a short "what you learned" recap (3–5 principles) |
 | Pace / checkpoints | as planned | may add a soft pause after a teachable checkpoint (never a hard gate) |
 
-Every phase skill (`idea-to-spec`, `spec-to-tasks`, `task-execution`, `align-ui`) reads `posture`
-the same way it already reads `collaboration` and toggles only this surface. Under `just-vibes`
+Every phase skill (`idea-to-spec`, `spec-to-tasks`, `task-execution`) reads `posture`
+the same way it already reads `mode` and toggles only this surface. Under `just-vibes`
 (no human present), learning posture writes a **"Lessons"** section to
 `akios/.local/just-vibes-journal.md` per unit instead of narrating live; delivery journals outcomes
-only. Full detail: `akios/specs/operating-modes.md`.
-
-## Delivery autonomy (manual vs. auto)
-`akios/Roadmap.md` carries a fourth flag: `autonomy: manual | auto` (default `manual`, written by
-`/akios:setup`, overridable for one run via a command flag or a spoken switch, without rewriting
-the Roadmap default). **Independent of `collaboration` — not inferred from it**: `collaboration`
-answers "who else runs akios on this repo" (solo/team); `autonomy` answers "is `just-vibes`
-authorized to auto-push/merge at all." Every combination is valid:
-
-| | `autonomy: manual` | `autonomy: auto` |
-|---|---|---|
-| **`collaboration: solo`** | build + commit locally; never push/merge, even under `--force` | merge + push the default branch (today's documented solo behavior) |
-| **`collaboration: team`** | build + commit; claim-coordination pushes still happen, but no shipping push/PR | push `feature/<spec>` + open a PR (today's documented team behavior) |
-
-Under `autonomy: manual`, a green unit's branch stays local and shows up in the `just-vibes` run
-report's **"Built (unshipped)"** bucket — distinct from Parked (red) and Shipped (already
-shipped) — awaiting a human push/merge. `task-execution`'s hard human gate is waived only when
-**both** `just-vibes` **and** `autonomy: auto` apply; outside `just-vibes`, this flag has no
-effect (a human is already present to answer the gate directly). Full detail:
-`akios/specs/collaboration-autonomy.md`.
+only.
 
 ## The priority chain (whose answer wins)
 For any code decision (pattern, naming, architecture), resolve **top-down — the first tier
 with a relevant answer wins, lower tiers only fill silence**:
 
 ```
-1. Project decision already made   (MEMORY.md + existing code / akios/Context.md)
-2. Knowledge packs, user-curated   (akios/code-references/ = the project's auto-built code pack;
-                                     other ingested packs — a DDD book, a design system — route
-                                     here too, by domain-tag match)
-3. Global user preference           (~/.claude/akios/preferences.md)
-4. Baseline packs, shipped floor    (swift-dev = the `ios` pack; other baseline packs land here)
+1. Project decision already made  (MEMORY.md + existing code / akios/Context.md)
+2. Global user preference         (~/.claude/akios/preferences.md)
+3. Your own general knowledge     (the floor — used only when both tiers above are silent)
 ```
 
-A repo's established architecture isn't rewritten because of a general preference (project
-on top). Concrete code you've shown outranks a stated preference (a curated knowledge pack
-above preferences). `swift-dev` (the `ios` baseline pack) is the floor that always answers.
-The chain itself is unchanged — tiers 2 and 4 just widened from "code-references / swift-dev"
-specifically to "knowledge packs" generally, so a user-ingested pack (`/akios:learn`) slots in
-without a new tier. See `akios/specs/knowledge-architecture.md` for the pack format and ingestion path.
+A repo's established architecture isn't rewritten because of a general preference — the project is
+on top, and existing code in the repo *is* a project decision even when nobody wrote it down.
+Tier 3 is your own model knowledge, deliberately last: what this project already does beats a
+general best practice every time. The way to grow tier 1 is to record decisions as they're made —
+in `akios/Context.md`, in the spec, or in auto-memory.
 
 ## How to execute (orchestration)
-The feature spine's phases are defined in **`akios/workflow.yml`** (the machine-readable contract —
+The feature spine's phases are defined in **`workflow.yml`** (the machine-readable contract —
 commands and phase detection read it). `task-execution` owns the *deliver* phase loop;
 `spec-to-tasks` owns *plan*; `idea-to-spec` owns *brainstorm*. For a vague "build X" request,
-**`ios-feature-pipeline`** is the entry point — it reads `akios/workflow.yml` and walks you through
+**`feature-pipeline`** is the entry point — it reads `workflow.yml` and walks you through
 the phases.
 
 Note: a spawned subagent starts cold — it does NOT inherit these gates. When you dispatch one
-for gated work, restate the relevant gate (and the task's `swift-dev` domain) in its prompt.
+for gated work, restate the relevant gate (and the task's `refs:`) in its prompt.
 
 ## Sizing the work & subagent economy
 Match the machinery — and the model — to the size of the job. Two questions before you start or dispatch:
 
 **1. Quick task or real spec?**
 - *Quick task* — one file, or a mechanical change across a few, low-risk, no new domain (a rename, a
-  one-liner, mirroring an existing screen, a copy tweak). **Do it inline, now** — no spec, no pipeline
-  (still on a branch/worktree per the isolation rule below; never edit a building working copy in place).
+  one-liner, mirroring an existing module, a copy tweak). **Do it inline, now** — no spec, no pipeline.
 - *Real spec* — multi-file, new behavior, a new domain, or anything you'd want reviewed as a unit.
-  Route it through the spine (brainstorm → plan → design → deliver) and let `task-execution` own the loop.
+  Route it through the spine (brainstorm → plan → deliver) and let `task-execution` own the loop.
 
 Mis-sizing costs both ways: a full pipeline for a one-liner is overhead the user pays for nothing; a
 quick patch for a real feature ships half-baked. When genuinely unsure, ask one sizing question rather
@@ -152,11 +133,10 @@ This kit uses three similarly-valued thresholds for three different things — s
 |---|---|---|---|---|
 | Inter-spec compact line | 110k / 135k | The **orchestrator's own** context, between specs | `task-execution/SKILL.md` "Context management" | warn at 110k → finish current task; urgent `/compact` at 135k |
 | Subagent-dispatch judgment | 120k | The **orchestrator's own** context, before deciding to dispatch at all | this section, above | at/above it, dispatching a heavy isolatable task becomes worth considering |
-| Subagent lineage budget | 120k | **A subagent's own context**, accumulated across the tasks it has chained through so far | `akios/specs/subagent-context-chaining.md` | at/above it, that link finishes its current task, hands off, and terminates — it does not start another task |
+| Subagent lineage budget | 120k | **A subagent's own context**, accumulated across the tasks it has chained through so far | `task-execution/SKILL.md` "Batch chaining" | at/above it, that link finishes its current task, hands off, and terminates — it does not start another task |
 
 The dispatch-judgment line and the lineage budget share a value by coincidence, not identity — one
-is checked against the orchestrator's window, the other against a subagent's own. See
-`subagent-context-chaining.md` §2 for the full reasoning.
+is checked against the orchestrator's window, the other against a subagent's own.
 
 **3. When you do dispatch: cheapest model that fits, and only the slice it needs.**
 - *Orchestration tier.* The driving session runs on **opus or sonnet** — sonnet is the budget option
@@ -168,52 +148,46 @@ is checked against the orchestrator's window, the other against a subagent's own
   needs — that's spending the orchestrator's tier on work a cheaper one ships correctly.
 - *Never clone your context into a subagent.* A subagent starts cold and is billed for **every token you
   hand it** — passing your whole window is the single most expensive mistake here. Send only the slice:
-  the task + its DoD, the one `swift-dev` domain sub-skill, the matching `akios/Context.md` gotcha, the
-  precedent file path. If you're about to paste the conversation, stop — summarize the slice instead.
+  the task + its DoD, its `refs:` list, the project's test command, the matching
+  `akios/Context.md` gotcha, the precedent file path. If you're about to paste the conversation, stop —
+  summarize the slice instead.
 
 ## Skill gates
-The SessionStart hook re-states these every session, but it only reminds — it
-does not enforce. They are a routing aid, **not a toll booth on every file**.
+These are a routing aid, **not a toll booth on every file**.
 
 **Proportionality (read before routing).** A skill earns its overhead only when it
 injects knowledge you don't already have or enforces discipline on risky work. Match the
 ceremony to the task:
 
 - **Just do it** (no gate) when the change is a *mechanical application of a pattern already
-  established in this repo* and is low-risk — e.g. "make BoardView like SquadView", renames,
-  obvious one-liners, moving code. Recognizing the existing pattern **is** the routing; loading
-  a guide to copy a pattern you can already see adds latency, not correctness.
+  established in this repo* and is low-risk — e.g. "make the Board module like the Squad module",
+  renames, obvious one-liners, moving code. Recognizing the existing pattern **is** the routing;
+  loading a guide to copy a pattern you can already see adds latency, not correctness.
 - **Load a guide** when there's genuine uncertainty it would resolve: a new domain, an
-  unfamiliar or version-sensitive API, concurrency / SwiftData / accessibility nuance, a design
+  unfamiliar or version-sensitive API, concurrency or persistence nuance, a design
   with no in-repo precedent, or anything you'd hesitate to ship unreviewed.
 
 When in doubt, the cost of skipping is a missed best-practice; the cost of over-gating is the
 overhead the user is paying for nothing. Bias toward the smaller of the two. The gates below are
 the *map of where knowledge lives* — consult it when you need the knowledge, not reflexively.
 
-**Skipping the gate ≠ skipping isolation.** "Just do it" means do it directly, not do it
-recklessly. Standalone work that bypasses the feature pipeline still lands on a branch (or a
-worktree for anything that builds) — never edit the user's working copy in place mid-build. Read
-the files first and diagnose before writing; delete dead code and duplicates so the diff gets
-*smaller*, not bigger. Speed comes from reading first and reusing the existing pattern as a spec —
-not from cutting the safety rails.
+**Skipping the gate ≠ skipping care.** "Just do it" means do it directly, not do it recklessly.
+Read the files first and diagnose before writing; delete dead code and duplicates so the diff gets
+*smaller*, not bigger. Check `git status` before your first edit and say so if the tree is already
+dirty — your changes and the user's shouldn't get tangled. Speed comes from reading first and
+reusing the existing pattern as a spec, not from cutting the safety rails.
 
 | Trigger | Skill | When |
 |---|---|---|
-| Building a new feature end-to-end | `ios-feature-pipeline` → brainstorm → plan → design → deliver | before starting |
+| Building a new feature end-to-end | `feature-pipeline` → brainstorm → plan → deliver | before starting |
+| Mapping a whole product at once | `deep-brainstorm` (`/akios:deep-brainstorm`) → a spec family | before the first spec |
 | Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → write specs to `akios/specs/` | before building |
 | Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `akios/tasks/todo/` | after the spec |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
-| Implementing / running / debugging Swift | `swift-dev` (domain router) + `fewer-permission-prompts` | while coding |
-| Creating / polishing SwiftUI Views | `swift-dev` → `swiftui-pro` (+ design-principles for polish) | before the view |
-| Writing tests | `swift-dev` → `swift-testing-pro` | with the code |
-| Bug, crash, flake, regression | `swift-dev` → `ios-debugger-agent` | before any fix |
 | Delivering the backlog | `task-execution` (`/akios:deliver`) | to ship |
 | Running unattended (drive the whole pipeline yourself) | `just-vibes` (`/akios:just-vibes` · `--force` to loop) | hands-off |
+| Compacting a session into a handoff | `handoff` (`/akios:handoff`) | before pivoting or splitting work |
 | Claiming "done" | `/verify` + `/code-review` | before finishing |
-
-`swift-dev` uses progressive disclosure — the ~400-word router dispatches to one bundled
-guide on demand, so only the relevant domain loads during long plan/deliver sessions.
 
 ### Deepthink (user-triggered)
 Proportionality runs the other way too: when the user flags a decision as high-stakes and wants
@@ -232,25 +206,21 @@ source dirs are described in `akios/Context.md` `## Architecture`.
 | Artifact | Location | Naming | Found / loaded via |
 |---|---|---|---|
 | Operating files | repo root (`CLAUDE.md`/`AGENTS.md`); `akios/` (`Context.md`) | `CLAUDE.md`, `AGENTS.md`, `akios/Context.md` | Claude Code auto-loads `CLAUDE.md`, which imports `AGENTS.md` (root) and `akios/Context.md` |
-| Phase contract | `akios/` | `akios/workflow.yml` | commands + phase detection read it |
-| Spec state | `akios/` | `akios/Roadmap.md` | mode flag + `collaboration` flag + one line per spec |
+| Phase contract | `akios/` | `workflow.yml` | commands + phase detection read it |
+| Spec state | `akios/` | `akios/Roadmap.md` | mode flag + posture flag + one line per spec |
 | Product vision | `akios/` | `akios/Vision.md` | north star + prioritized wishlist; top-tier `just-vibes` fuel |
 | Specs | `akios/specs/` | `<domain>.md`, one file per domain | `akios/Roadmap.md` `## Specs` table |
 | Tasks | `akios/tasks/<state>/` | `T<NNN>-<slug>.md`; state = folder (`todo/ in-progress/ review/ done/`) | moved between folders = state change |
-| UI alignment doc | `akios/tasks/ui-alignment/` | `<ScreenName>.md` (not a task state — a sibling folder) | written by `align-ui` (`/akios:design` or the deliver `[UI gate]`); loaded as the UI task's highest-priority visual reference |
+| Handoffs | `akios/tasks/handoffs/` | `<slug>.md` + `<slug>-return.md` | written and read by `handoff` |
 | Archived specs | `akios/archive/` | `<spec>.md` + `Archive.md` (summary index) | read `Archive.md` first; open full file on demand |
-| Code references | `akios/code-references/` | user-uploaded `.swift` + `INDEX.md` (tags) | loaded on-demand by matching domain tag |
 | User preferences | `~/.claude/akios/preferences.md` (not in repo) | — | priority chain tier 3 |
 | Durable decisions | native auto-memory (not in repo) | `MEMORY.md` | written automatically; survives compaction |
-| Path rules | `.claude/rules/` | `<topic>.md` (e.g. `swift.md`) | fires when a matching file is read |
-| Hooks | `.claude/hooks/` | `<event>-<name>.sh` | wired in `.claude/settings.json` |
-| Skill trace + run journal | `akios/.local/` | `trace.jsonl`, `just-vibes-journal.md` (append-only) | local runtime; **gitignored** — not shared |
-| Instance claims | committed, not `akios/.local/` | task frontmatter `owner:` + the `akios/Roadmap.md` spec line | teammates see them via `git pull` |
-| App source | per `akios/Context.md` `## Architecture` | project-specific | `akios/Context.md` |
+| Run journal | `akios/.local/` | `just-vibes-journal.md` (append-only) | local runtime; **gitignored** — not shared |
+| Project source | per `akios/Context.md` `## Architecture` | project-specific | `akios/Context.md` |
 
 > **Not the same folder:** this table's `akios/` is a **per-project** folder created at repo root
 > by `/akios:setup`. It's unrelated to `~/.claude/akios/` (the "User preferences" row above) —
-> that one is a **user-global** home for preferences/skeletons, outside any single repo. Same
+> that one is a **user-global** home for preferences and packs, outside any single repo. Same
 > name, different scope; they never collide in practice, but don't conflate them.
 
 Adding a new artifact? Put it where the table says and name it the same way. If it's a spec,
@@ -268,74 +238,74 @@ add a row to the `akios/Roadmap.md` `## Specs` table so the next session knows i
 - Before designing something new, read `akios/Roadmap.md` first.
 
 ## Full feature workflow (the spine)
-Defined in `akios/workflow.yml`; entry point is **`ios-feature-pipeline`**. At a glance:
+Defined in `workflow.yml`; entry point is **`feature-pipeline`**. At a glance:
 
-`brainstorm (idea-to-spec) → plan (spec-to-tasks) → design (ui-variations + align-ui) → deliver (task-execution)`
+`brainstorm (idea-to-spec) → plan (spec-to-tasks) → deliver (task-execution)`
 
-Four phases: `brainstorm` (interactive design → `akios/specs/<feature>.md`) → `plan` (one pass →
-`akios/tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, UI states) → `design` (UI-scoped
-tasks only: `ui-variations` explores + remixes + graduates a screen into
-`presentation/<View>/`, `align-ui` resolves states/interactions/navigation + the Nielsen
-heuristics checklist; non-UI tasks skip straight to `deliver`) → `deliver` (branch per spec,
-folder-state lifecycle, TDD-first, commit at each checkpoint, `/verify` + `/code-review`,
-human gate before push/merge). See `ios-feature-pipeline` for the conduct; `akios/workflow.yml` for the
-contract. No scaffold directory and no second spec format.
+Three phases: `brainstorm` (interactive design → `akios/specs/<feature>.md`) → `plan` (one pass →
+`akios/tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, state coverage) → `deliver`
+(folder-state lifecycle, TDD-first, DoD audit at each checkpoint, `/verify` + `/code-review`, then
+hand the working tree back **uncommitted**). See `feature-pipeline` for the conduct;
+`workflow.yml` for the contract. No scaffold directory and no second spec format.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
-**plan mode** (read-only; review the spec/backlog before a single edit lands). `design` and
-`deliver` both write real files (graduated SwiftUI previews, then wired code) — switch to
-**accept-edits / auto mode** for both so you're not approving every individual edit while the
-agent works a known plan. `Shift+Tab` cycles modes mid-session. This is workflow economy, not just
-safety: plan mode stops premature writes during design-of-the-spec; accept-edits stops
-death-by-prompt once code (prototype or final) starts landing. (For the sandbox/security angle,
-see `ios-agentic-kit`'s `references/sandbox.md`.)
+**plan mode** (read-only; review the spec/backlog before a single edit lands). `deliver` writes
+real files — switch to **accept-edits / auto mode** so you're not approving every individual edit
+while the agent works a known plan. `Shift+Tab` cycles modes mid-session. This is workflow economy,
+not just safety: plan mode stops premature writes during design-of-the-spec; accept-edits stops
+death-by-prompt once code starts landing.
+
+### Staying in flow (anti-drift)
+The spine's most common failure is **jumping out of the current phase or spec** when a concrete
+build instruction surfaces mid-design — e.g. during brainstorm the user says "just create the seed
+data / 5 records / that model" and you start hand-writing files, skipping plan and deliver, often
+folding a *different* domain into the spec in flight.
+
+Two rules close that gap:
+
+- **WHAT is not HOW.** A mid-phase instruction to build something ("create X", "add Y") names a
+  *what*; it does **not** authorize skipping to execution. Stay in the phase you're in.
+- **When a build need surfaces mid-phase, STOP and route it — don't execute it inline.** Reflex:
+  1. **Name** it: "that's an implementation/data task, not part of this design phase."
+  2. **Classify scope:** does it belong to the *current* spec, or is it a *distinct domain*?
+     A different domain (its own data, its own DoD) is its **own spec** — register it in
+     `akios/Roadmap.md`, don't silently absorb it into the spec in flight.
+  3. **Route:** if it's a true blocker, finish the current spec's design, then run that need
+     through its own `brainstorm → plan → deliver`. If not a blocker, note it and stay on task.
+  4. Only *then*, when you're legitimately in deliver for the right spec, write code or data.
+
+If you catch yourself already mid-drift (writing files in a design phase), name the error, stop,
+and re-route. Recovering is cheap; shipping the wrong thing in the wrong spec is not.
+
+A phase ends only at its hand-off artifact (spec → tasks → reviewed code). Don't run the next
+phase's work early — no application code or data files during brainstorm or plan.
 
 ### Autonomous run (just-vibes) — driving the spine yourself
 `/akios:just-vibes` runs the whole spine **unattended**: it picks the next fuel (a submitted idea →
 `akios/tasks/todo/` → designed specs → `akios/Vision.md`/`akios/Roadmap.md`), builds it, gates on quality, and delivers.
 **Default** does one unit then stops at the spec boundary; **`--force`** loops until fuel is exhausted
-or you interrupt. It is the **explicit opt-out of the human push/merge gate** (invoking it *is* the
-authorization) — but the **quality gate stays**: verify + code-review + a bounded fix loop, and a spec
-that won't go green is **parked** (branch + logs), never delivered. Unattended brainstorm runs in a
+or you interrupt. It is the **explicit opt-out of being asked** — but the **quality gate stays**:
+verify + code-review + a bounded fix loop, and a spec that won't go green is **parked**, never
+marked done. It commits nothing either (see "akios never writes to git"): the run ends with changed
+files in the working tree, same as any other. Unattended brainstorm runs in a
 **deepthink** posture (research + decision records) since no one's there to decide live. The loop,
 fuel precedence, and reporting live in the `just-vibes` skill — don't re-document them here.
 
-## Working alongside teammates (multi-instance)
-When `akios/Roadmap.md` says `collaboration: team`, several teammates each run akios against this repo.
-Coordination is **git-based, safety-first, no central server** — the etiquette:
-
-- **Recognize signatures.** Each instance has an identity (`.claude/hooks/akios-instance.sh` →
-  `user@host/id`) carried on commit trailers (`Akios-Instance:`) and claims. Work tagged with a
-  signature that isn't yours belongs to a teammate's akios — leave it alone.
-- **Claim before you build.** `git pull`, check ownership, then claim the unit in a **committed** file
-  (task frontmatter `owner:` or its `akios/Roadmap.md` line) and push. **Push-rejection is the lock**: if your
-  claim push is rejected, pull, re-check, and yield if a teammate took it. Full protocol in `task-execution`.
-- **One branch per spec; never two instances on one branch.** Worktrees keep parallel builds isolated.
-- **`akios/Roadmap.md` is shared and single-source.** Edit only your unit's line; never reorder the table.
-  Status is **monotonic** (`designed < planned < in-progress < done`, plus the `needs-revision`/
-  `blocked` demotion side-states — see `akios/Roadmap.md`'s status-enum note for the full order) — on a
-  merge conflict, higher status wins, so an unattended run resolves it without a human.
-- **Solo (`collaboration: solo`) skips all of this** — no claims, and delivery merges + pushes the
-  default branch directly.
-
 ## Project-specific gates
-{{e.g. "always /security-review when touching Keychain / auth / networking"}}
+{{e.g. "always /security-review when touching auth / secrets / networking"}}
 
 ## House rules
-- **Scope — Apple/Swift specialization.** akios is tuned for the Apple ecosystem (Swift,
-  Objective-C, SwiftUI/UIKit, Xcode project files, `*.plist` / entitlements / `.xcconfig`, Swift
-  Package Manager, Apple platform targets) — that's where the gates, skills, and best-practice
-  baseline apply. You **may** still help with non-Apple code (web/JS, Android, a non-Swift
-  backend, other tooling), but **warn once up front** that it's outside akios's specialization
-  ("heads-up: this is outside akios's Apple/Swift focus — the Swift gates and best-practice floor
-  don't cover it"), then proceed if the user wants. Warn, don't block.
+- **Stack-agnostic by construction.** akios carries process, not framework knowledge. Read
+  `akios/Context.md` for this project's stack and commands, and follow the patterns the repo
+  already uses. Never assume a build tool, a folder convention, or a test runner the project
+  hasn't recorded.
 - Shortest working diff. No speculative abstractions, no scaffolding "for later".
 - One runnable check behind any non-trivial logic.
 - Boring over clever. Deletion over addition.
 - **Honor the priority chain** (above) before applying any default.
-- **Native types over wrappers.** Use Swift's own `id` / `UUID` / `Hashable` / `Codable`
-  before writing a wrapper type. A wrapper needs a one-line justification.
-- **Protocol-first repositories / data access.** Define a `protocol` + default
-  implementations; concrete types inherit. Smaller, reviewable PRs. A repository's done-bar
-  is: protocol defined, defaults provided, `Hashable` + JSON↔object round-trip covered.
+- **Native types over wrappers.** Use the language's own identity / equality / serialization
+  primitives before writing a wrapper type. A wrapper needs a one-line justification.
+- **Interface-first data access.** Define the abstraction + default implementations; concrete types
+  implement it. Smaller, reviewable PRs. A repository's done-bar is: interface defined, defaults
+  provided, equality + serialization round-trip covered.
 - {{PROJECT_RULE — e.g. "never touch /migrations without a backup plan"}}

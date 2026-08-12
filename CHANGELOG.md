@@ -1,5 +1,152 @@
 # Changelog
 
+## 1.0.0 (2026-08-11)
+
+**akios is now stack-agnostic.** The entire Swift/iOS layer is removed and the kit is reduced to
+the part that applies everywhere: spec-driven development, structured brainstorming, autonomous
+execution, and the meta-skills that maintain it. This is a breaking change for anyone using akios
+as an iOS kit — v0.9.1 remains available in git history and via the `v0.9.1` tag.
+
+### Removed — the iOS/Swift layer
+- **`swift-dev`** and its entire bundled tree (~900K): `swiftui-pro`, `swiftdata-pro`,
+  `swift-testing-pro`, `swift-concurrency-pro`, `swiftui-ui-patterns`, `swiftui-performance-audit`,
+  `ios-debugger-agent`, `ios-accessibility`, `swiftui-design-principles`, `swiftui-design-system`,
+  `swiftui-view-refactor`, `figma-to-swiftui`, `alva-architecture`, `review-doctrine`.
+- **The `design` phase**, with `ui-variations` and `align-ui` — both were SwiftUI `#Preview`-native
+  and had no meaning outside it. The spine is now `brainstorm → plan → deliver`.
+- **ALVA** in every form: the architecture doctrine, the `architecture: alva` signal, the
+  `Foundation/` usage ledger and its script, the slice scaffold in `/akios:setup`, and the
+  per-skill `references/alva-integration.md` files.
+- **`data-modeling-canvas`** and the `artifacts/` tree — the kit no longer ships runnable apps,
+  and with it goes the only npm/build dependency in the repo.
+- **`templates/rules/swift.md`** and **`templates/foundation/`** (the design-token stubs).
+
+### Removed — all shell scripts
+`scripts/` is gone in full: `install.sh`, `install-skills.sh`, `install-artifacts.sh`,
+`register-skill.sh`, `check-update.sh`, `test-kit.sh`, `alva-usage-ledger.sh`, and the three hooks
+(`agentic-kit-inject.sh`, `skill-trace.sh`, `post-checkpoint-verify.sh`).
+- **Installation is plugin-only.** The manifest exposes `skills/` directly, so there is no
+  hardcoded `SKILLS=()` array to keep in sync — the kit's most-cited historical footgun no longer
+  exists.
+- **`/akios:setup` installs no hooks and no scripts.** `CLAUDE.md`'s `@AGENTS.md` +
+  `@akios/Context.md` imports are the entire load mechanism. Setup's migrate path detects
+  leftovers from an older install and *offers* to remove them; it never deletes silently.
+- The auto-build/test hook is replaced by `task-execution` running the project's own recorded
+  `Test:` command from `akios/Context.md`.
+
+### Changed — akios never writes to git
+The kit runs no git command that changes anything: no commits, no branches, no `git add`, no
+pushes, no merges, no tags — in **any** mode, `/akios:just-vibes` included. Running unattended
+removes the questions, not the human's ownership of their history. Every run now ends the same
+way: changed files in the working tree and a report of what changed, for the user to review and
+commit however they like. Approving the *work* is explicitly not approving a *commit*; akios
+doesn't even offer. Reading git (`status`, `diff`, `log`) is unaffected.
+
+Everything that existed only to serve git went with it:
+- **`collaboration: solo | team`** and **`autonomy: manual | auto`** — both flags did nothing
+  except decide *how* to ship. Removed from `workflow.yml`, `templates/Roadmap.md`, the setup
+  interview, and `AGENTS.md`. `mode` and `posture` remain.
+- **The multi-instance claim protocol** (`owner:` on tasks, claim commits, push-rejection as the
+  lock) — it was git-as-a-lock-server, and there is no git to lock with. The `owner:` field is
+  gone from the task template and `spec-to-tasks`.
+- **Branch-per-spec** in `task-execution` — with nothing being committed, an isolation branch
+  isolates nothing. It now works in place and checks `git status` first, reporting an
+  already-dirty tree instead of tangling changes silently.
+- **just-vibes' SHIP step** — replaced by RECORD: mark the spec `done`, move the task files, leave
+  the diff. The run report's "Shipped"/"Built (unshipped)" split collapsed into one "Built" bucket.
+
+### Removed — `/akios:review`
+The code-review doctrine it wrapped (single-responsibility drift, evidence-based duplication,
+boundary conformance, spec conformance, data integrity) still lives in `task-execution` and still
+runs at every task's review step and at finish. The command was a way to invoke that pass on
+demand; the built-in `/code-review` covers the on-demand case.
+
+### Changed — every command works without `/akios:setup`
+No command treats setup as a prerequisite any more. Each one creates the folders it needs, asks
+only the questions it actually depends on, and offers `/akios:setup` at the end — never as a gate.
+`/akios:brainstorm` and `/akios:deep-brainstorm` need nothing at all; `/akios:deliver` asks for the
+test command if none is recorded; `/akios:just-vibes` falls back to the documented defaults
+(`solo`/`delivery`/`manual`), which means an uninitialized repo gets the safest behavior — it
+builds and ships nothing; `/akios:review` reports which axes were inapplicable instead of blocking.
+
+### Changed — `/akios:setup` takes any project on its own terms
+The interview no longer presumes an application with one language and a five-command lifecycle. It
+opens by asking *what this repo is*, accepts "not applicable" as a first-class answer, records
+several stacks and command sets for a monorepo instead of flattening them, and treats a non-code
+project (docs, infra, a dataset, notes) as fully supported — "tests" become whatever verification
+the work actually has. An honest `none` in `## Commands` is now explicitly the right answer, and a
+fabricated invocation is named as the worst possible outcome of the interview. The scan widened to
+`justfile`/container/Nix definitions and reports "no manifest" as a finding rather than a failure.
+`git init` is no longer a precondition, and setup never stages or commits the files it writes.
+
+### Removed — `akios/code-references/`
+Tier 2 of the priority chain is gone entirely; the chain is now three tiers — **project decision →
+user preference → the model's general knowledge**. What the repo already does *is* a project
+decision even when nobody wrote it down, so a separate curated-references folder was a second way
+to say the same thing. The **hurdles ledger** that lived inside it (`hurdles.md`) moved to native
+auto-memory, which is loaded every session anyway — one memory mechanism instead of a file that
+had to be indexed, tagged, and remembered about.
+
+### Removed — knowledge packs
+`knowledge-ingest` (`/akios:learn`) and `skill-author` (`/akios:new-skill`) are gone, along with the
+`pack.yml` / `INDEX.md` / `kind: snippet` machinery they fed and `task-execution`'s snippet
+copy-adapt-prune section. Tier 2 of the priority chain is now `akios/code-references/` alone —
+real source files the user drops in because they want those patterns followed — and a task tags
+the ones it needs with `refs:` instead of `pack:<domain>`. One curation mechanism instead of two.
+
+### Removed — the `agentic-kit` meta-skill
+It was documentation *about* the kit, and every load-bearing part of it already had a canonical
+home elsewhere: the priority chain and the gate table in `AGENTS.md`, the install manifest in
+`/akios:setup`, the spine in `workflow.yml`, the pitch in `README.md`. Its own text conceded the
+duplication ("this is the portable version for repos without the kit installed"). Its
+`references/sandbox.md` (permission templates) went with it — the kit installs no permission
+config, so the doc had no consumer.
+
+### Changed — `workflow.yml` moved to the repo root
+The phase contract is a **contract**, not state: it is copied verbatim from the plugin at every
+setup and never edited per project. It now sits beside `VERSION` at the root, in the plugin and in
+every consumer repo, while `akios/` is left holding only per-project state (Context, Roadmap,
+Vision, specs, tasks). `/akios:setup` relocates it automatically on upgrade — no prompt, since the
+file is never hand-edited. It is also now `version: 2`: the `design` phase is gone and no phase
+names a language, framework, or build tool.
+
+### Changed — renamed
+- `ios-feature-pipeline` → **`feature-pipeline`**
+- The plugin name (`akios`) and the `/akios:*` command namespace are unchanged — existing
+  installs keep working.
+
+### Changed — anti-drift moved into `AGENTS.md`
+`feature-pipeline`'s "Staying in flow" section — *WHAT is not HOW*, and the four-step reflex for
+routing a build need that surfaces mid-design instead of executing it inline — is generic agent
+behavior, not pipeline conduct. It now lives in the installed `templates/AGENTS.md`, so it is
+loaded every session rather than only when the orchestrator skill happens to fire.
+`feature-pipeline` points at it instead of restating it.
+
+### Changed — stack-agnostic by construction
+- **`akios/Context.md` is the only place a language, framework, or command may be named.** Every
+  phase now reads its build/test invocation from `## Commands` instead of carrying one. Guessing
+  or hardcoding an invocation is an explicit anti-pattern in `task-execution`.
+- **Priority chain tier 4 is now the agent's own general knowledge**, not a shipped baseline pack.
+  The kit deliberately ships no domain floor; `akios/code-references/` is how a project raises it.
+- **`task-execution`**: the three proofs become **two** (the visual proof went with the design
+  phase); the Foundation reuse gate and the UI gate are gone; the code-review doctrine is now a
+  short inline checklist (single-responsibility drift, evidence-based duplication, boundary
+  conformance, spec conformance, data integrity) instead of a `swift-dev` guide.
+- **`spec-to-tasks`**: `area:` and build-order now follow whatever `akios/Context.md` records;
+  reference routing reads `akios/code-references/INDEX.md` instead of defaulting to `pack:ios`;
+  the `swift_dev:` task field is dropped.
+- **`templates/Context.md`** gained `## Module boundaries` and `## Shared / common code` — the
+  vocabulary downstream skills reuse in place of a hardcoded folder shape — and `## Xcode targets`
+  became a generic `## Build & packaging notes`.
+- **`/akios:review`** applies the inline doctrine against the project's own declared boundaries.
+- `just-vibes` drops the retired legacy `tasks.md` fuel tier.
+
+### Removed — stale docs and the v0.x backlog
+- `docs/` (the architecture snapshot and the plugin audit map) — both described the iOS kit and
+  duplicated `README.md` + `agentic-kit`.
+- `akios/specs/` and `akios/tasks/` are reset to empty. The v0.x spec family and its ~70 completed
+  tasks described a product that no longer exists; they are preserved in git history at `v0.9.1`.
+
 ## 0.9.1 (2026-07-19)
 
 ### Added — data-modeling-canvas: complex/nested types + optional fields

@@ -49,7 +49,7 @@ Create `akios/tasks/handoffs/` if it doesn't exist.
 **Chain-internal handoff (mandatory, not situational).** When a subagent chaining through a
 sequential task batch crosses its 120k-token lineage budget
 (`akios/specs/subagent-context-chaining.md` §4), it writes
-`akios/tasks/handoffs/subagent-<spec-slug>-<link-number>.md` (e.g. `subagent-alva-adoption-2.md`
+`akios/tasks/handoffs/subagent-<spec-slug>-<link-number>.md` (e.g. `subagent-checkout-flow-2.md`
 for the second link in a chain working that spec's batch) — same format as below, naming which
 batch tasks are done vs. queued. Unlike the general `<topic>` handoff above, writing this one at
 the budget line is required every time, not left to judgment.

@@ -3,19 +3,27 @@ description: Start a feature — turn an idea into an approved spec (pipeline Ph
 disable-model-invocation: true
 ---
 
-# /akios:brainstorm — Design phase (akios/workflow.yml: brainstorm)
+# /akios:brainstorm — Brainstorm phase (workflow.yml: brainstorm)
 
-**Guard (soft).** Confirm this repo is initialized: `AGENTS.md` + `akios/workflow.yml` +
-`.claude/.agentic-kit-version` present, and the `brainstorm` phase's `prereqs` from
-`akios/workflow.yml` (`akios/Context.md`, `akios/Roadmap.md`) exist. If something is missing, **don't hard-block** —
-say what's missing and **offer** to run `/akios:setup` first.
+**Works without `/akios:setup`.** Never block on missing kit files, and never make
+`/akios:setup` a prerequisite. If `akios/` isn't there, create the directories you need as you go;
+if `akios/Context.md` is missing, ask only the questions this command actually needs (nothing else),
+use the answers now, and offer once — at the end, never as a gate — to run `/akios:setup` so the
+answers persist. A repo that has never seen akios gets the full value of this command on the first
+try.
 
-**Run.** Load the `ios-feature-pipeline` skill for conduct and execute the **`brainstorm`** phase
-(`idea-to-spec`) only — `akios/workflow.yml` is the phase contract; don't re-document the phases here.
+For this command specifically, you need almost nothing: a spec is a design document. Write it to
+`akios/specs/<feature>.md` (creating `akios/specs/` if absent) and record its row in
+`akios/Roadmap.md` (creating the file from the kit's Roadmap template if absent). Read
+`akios/Context.md` if it exists; if it doesn't, ask about the project only where the design genuinely
+depends on it, and note the assumption in the spec instead of interrogating the user.
+
+**Run.** Load the `feature-pipeline` skill for conduct and execute the **`brainstorm`** phase
+(`idea-to-spec`) only — `workflow.yml` is the phase contract; don't re-document the phases here.
 This phase is interactive; the user must be present. On approval, set the spec's status to
 `designed` in `akios/Roadmap.md`.
 
-**Stay in flow.** Design only — write no app code or data files here, even on a direct "just build
+**Stay in flow.** Design only — write no code or data files here, even on a direct "just build
 X" mid-session. If a build/data need surfaces, apply the pipeline's *anti-drift* reflex: name it,
 decide whether it's this spec or its own, register a new spec in `akios/Roadmap.md` if distinct, and
 route it through the full pipeline — don't execute it inline.

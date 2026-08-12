@@ -14,12 +14,12 @@
 > kind of change) — and **propose** an entry before writing it. Nothing is logged
 > silently; you confirm every line. Entries are deduplicated and append-only.
 >
-> **Priority chain** (where these preferences sit): see specs / AGENTS.md —
-> `project decision → code-references → preferences (this file) → swift-dev`.
+> **Priority chain** (where these preferences sit): see AGENTS.md —
+> `project decision → curated references → preferences (this file) → the agent's general knowledge`.
 > Concrete sample code you upload outranks a stated preference here.
 
 ## Preferences
 <!-- One transferable preference per bullet. Empty on first install — the priority
-     chain simply falls through this tier to swift-dev until you add entries. -->
+     chain simply falls through this tier until you add entries. -->
 
 - (none yet)

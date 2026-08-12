@@ -3,11 +3,18 @@ description: Map the entire app — run whole-product discovery and produce a co
 disable-model-invocation: true
 ---
 
-# /akios:deep-brainstorm — Whole-app mapping (akios/workflow.yml: deep-brainstorm)
+# /akios:deep-brainstorm — Whole-app mapping (workflow.yml: deep-brainstorm)
 
-**Guard (soft).** Confirm this repo is initialized: `AGENTS.md` + `akios/workflow.yml` +
-`.claude/.agentic-kit-version` present, and `akios/Context.md` exists. If something is missing,
-**don't hard-block** — say what's missing and **offer** to run `/akios:setup` first.
+**Works without `/akios:setup`.** Never block on missing kit files, and never make
+`/akios:setup` a prerequisite. If `akios/` isn't there, create the directories you need as you go;
+if `akios/Context.md` is missing, ask only the questions this command actually needs (nothing else),
+use the answers now, and offer once — at the end, never as a gate — to run `/akios:setup` so the
+answers persist. A repo that has never seen akios gets the full value of this command on the first
+try.
+
+Whole-app mapping is in fact the *best* first command in a fresh repo — it produces the product
+understanding `/akios:setup` would otherwise have to interview for. Create `akios/specs/` and
+`akios/Roadmap.md` as you write, and offer `/akios:setup` at the end to persist the stack answers.
 
 **Run.** Load the `deep-brainstorm` skill and execute the full whole-app mapping session.
 The session is interactive; the user must be present for Discover + Cartograph + Scope.

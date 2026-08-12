@@ -10,7 +10,7 @@ design use `-vision` instead of `-spec`. Strategy/roadmap decisions: `-product-s
 Free-form idea capture: `-feature-ideas`.
 
 > **Running inside a larger kit?** Some pipelines mandate their own naming (e.g. akios'
-> `ios-feature-pipeline`) — see `references/akios-integration.md`. Standalone, the form above applies.
+> `feature-pipeline`) — see `references/akios-integration.md`. Standalone, the form above applies.
 
 ## Header block
 
@@ -54,8 +54,8 @@ On updates, bump the version and add a changelog callout right under the header:
 ## Feature specs may need an extra header
 
 Some pipelines require a short declaration block up front for downstream automation to scope
-its work — akios' ALVA "Contract & Foundation" header is one example; see
-`references/akios-integration.md` for its exact shape. Standalone, skip this section.
+its work — akios' "Contract" header (exports/consumes, in projects with module boundaries) is
+one example; see `references/akios-integration.md` for its exact shape. Standalone, skip this section.
 
 ## The worked-example section
 

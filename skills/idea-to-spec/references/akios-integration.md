@@ -9,35 +9,36 @@ specifics. Read it only when this skill is running inside akios. Everything in `
 Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override — a command
 flag or spoken switch — wins for this session without rewriting the Roadmap value). See
 `AGENTS.md` "Operating posture" for the full teaching-surface this flag controls across every
-phase; `akios/specs/operating-modes.md` for the source design.
+phase.
 
 ## Spec registration
 
 Each spec gets its own `akios/specs/<name>.md` and a row in `akios/Roadmap.md`'s `## Specs`
 table the moment it's framed, so the set stays visible across the whole kit.
 
-## Contract & Foundation header (ALVA)
+## Contract header (when the project has module boundaries)
 
-Any spec that `spec-to-tasks` will decompose into an ALVA feature slice (i.e. it describes a
-buildable app feature, not a cross-cutting doctrine/process spec) opens with a short declaration
-block right under the header, before §1:
+If `akios/Context.md` `## Architecture` describes a project with explicit module/feature
+boundaries, any spec that `spec-to-tasks` will decompose into one of those modules (i.e. it
+describes a buildable feature, not a cross-cutting doctrine/process spec) opens with a short
+declaration block right under the header, before §1:
 
 ```markdown
-## Contract & Foundation
+## Contract
 
-- **Exports (`contract/`):** what this feature's public surface will be — the protocol + DTOs other features are expected to consume. "None yet" if this is a leaf feature.
-- **Consumes:** which other features' `contract/`, and which `Foundation/Design-tokens` / `Foundation/Code-tokens` symbols, this feature is expected to need.
+- **Exports:** what this feature's public surface will be — the interface + data shapes other modules are expected to consume. "None yet" if this is a leaf feature.
+- **Consumes:** which other modules' public surfaces, and which shared/common symbols, this feature is expected to need.
 ```
 
-This is cheap to write (a few bullets, not a design pass) and pays for itself twice:
-`spec-to-tasks` reads it to scope the `contract/` task and the Foundation-consult DoD line, and
-it doubles as a cross-check against the usage-ledger's counted evidence (doctrine §6.4
-alternative D) — if the ledger later shows heavier cross-feature use than declared here, that
-divergence is worth a look, not silently trusted either way.
+This is cheap to write (a few bullets, not a design pass) and pays for itself: `spec-to-tasks`
+reads it to scope the boundary task, and it doubles as a cross-check when the implementation
+later reaches across more boundaries than declared here — that divergence is worth a look.
 
-## Swift/iOS naming
+Projects with no such boundaries (a flat script, a single-module app) skip this block entirely.
 
-Swift/iOS projects (with `ios-feature-pipeline`) prefer the simpler `akios/specs/<feature>.md`
-form (e.g. `akios/specs/catalog.md`) — the pipeline expects files under `akios/specs/` without a
-project prefix. The `<project>-<block>-spec.md` form (see `spec-format.md`) is correct for
-multi-project or non-iOS contexts.
+## Spec naming
+
+Inside akios, prefer the simple `akios/specs/<feature>.md` form (e.g. `akios/specs/catalog.md`) —
+the pipeline expects files under `akios/specs/` without a project prefix. The
+`<project>-<block>-spec.md` form (see `spec-format.md`) is correct for multi-project contexts
+where one repo hosts several products.

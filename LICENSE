@@ -22,9 +22,7 @@ SOFTWARE.
 
 ---
 
-This license covers the agentic-kit scaffolding and skills authored by Lucas
-Oliveira (templates/, install.sh, hooks, and the authored skills under skills/).
-Third-party plugins (ponytail, superpowers, axiom) are installed via their own
-marketplaces and retain their own authors and licenses — see CREDITS.md. The
-skills/ios-agentic-kit/references/ material is adapted from a third party; see
-its attribution headers and CREDITS.md.
+This license covers the akios kit authored by Lucas Oliveira: the commands under
+commands/, the scaffolding under templates/, the phase contract workflow.yml, and
+the skills under skills/. The kit bundles no third-party code and requires no
+external plugins — see CREDITS.md for prior art that inspired parts of it.

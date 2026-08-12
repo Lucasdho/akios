@@ -20,7 +20,7 @@ existing phase skills: `idea-to-spec` (brainstorm), `spec-to-tasks` (plan), `tas
 ## UNATTENDED MODE — HARD RULES (read before anything else)
 
 These rules override everything in the sub-skills (`idea-to-spec`, `spec-to-tasks`,
-`task-execution`, `align-ui`). If a sub-skill says "wait for the user", "hand control back",
+`task-execution`). If a sub-skill says "wait for the user", "hand control back",
 "ask one question", or "one confirm" — **that instruction does not apply here.**
 
 1. **NEVER ask the user anything.** No questions, no clarifications, no "shall I proceed?",
@@ -42,25 +42,23 @@ These rules override everything in the sub-skills (`idea-to-spec`, `spec-to-task
    confirm"). In unattended mode, bypass the commands entirely — invoke the underlying skills
    (`idea-to-spec`, `spec-to-tasks`, `task-execution`) directly, applying the overrides below.
 
-5. **`ios-feature-pipeline`'s "always interactive" rule is explicitly waived.** That rule
+5. **`feature-pipeline`'s "always interactive" rule is explicitly waived.** That rule
    protects against silent decisions when a human is present. No human is present here.
-   Do not consult ios-feature-pipeline for routing — follow the BUILD step in this skill.
+   Do not consult feature-pipeline for routing — follow the BUILD step in this skill.
 
 ---
 
 ## The contract (what unattended changes, and what it doesn't)
 
-- **Human push/merge gate → replaced, but only when `akios/Roadmap.md` says `autonomy: auto`.**
-  Invoking `/akios:just-vibes` under `autonomy: auto` *is* the authorization to ship — you do
-  not stop for per-spec push/merge approval. (`task-execution`'s hard human gate is explicitly
-  waived only when **both** just-vibes **and** `autonomy: auto` apply.) Under `autonomy: manual`
-  (the default), the gate's *substance* stays in force even though no human is present to answer
-  it literally: a green unit is built and committed, but **not** pushed/merged/PR'd — see step 5
-  SHIP below. `autonomy` is independent of `collaboration` — see `akios/specs/collaboration-autonomy.md`.
+- **Git → still never touched.** akios does not run git, here or anywhere (see `AGENTS.md`
+  "akios never writes to git"). No commits, no branches, no pushes, no merges, no PRs — an
+  unattended run produces exactly what an attended one does: changed files in the working tree.
+  The human reviews the diff and decides what to do with it. "Unattended" removes the *questions*,
+  not the human's ownership of their history.
 - **Quality gate → kept, hard.** `/verify` + `/code-review` still run — together they realize
-  `task-execution`'s **three proofs** (build/test, spec-conformance, visual; see its "The three
-  proofs" section). **Never ship broken work.** A red spec gets a bounded fix loop, then is
-  parked — not pushed.
+  `task-execution`'s **two proofs** (build/test and spec-conformance; see its "The two proofs"
+  section). **Never leave broken work marked done.** A red spec gets a bounded fix loop, then is
+  parked.
 - **All interactive phases → deepthink.** Every decision in every phase (spec, plan, alignment)
   is made by you — chosen via deepthink, recorded with full rationale, written to disk. The
   human reviews *after* and can override any decision.
@@ -96,14 +94,11 @@ Whenever you make a decision unattended:
 
 1. **Explicit idea** passed as an argument (highest — the user told you what to do).
 2. **`akios/tasks/todo/*.md`** — already planned, ready to deliver (run deliver phase only).
-3. **`tasks.md`** (legacy single-file format) — tasks exist, run deliver phase using the file as
-   the backlog. Treat each unchecked `[ ]` item as a pending task in checkpoint order.
-4. **`akios/specs/*.md` at status `designed`** in `akios/Roadmap.md` — has a spec, needs plan → deliver.
+3. **`akios/specs/*.md` at status `designed`** in `akios/Roadmap.md` — has a spec, needs plan → deliver.
    - **Skip `needs-revision` specs** (R-W-W audit flagged them weak) unless `--force` is passed.
      Log each skipped spec in the journal with reason "audit: needs-revision".
-5. **`akios/specs/*.md` present but no `akios/Roadmap.md`** — treat each spec as `designed`, run plan → deliver.
-6. **`akios/Vision.md` / `akios/Roadmap.md` items with no spec** — needs full brainstorm → plan → deliver
-   (with `design` between plan and deliver for any UI-scoped task the plan produces).
+4. **`akios/specs/*.md` present but no `akios/Roadmap.md`** — treat each spec as `designed`, run plan → deliver.
+5. **`akios/Vision.md` / `akios/Roadmap.md` items with no spec** — needs full brainstorm → plan → deliver.
 
 > **`needs-revision` specs:** Roadmap status set by the deep-brainstorm R-W-W audit when a spec
 > scores below 41/100. Skipped in default mode — the spec needs revision before it's
@@ -112,15 +107,14 @@ Whenever you make a decision unattended:
 **Fuel detection procedure:**
 ```
 1. Check for akios/tasks/todo/*.md  → deliver fuel
-2. Check for tasks.md         → deliver fuel (legacy)
-3. Read akios/Roadmap.md if present → find specs at status `designed`
+2. Read akios/Roadmap.md if present → find specs at status `designed`
    └ SKIP any spec at status `needs-revision` unless --force was passed
-4. List akios/specs/*.md            → any spec without a akios/tasks/todo/ entry = plan fuel
-5. Read akios/Vision.md / akios/Roadmap.md for backlog items without specs → brainstorm fuel
-6. Nothing found              → report "no fuel" and stop
+3. List akios/specs/*.md            → any spec without a akios/tasks/todo/ entry = plan fuel
+4. Read akios/Vision.md / akios/Roadmap.md for backlog items without specs → brainstorm fuel
+5. Nothing found              → report "no fuel" and stop
 ```
 
-Pick the highest-precedence fuel that is **not already claimed by another akios instance**.
+Pick the highest-precedence fuel.
 
 ---
 
@@ -128,10 +122,7 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
 
 ```
 1. PICK    next fuel by precedence (fuel detection procedure above)
-2. CLAIM   record ownership in a COMMITTED file (task frontmatter `owner:`, or Roadmap spec
-           line) signed with this instance's signature (.claude/hooks/akios-instance.sh).
-           Team mode: commit "claim: <unit> by <sig>" + push; rejected → yield and re-pick.
-3. BUILD   run only the phases needed to reach shippable.
+2. BUILD   run only the phases needed to reach a finished unit.
            CRITICAL: run skills directly; every interactive gate is waived (see UNATTENDED RULES).
 
            a. NO SPEC → brainstorm (idea-to-spec, DEEPTHINK MODE):
@@ -143,65 +134,37 @@ Pick the highest-precedence fuel that is **not already claimed by another akios 
 
            b. HAS SPEC, NO TASKS → plan (spec-to-tasks, UNATTENDED MODE):
               - Read the spec + akios/Context.md + MEMORY.md.
-              - Decompose into task files in akios/tasks/todo/ (or update tasks.md for legacy projects).
+              - Decompose into task files in akios/tasks/todo/.
               - Skip the "one interactive confirm" — write task files directly.
               - Group by similarity, bound by 80k tokens, tag parallelism, set checkpoints.
 
            c. HAS TASKS → deliver (task-execution, UNATTENDED MODE):
               - Follow task-execution's folder-state lifecycle.
-              - align-ui gate: if a task is UI-scoped, run align-ui in auto-decide mode
-                (every choice marked [auto], no questions asked, alignment doc written).
-              - TDD-first posture, commit at each checkpoint barrier.
-              - Human push/merge gate: waived only under `autonomy: auto` (this skill is the
-                authorization there); under `autonomy: manual` the gate's substance holds — see
-                step 5 SHIP.
+              - Every gate that would normally grill the user runs in auto-decide mode
+                (every choice marked [auto], no questions asked, rationale recorded).
+              - TDD-first posture; audit every DoD at each checkpoint barrier.
+              - Touch git at no point: no branch, no commit, no push.
 
-4. GATE    /verify + /code-review (load `skills/swift-dev/skills/review-doctrine/GUIDE.md` first,
-           same as task-execution's own gate — see its "Code-review doctrine" section) — the three
-           proofs (build/test, spec-conformance, visual)
-             green → SHIP (step 5)
+3. GATE    /verify + /code-review (apply task-execution's "Code-review doctrine" checklist on
+           top of the built-in review, same as its own gate) — the two
+           proofs (build/test, spec-conformance)
+             green → RECORD (step 4)
              red   → FIX LOOP: diagnose + fix, re-verify. Bound: stop after two consecutive
                      cycles with no measurable progress (same failures). Then PARK.
-5. SHIP    gated by akios/Roadmap.md `autonomy` flag FIRST, then `collaboration`:
-             autonomy: manual → skip push/merge/PR entirely. Commits stay local on
-                                 feature/<spec>. Update Roadmap status per the quality-gate
-                                 result exactly as autonomy: auto would (green → done, red →
-                                 blocked) — manual gates SHIPPING, not build completion. Append
-                                 "Shipping: deferred — autonomy: manual, awaiting human
-                                 push/merge" to the journal (step 6) and CONTINUE the loop under
-                                 --force (this unit does not stop the whole run).
-             autonomy: auto   → proceed per `collaboration`:
-                                   solo → merge feature/<spec> into default branch + push
-                                   team → push feature/<spec> + open a PR (gh)
-                                 Commit trailer carries Akios-Instance. Update Roadmap status → done.
-   PARK   (red, unfixable): keep branch + logs; set Roadmap status to `blocked`; DO NOT ship.
-           Also PARK if the spec is at `needs-revision` — even a green quality gate does not
-           authorize shipping a spec the R-W-W audit flagged as weak. Revise the spec first.
-           (PARK is unrelated to `autonomy: manual`'s deferral — PARK means red/unfixable; a
-           manual-deferred unit is green, just not self-shipped.)
-6. JOURNAL append the cycle to akios/.local/just-vibes-journal.md:
+4. RECORD  green → set the spec's akios/Roadmap.md status to `done` and move its task files to
+                   akios/tasks/done/. The work sits in the working tree, uncommitted, for the
+                   human to review.
+   PARK   (red, unfixable): leave the failing work in place with its logs; set Roadmap status to
+           `blocked`. Also PARK if the spec is at `needs-revision` — even a green quality gate
+           does not authorize marking done a spec the R-W-W audit flagged as weak. Revise first.
+5. JOURNAL append the cycle to akios/.local/just-vibes-journal.md:
              - unit built, fuel type used, phases run
              - key decisions made (with reasoning) per phase
-             - gate result (green/red), shipping outcome or park reason or deferred (autonomy: manual)
-             - branch / PR link (if shipped)
+             - gate result (green/red), and the park reason if parked
+             - the files it touched, so the human can find the diff
              - under posture: learning — also append a "Lessons" subsection (see below)
-7. NEXT    default → STOP + report.  --force → loop to step 1.
+6. NEXT    default → STOP + report.  --force → loop to step 1.
 ```
-
----
-
-## Coordination with teammates (multi-instance)
-
-just-vibes is the most likely place two akios instances collide, so it is **claim-first**:
-- Claim before building; a unit owned by **another** instance's `Akios-Instance` signature is
-  off-limits — skip to the next fuel.
-- `git pull` before claiming; **push-rejection is the lock** — if your claim push is rejected,
-  pull, re-check ownership, and yield if it was taken.
-- The claim push is **coordination**, not shipping — it happens exactly as described here
-  regardless of the `autonomy` flag. `autonomy: manual` only withholds step 5's shipping action
-  (merge to default branch, or push-for-PR + PR open); it never disables claim-lock semantics.
-- `akios/Roadmap.md` uses **monotonic-status merge** (higher status wins); never reorder its `## Specs`
-  table — edit only your unit's row.
 
 ---
 
@@ -211,8 +174,8 @@ No human is present to narrate to, so `posture: learning` (`akios/Roadmap.md`, d
 redirects the teaching to the journal instead of live narration:
 
 - **Learning:** every unit's journal entry (step 6) gains a **"Lessons"** subsection — the 3–5
-  principles the unit exercised, the decisions and their *why* (citing the owning pack/spec), and
-  any entry auto-appended to the **hurdles ledger** (`akios/code-references/hurdles.md`, see
+  principles the unit exercised, the decisions and their *why* (citing the owning reference/spec), and
+  any hurdle auto-recorded to auto-memory (see
   `task-execution`'s "Hurdles ledger" section) or `preferences.md` this unit. This is the artifact
   a returning human reads to learn what happened *and why* — the unattended analogue of live
   narration.
@@ -221,18 +184,12 @@ redirects the teaching to the journal instead of live narration:
 - Both postures keep every other unattended rule unchanged (deepthink decisions, no questions
   asked, quality gate not relaxed) — posture only ever adds or omits the Lessons subsection.
 
-See `akios/specs/operating-modes.md` §4 (D4) for the source design.
-
 ## Reporting (every time you stop)
 
-End with a compact report drawn from the journal:
-- **Shipped:** units shipped + where (merged branch / PR links). Only populated under
-  `autonomy: auto`.
-- **Built (unshipped):** units that reached a **green** quality gate under `autonomy: manual` —
-  branch name + spec, ready for a human to push/merge. Distinct from Parked (red) and Shipped
-  (already shipped) — don't conflate a policy-withheld shipment with a broken one.
-- **Parked:** units left red + the blocker + branch name (so a human can pick them up).
-- **Skipped:** fuel owned by teammates (with their signature) — for visibility, not action.
+End with a compact report drawn from the journal. **Everything below is uncommitted work in the
+working tree** — say so once, plainly, so the human knows the diff is theirs to review and commit:
+- **Built:** units that reached a **green** quality gate — spec + the files touched.
+- **Parked:** units left red + the blocker + where the failing work sits.
 - **Open risks:** decisions flagged as unverifiable or tensions left unresolved, per unit.
 - **Next:** what fuel remains, and the one-line command to continue (`/akios:just-vibes --force`).
 
@@ -244,13 +201,9 @@ End with a compact report drawn from the journal:
 - **Asking one clarifying question** — no one answers it; the run stalls. Make the decision.
 - **Skipping spec-to-tasks's confirm** without writing the tasks — write them; the confirm is waived,
   not the task files.
-- Shipping a red spec — park it, never ship broken work.
+- Marking a red spec `done` — park it, never sign off on broken work.
 - Brainstorming unattended without recording decisions — the human reviews after; the *why* must be
   on disk.
 - In default mode, sliding into a second unit — stop at the first spec boundary.
-- Grabbing a unit another instance's signature already claimed.
-- Pushing, merging, or opening a PR under `autonomy: manual` — that flag exists precisely to
-  withhold shipping; build and commit, then defer (§5 SHIP), never override it because "just
-  this once seems safe."
-- Stopping the whole `--force` run because one unit deferred under `autonomy: manual` — deferral
-  is not a stall condition; keep looping over remaining fuel.
+- **Running any git command.** Not a branch, not a commit, not a push — "unattended" is not
+  authorization over the user's history. Leave the changes in the working tree and report them.

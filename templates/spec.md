@@ -20,12 +20,6 @@
 
 ---
 
-## Empty / zero states
-<!-- MANDATORY for any screen, list, feed, or data-backed view: what the user sees
-     before any data exists, after clearing all data, on first run. Cover
-     loading and error variants where they apply. An undocumented empty state is a
-     missing requirement. -->
-
 ## Worked example
 <!-- For process specs: the living example's run through this block. -->
 
