@@ -38,7 +38,9 @@ Read `references/app-behavior.md` for the canonical behavior (phases, ingredient
 
 **Midpoint Validation Audit:** score the R-W-W rubric honestly (see reference for weights and bands). Show the scorecard, the band, and a one-line verdict. **Never inflate a score across a verdict line.** Always offer one stronger adjacent idea compared on the same criteria; if they decline it, record that as a real decision.
 
-**Close** by writing the versioned first-diamond spec in markdown (header + v0.1, numbered Discover/Define/MVA sections with decisions-and-reasons, and "Open / next"). If a filesystem is available, offer to save it.
+**Close** by writing the versioned first-diamond spec in markdown (header + v0.1, numbered Discover/Define/MVA sections with decisions-and-reasons, and "Open / next"). Offer to save it — inside an akios repo that path is
+`akios/specs/founderlens-<slug>.md`, which is where `deep-brainstorm` looks for it; standalone,
+wherever the user wants.
 
 ## The non-negotiables (what makes this FounderLens and not a questionnaire)
 

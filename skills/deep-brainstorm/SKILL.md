@@ -41,8 +41,9 @@ Three rules keep it open:
 
 ## The contract: what this skill owns
 
-- Reads: `akios/Context.md`, `akios/Vision.md` (if present), `akios/Roadmap.md`, `MEMORY.md`,
-  existing `akios/specs/*.md`. Nothing else without checking first.
+- Reads: `akios/Context.md`, `akios/Vision.md` (if present), `akios/Roadmap.md`, existing
+  `akios/specs/*.md`, plus whatever auto-memory (`MEMORY.md` — loaded for you, not a path in the
+  repo) already surfaced. Nothing else without checking first.
 - Writes: `akios/specs/*.md` (one per identified domain), `akios/rww-audit.md` (the Phase 5
   report — deliberately outside `specs/`), updates `akios/Roadmap.md`.
 - Does NOT: do the work itself — no code, no prose, no task files. Those belong downstream.
@@ -187,8 +188,9 @@ split, merged, or renamed. Wait.
 ### Writing the specs
 
 Once grouping is confirmed, write all specs **in one pass** — never one at a time with approval
-between. Each follows `idea-to-spec`'s `references/spec-format.md` (scaffolded from
-`templates/spec.md`), filling in:
+between. Each keeps the shape of `${CLAUDE_PLUGIN_ROOT}/templates/spec.md` and
+`idea-to-spec`'s `references/spec-format.md`; the map supplies the material that fills its
+numbered sections:
 
 > **Status and tier do not go in the spec file.** Both live only in `akios/Roadmap.md`'s `## Specs`
 > table (`Tier` and `Status` columns) — see "After writing" below. A spec that carries its own

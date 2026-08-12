@@ -27,7 +27,7 @@ are, and walks you through the phases in order, handing off the right artifact b
 ## How to route
 1. **Read `workflow.yml`.** It defines the phases and their prereqs/outputs.
 2. **Detect the current phase per spec** — the highest phase whose `outputs` already exist for
-   the relevant spec — and read the **mode** + per-spec status from `akios/Roadmap.md`.
+   the relevant spec — and read the per-spec status from `akios/Roadmap.md`.
 3. **Soft gate:** if a phase's `prereqs` are missing, don't hard-block — say what's missing and
    **offer** to run the prerequisite phase. Never auto-fire the interactive `brainstorm` phase.
 4. **Hand off** the named output of one phase as the input of the next (spec → tasks → code).
@@ -42,7 +42,9 @@ are, and walks you through the phases in order, handing off the right artifact b
    files in the working tree and a report; the user owns their history.
 5. **Stay in the current phase.** The anti-drift discipline — WHAT is not HOW, and route a
    mid-phase build need instead of executing it inline — lives in the installed `AGENTS.md`
-   (**"Staying in flow"**). Read it there; it is not restated here.
+   (**"Staying in flow"**). Read it there; if it isn't installed yet, the rule is: a mid-phase
+   "build X" names a *what*, not permission to skip to execution — name it, decide whether it
+   belongs to this spec or its own, and route it.
 6. **Never assume a stack.** Build, test, and lint invocations come from `akios/Context.md`
    `## Commands`; the pipeline itself is language-agnostic.
 

@@ -25,9 +25,9 @@ subject and derives a new one when none fits.
 The session is interactive; the user must be present for Discover + Cartograph + Scope.
 The Spec-burst phase (Phase 4) writes all specs in one pass without interruption.
 
-**If `founderlens-behavior` skill is available** (installed or referenced in MEMORY.md): the
-Discover phase may invoke it for the first-diamond run. If a `akios/specs/founderlens-*.md` already
-exists, summarize its decisions and offer to skip straight to Cartograph.
+The Discover phase may invoke `founderlens-behavior` for the first-diamond run. If a
+`akios/specs/founderlens-*.md` already exists, summarize its decisions and offer to skip straight
+to Cartograph.
 
 Subject or focus (optional — narrows the session): `$ARGUMENTS`
 

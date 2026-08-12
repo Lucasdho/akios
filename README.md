@@ -55,8 +55,8 @@ The one answer that matters most is your project's **commands** — how to insta
 build it. Get those right and everything downstream works. An honest `none` is a correct answer;
 a fabricated command is the worst possible entry.
 
-Codex installs the same skill family through `.codex-plugin/plugin.json`, without the command
-layer — that stays Claude-only, since it depends on `CLAUDE.md`, `.claude/`, and `~/.claude`.
+akios targets **Claude Code only**. Both layers depend on it — the commands on `CLAUDE.md`,
+`.claude/`, and `~/.claude`, and the skills on `${CLAUDE_PLUGIN_ROOT}` to reach their templates.
 
 ## The spine
 

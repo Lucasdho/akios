@@ -27,16 +27,17 @@ back — write `akios/tasks/handoffs/<topic>-return.md` instead, structured as a
 
 - **Current position in the pipeline.** Which phase (brainstorm / plan / deliver),
   which spec, which task, which checkpoint.
-- **Decisions made this session.** Only the ones not already captured in specs, tasks, commits,
-  or `MEMORY.md` — reference those by path, don't duplicate content.
+- **Decisions made this session.** Only the ones not already captured in specs, tasks, commits, or
+  auto-memory — reference the artifacts by path and auto-memory by name, don't duplicate content.
 - **Open questions.** Anything unresolved that the next session must answer before proceeding.
 - **Risks and tensions.** Flags worth carrying forward even if not yet acted on.
 - **Suggested skills.** Which akios skills the next session should invoke, and in what order.
 
 ## What NOT to include
 
-- Content already in `akios/specs/`, `akios/tasks/`, `akios/archive/Archive.md`, or `MEMORY.md` — reference by
-  path instead (`akios/specs/foo.md §3`).
+- Content already in `akios/specs/`, `akios/tasks/`, `akios/archive/Archive.md` — reference by
+  path instead (`akios/specs/foo.md §3`) — or already in auto-memory, which the next session
+  loads on its own.
 - Code diffs or full file contents — reference by file path + line range.
 - Sensitive information (API keys, credentials, PII).
 - The current conversation transcript.

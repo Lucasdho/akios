@@ -16,15 +16,18 @@ under `akios/tasks/todo/`**. One skill, one pass, one human confirm.
 about *this* project's architecture. Never assume a stack, a folder convention, or a test runner.
 
 ## Inputs / output
-- **In:** one or more approved `akios/specs/<feature>.md` (passed as `$ARGUMENTS`), plus `akios/Context.md`
-  (architecture/conventions) and `MEMORY.md` (locked decisions). Read **only** these.
+- **In:** one or more approved `akios/specs/<feature>.md` (passed as `$ARGUMENTS`) plus `akios/Context.md`
+  (architecture/conventions) — read **only** these two — and whatever your native auto-memory
+  (`MEMORY.md`) already put in context for locked decisions. Auto-memory lives outside the repo and
+  is loaded for you; don't go looking for a path to open.
 - **Out:** task files in `akios/tasks/todo/` (`T<NNN>-<slug>.md`, see the `task.md` template), and the
   spec's status set to `planned` in `akios/Roadmap.md`. No single `tasks.md`.
 
 ## The pass (do this in order, once)
 
-1. **Read** the spec(s) + `akios/Context.md` + `MEMORY.md`. Nothing else. Don't re-clarify what the spec
-   already settled — if something is genuinely ambiguous, ask one direct question, no clarify ceremony.
+1. **Read** the spec(s) + `akios/Context.md`, and recall what auto-memory already surfaced. Nothing
+   else. Don't re-clarify what the spec already settled — if something is genuinely ambiguous, ask
+   one direct question, no clarify ceremony.
 2. **Decompose by similarity + size.**
    - **Group by similarity** — same file / area / concern travels together. `area` follows the
      project's own structure as recorded in `akios/Context.md` `## Architecture`; never invent a
@@ -72,7 +75,7 @@ about *this* project's architecture. Never assume a stack, a folder convention, 
     coverage compactly. Get a yes or adjustments. *Then* write the task files into `akios/tasks/todo/`.
 
 ## Task file format
-One file per task in `akios/tasks/todo/`, following `templates/task.md`:
+One file per task in `akios/tasks/todo/`, following `${CLAUDE_PLUGIN_ROOT}/templates/task.md`:
 
 ```markdown
 ---

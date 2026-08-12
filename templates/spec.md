@@ -41,7 +41,7 @@
 ## Worked example
 <!-- For process specs: the living example's run through this block. -->
 
-## Open / next
+## {{N}}. Open / next
 - what the next session should tackle
 - what stayed undecided (and who owns it)
 - risks carried forward, marked: `[TECHNICAL RISK — ...]`, `[EXPLICIT RISK — ...]`

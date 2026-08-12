@@ -39,11 +39,11 @@ Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's reco
   **self-check (step 5)**, repair any single missing artifact, and stop with "Already initialized
   at v<X> — nothing to do." Re-run the full flow only if the user asks to repair/reset.
 - **Recorded < installed** → **migrate, don't re-interview.** Skip step 1. Refresh only the
-  **always-copy** artifacts (`workflow.yml`, the version file); leave the
-  *skip-if-exists* files (`AGENTS.md`, `akios/Context.md`, `akios/Roadmap.md`) untouched.
+  **always-copy** artifacts (`workflow.yml`, the version file); leave every *skip-if-exists* file
+  in step 3's table untouched (`AGENTS.md`, `akios/Context.md`, `akios/Roadmap.md`,
+  `akios/Vision.md`), and `CLAUDE.md` too beyond adding a missing import.
   Re-verify wiring (step 4). Write the new version, then **report the diff** from
   `${CLAUDE_PLUGIN_ROOT}/CHANGELOG.md` in two or three lines, flagging anything needing a manual touch.
-  Detect the **mode** here too: if the user has feature work in mind, ask `new`/`one-shot`/`feature`.
 
   **Leftovers from a pre-1.0 install.** Older versions installed shell hooks
   (`.claude/hooks/*.sh`), a `.claude/scripts/` helper, and a `.claude/rules/` gate file; none of
@@ -78,8 +78,6 @@ Three rules keep this open:
   which one it is in `## Commands`; the phases degrade to the DoD audit when there's no runner.
 
 Ask in one batched pass (skip what the scan in step 2 answers confidently; confirm rather than re-ask):
-- **Mode** — `new` (greenfield repo) / `one-shot` (single deliverable) / `feature` (adding to an
-  existing project). Written to `akios/Roadmap.md`; `brainstorm` reads it instead of re-asking.
 - **What this repo is** — one line, in the user's words. An app, a library, a monorepo, infra, a
   docs site, a dataset, notes. This frames every answer below; don't skip it because it seems obvious.
 - **Stack** — language(s) / framework(s) / runtime / data store, as many as actually apply
@@ -121,7 +119,7 @@ If a scan fact contradicts an interview answer, tell the user and ask which is r
 
 ## 3. Materialize the context files + folder tree (never clobber existing files)
 Copy each template into the repo, replacing every `{{...}}` token with the resolved value.
-Placeholders to fill live in `akios/Context.md`, `AGENTS.md`, `CLAUDE.md`, and `akios/Roadmap.md` (mode).
+Placeholders to fill live in `akios/Context.md`, `AGENTS.md`, and `CLAUDE.md`.
 
 **Narrate + verify per row.** As each row below is applied, print "✓ `<File>` written" (or
 "skipped — already exists" per the row's rule), then immediately re-check the result before moving
@@ -135,7 +133,7 @@ attempted) rather than continuing or guessing at the repo's state.
 |---|---|---|
 | `AGENTS.md` | `${CLAUDE_PLUGIN_ROOT}/templates/AGENTS.md` | skip if it already exists |
 | `akios/Context.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Context.md` | skip if it already exists |
-| `akios/Roadmap.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Roadmap.md` | skip if it exists; fill the `mode:` line |
+| `akios/Roadmap.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Roadmap.md` | skip if it already exists |
 | `akios/Vision.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
 | `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
 | `CLAUDE.md` | `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@akios/Context.md` imports is missing (Context first so AGENTS ends on top) |
@@ -194,10 +192,9 @@ rather than re-derived or assumed complete.
 
 Otherwise, confirm: the `akios/` context files (incl. `akios/Vision.md`) + `workflow.yml` +
 the folder tree exist; `CLAUDE.md` imports both `@AGENTS.md` and `@akios/Context.md`;
-`akios/Roadmap.md` has a `mode:` value;
 `akios/Context.md` `## Commands` carries a real, runnable test command (not a placeholder);
 `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
-`akios/Context.md` / `AGENTS.md` / `CLAUDE.md` / `akios/Roadmap.md` / `akios/Vision.md`.
+`akios/Context.md` / `AGENTS.md` / `CLAUDE.md` / `akios/Vision.md`.
 Report any miss.
 
 ## 6. Dependencies

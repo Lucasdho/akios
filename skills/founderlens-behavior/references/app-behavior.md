@@ -1,10 +1,10 @@
 # FounderLens — App Behavior (distilled from the specs)
 
-The canonical behavior the simulator encodes. Source: the FounderLens spec family (interaction, first-diamond, develop, onboarding, devaudit, deliver-vision, product-strategy). This file is the contract the simulator must stay faithful to.
+The canonical behavior this skill encodes. Source: the FounderLens spec family (interaction, first-diamond, develop, onboarding, devaudit, deliver-vision, product-strategy). This file is the contract this skill must stay faithful to.
 
 ## The promise
 
-FounderLens is a virtual co-founder for the pre-MVP strategy phase. It does **not** build the product — it generates the spec-driven prompts that build it. The backbone is the Double Diamond: Discover → Define → Develop → Deliver, with a Midpoint Validation Audit between Define and Develop, and a Development Audit between Develop and Deliver. The simulator covers the **first diamond + MVA**.
+FounderLens is a virtual co-founder for the pre-MVP strategy phase. It does **not** build the product — it generates the spec-driven prompts that build it. The backbone is the Double Diamond: Discover → Define → Develop → Deliver, with a Midpoint Validation Audit between Define and Develop, and a Development Audit between Develop and Deliver. This skill covers the **first diamond + MVA**.
 
 ## Interaction model (applies to every screen)
 
@@ -61,4 +61,4 @@ A versioned markdown doc: header + v0.1, numbered sections for Discover / Define
 
 ## BYOK
 
-The real app is bring-your-own-key (an Anthropic Console key held in the platform's own credential store; no server inference). The simulator represents this honestly but runs AI through the artifact runtime so it works without setup.
+The real app is bring-your-own-key (an Anthropic Console key held in the platform's own credential store; no server inference).

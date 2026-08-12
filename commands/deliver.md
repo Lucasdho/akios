@@ -25,7 +25,7 @@ run it against the backlog in `akios/tasks/todo/`:
   consult the priority chain before any pattern; write tests first (light bar for presentation code
   with no meaningful unit test); audit every DoD at each checkpoint barrier.
 - **Build/test commands come from `akios/Context.md` `## Commands`** — never guess an invocation.
-- **Runner routing** from each task: `≤20k → orchestrator` (inline), `>20k → subagent`. Subagents
+- **Runner routing** from each task: `≤20k → orchestrator` (inline), `>20k → subagent-eligible`. Subagents
   are opt-in and start cold — their prompt MUST name the task, its DoD, and the project's test
   command. If the subagent layer is unavailable, degrade to inline.
 - Manage context (warn 110k / urgent `/compact` 135k). **Mandatory `/compact` between every spec** — never start a new spec without compacting first.

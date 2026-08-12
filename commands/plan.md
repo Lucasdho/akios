@@ -20,7 +20,7 @@ not a gate.
 **Run.** Load the `spec-to-tasks` skill (single source of truth — don't re-document the pass) and
 run it against the spec: one pass, one human confirm, producing **task files under `akios/tasks/todo/`**
 (`T<NNN>-<slug>.md`) with `est_tokens` + `runner`, `[P]` markers by area, checkpoint grouping,
-definitions of done, and per-task UI-state coverage. Set the spec's status to `planned` in
+definitions of done, and per-task state coverage. Set the spec's status to `planned` in
 `akios/Roadmap.md`.
 
 Spec path or text (pass as `$ARGUMENTS`): `$ARGUMENTS`

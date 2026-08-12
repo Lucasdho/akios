@@ -7,21 +7,24 @@
 # computed from it:
 #   - current phase  = the highest phase whose `outputs` already exist (per spec)
 #   - phase gate     = all of a phase's `prereqs` exist (soft gate: warn + offer)
+# Commands outside the spine (`/akios:handoff`) are utilities, not phases, and are not listed here.
 #
 # Stack-agnostic by design: no phase names a language, framework, or build tool. Build, test,
 # and lint invocations are read from the consumer repo's `akios/Context.md` `## Commands`.
 #
-# Status enum (akios/Roadmap.md `## Specs` table), monotonic — higher status always wins:
-#   needs-revision < designed < planned < in-progress < blocked < done
-# `needs-revision` (deep-brainstorm's R-W-W audit flagged the spec weak) and `blocked`
-# (task-execution's fix loop gave up) are demotion side-states, not phases below — a
-# spec must move back to `designed`/`in-progress` before advancing again. `done` beats `blocked`
-# beats `in-progress`/`planned`/`designed` beats `needs-revision`.
+# Status (akios/Roadmap.md `## Specs` table). One forward path plus two side-states:
+#
+#   forward path (ordered, never runs backward):  designed -> planned -> done
+#   side-states  (unordered, off the path):       needs-revision · blocked
+#
+# - Forward moves only: never write a lower forward status over a higher one. `done` is terminal.
+# - A spec enters a side-state from any forward status: `needs-revision` (deep-brainstorm's
+#   R-W-W audit flagged the spec weak) or `blocked` (task-execution's fix loop gave up).
+# - Leaving a side-state restores the forward status the spec re-enters — `needs-revision` ->
+#   `designed` once revised, `blocked` -> `planned` once the fix resumes. Side-states are not
+#   ranked against the forward path, so neither entering nor leaving one is a backward move.
 
 version: 2
-
-# setup writes the active mode into akios/Roadmap.md; brainstorm reads it.
-modes: [new, one-shot, feature]
 
 # setup is bootstrap, NOT a phase (no spec/task prerequisite).
 bootstrap:
@@ -72,14 +75,16 @@ run_styles:
     skill: deep-brainstorm
     default: interactive whole-app discovery → spec family in one session
     unattended: deepthink mode (called under just-vibes); no human input; all decisions recorded
-    produces: akios/specs/*.md (one per domain) + akios/Roadmap.md rows at status designed
     prereqs: [akios/Context.md]       # soft gate — warn if missing, offer /akios:setup
-    outputs: [akios/specs/*.md]
-    roadmap: designed (all produced specs)
+    outputs: [akios/specs/*.md, akios/rww-audit.md]   # one spec per domain; the audit is a
+                                                      # report ABOUT the specs, deliberately
+                                                      # outside specs/ so just-vibes never
+                                                      # reads it as fuel
+    roadmap: designed                 # applied to every spec this run produces
     founderlens_integration: >
-      if founderlens-behavior skill is available and no first-diamond spec exists,
-      Discover phase invokes it; if a founderlens spec already exists, Discover summarizes
-      its decisions and offers to skip to Cartograph.
+      if no first-diamond spec exists, Discover phase may invoke founderlens-behavior;
+      if a founderlens spec already exists, Discover summarizes its decisions and offers
+      to skip to Cartograph.
 
   - id: just-vibes
     command: /akios:just-vibes      # add --force to loop instead of stopping after one unit

@@ -127,14 +127,15 @@ Pick the highest-precedence fuel.
            CRITICAL: run skills directly; every interactive gate is waived (see UNATTENDED RULES).
 
            a. NO SPEC → brainstorm (idea-to-spec, DEEPTHINK MODE):
-              - Read MEMORY.md + akios/archive/Archive.md for previously delivered high-quality specs;
+              - Read akios/archive/Archive.md, and recall what auto-memory (MEMORY.md, already in
+                context — not a path to open) holds, for previously delivered high-quality specs;
                 mirror their patterns and decisions — consistency with proven work beats novelty.
               - Make every decision yourself via deepthink (no waiting, no handing back).
               - Record chosen + rejected options + reasoning in the spec.
               - Write spec to akios/specs/<name>.md. Register in akios/Roadmap.md at status designed.
 
            b. HAS SPEC, NO TASKS → plan (spec-to-tasks, UNATTENDED MODE):
-              - Read the spec + akios/Context.md + MEMORY.md.
+              - Read the spec + akios/Context.md; recall auto-memory's locked decisions.
               - Decompose into task files in akios/tasks/todo/.
               - Skip the "one interactive confirm" — write task files directly.
               - Group by similarity, bound by 80k tokens, tag parallelism, set checkpoints.

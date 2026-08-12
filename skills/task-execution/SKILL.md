@@ -232,7 +232,7 @@ commits nothing.
 - **Writing to git.** Committing a checkpoint, branching, committing "so the work isn't lost", or offering to — in any mode, just-vibes included.
 - Treating a user's approval of the *work* as approval to *commit* it. They are different questions, and only one of them was asked.
 - Marking a red spec `done` under just-vibes because the fix loop "gave up" — park it, never sign off on it.
-- Reordering or demoting the `akios/Roadmap.md` `## Specs` table — edit only your line; status only moves up.
+- Reordering the `akios/Roadmap.md` `## Specs` table, or writing a lower forward status over a higher one — edit only your line, and never move `designed → planned → done` backward. (Parking a spec at `blocked` is entering a side-state, not a backward move; see `workflow.yml`.)
 - Making execution depend on subagents (they can be denied the build tool) — always degrade to inline.
 - Passing a checkpoint barrier whose DoDs aren't actually met.
 - Compressing context mid-spec.

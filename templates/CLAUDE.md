@@ -8,8 +8,8 @@
   (a CLAUDE.md in a subdirectory is not). Add Claude-specific notes below.
 -->
 
-<!-- Spec registry + per-spec state live in akios/Roadmap.md (the mode flag and the
-     `## Specs` table) — the single source of truth. Do NOT mirror that table here;
+<!-- Spec registry + per-spec state live in akios/Roadmap.md (the `## Specs`
+     table) — the single source of truth. Do NOT mirror that table here;
      one file updates, nothing drifts. See AGENTS.md `## Specs & Roadmap`. -->
 
 ## Claude Code notes

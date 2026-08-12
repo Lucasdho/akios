@@ -151,6 +151,7 @@ reusing the existing pattern as a spec, not from cutting the safety rails.
 |---|---|---|
 | Building a new feature end-to-end | `feature-pipeline` → brainstorm → plan → deliver | before starting |
 | Mapping a whole product at once | `deep-brainstorm` (`/akios:deep-brainstorm`) → a spec family | before the first spec |
+| Validating a raw idea before it's a feature | `founderlens-behavior` → a first-diamond spec | before the first spec |
 | Designing a system / turning an idea into a spec | `idea-to-spec` (`/akios:brainstorm`) → write specs to `akios/specs/` | before building |
 | Turning a spec into tasks | `spec-to-tasks` (`/akios:plan`) → `akios/tasks/todo/` | after the spec |
 | About to hand-write complex code, docs, types, or a format conversion | `oss-first` — is there a mature tool/lib first? | before generating |
@@ -177,9 +178,10 @@ source dirs are described in `akios/Context.md` `## Architecture`.
 |---|---|---|---|
 | Operating files | repo root (`CLAUDE.md`/`AGENTS.md`); `akios/` (`Context.md`) | `CLAUDE.md`, `AGENTS.md`, `akios/Context.md` | Claude Code auto-loads `CLAUDE.md`, which imports `AGENTS.md` (root) and `akios/Context.md` |
 | Phase contract | repo root | `workflow.yml` | commands + phase detection read it |
-| Spec state | `akios/` | `akios/Roadmap.md` | mode flag + one line per spec |
+| Spec state | `akios/` | `akios/Roadmap.md` | one line per spec |
 | Product vision | `akios/` | `akios/Vision.md` | north star + prioritized wishlist; top-tier `just-vibes` fuel |
 | Specs | `akios/specs/` | `<domain>.md`, one file per domain | `akios/Roadmap.md` `## Specs` table |
+| Spec audit | `akios/` | `rww-audit.md` | written by `/akios:deep-brainstorm` Phase 5; outside `specs/` so `just-vibes` never reads it as fuel |
 | Tasks | `akios/tasks/<state>/` | `T<NNN>-<slug>.md`; state = folder (`todo/ in-progress/ review/ done/`) | moved between folders = state change |
 | Handoffs | `akios/tasks/handoffs/` | `<slug>.md` + `<slug>-return.md` | written and read by `handoff` |
 | Archived specs | `akios/archive/` | `<spec>.md` + `Archive.md` (summary index) | read `Archive.md` first; open full file on demand |
@@ -196,10 +198,11 @@ add a row to the `akios/Roadmap.md` `## Specs` table so the next session knows i
 
 ## Specs & Roadmap (idea-to-spec)
 - Store versioned specs in `akios/specs/` — one file per domain.
-- `akios/Roadmap.md` is the orchestration doc: the **mode flag** (`new`/`one-shot`/`feature`, written
-  by `/akios:setup`) plus **one line per spec** (spec → domain → tier `core/enhance/future` → status
-  `designed/planned/in-progress/done`). Phase detection is per-spec — different specs can be in
-  different phases.
+- `akios/Roadmap.md` is the orchestration doc: **one line per spec** (spec → domain → tier
+  `core/enhance/future` → status). Status is one forward path — `designed → planned → done`,
+  never running backward — plus two side-states off it, `needs-revision` and `blocked`; entering
+  or leaving a side-state is not a backward move. Phase detection is per-spec — different specs
+  can be in different phases.
 - **Single source of truth.** Spec state lives **only** in `akios/Roadmap.md` — never mirror the `## Specs`
   table into `CLAUDE.md` or anywhere else, and never write a status or tier line into the spec file
   itself. One file updates; nothing else can drift out of sync. `CLAUDE.md` imports the operating
