@@ -1,0 +1,102 @@
+# akios — phase contract (single source of truth)
+#
+# Lives at the REPO ROOT, in the plugin and in every consumer repo alike — `akios/` is per-project
+# state, this file is the contract that state moves through.
+#
+# Commands are thin wrappers that read this file. Phase detection and prereq gating are
+# computed from it:
+#   - current phase  = the highest phase whose `outputs` already exist (per spec)
+#   - phase gate     = all of a phase's `prereqs` exist (soft gate: warn + offer)
+# Commands outside the spine (`/akios:handoff`) are utilities, not phases, and are not listed here.
+#
+# Stack-agnostic by design: no phase names a language, framework, or build tool. Build, test,
+# and lint invocations are read from the consumer repo's `akios/Context.md` `## Commands`.
+#
+# Status (akios/Roadmap.md `## Specs` table). One forward path plus two side-states:
+#
+#   forward path (ordered, never runs backward):  designed -> planned -> done
+#   side-states  (unordered, off the path):       needs-revision · blocked
+#
+# - Forward moves only: never write a lower forward status over a higher one. `done` is terminal.
+# - A spec enters a side-state from any forward status: `needs-revision` (deep-brainstorm's
+#   R-W-W audit flagged the spec weak) or `blocked` (task-execution's fix loop gave up).
+# - Leaving a side-state restores the forward status the spec re-enters — `needs-revision` ->
+#   `designed` once revised, `blocked` -> `planned` once the fix resumes. Side-states are not
+#   ranked against the forward path, so neither entering nor leaving one is a backward move.
+
+version: 2
+
+# setup is bootstrap, NOT a phase (no spec/task prerequisite).
+bootstrap:
+  command: /akios:setup
+  creates:
+    - CLAUDE.md
+    - AGENTS.md
+    - workflow.yml            # this file, copied to the consumer repo root
+    - .claude/.akios-version  # installed version marker; drives the idempotency gate
+    - akios/Context.md
+    - akios/Roadmap.md
+    - akios/Vision.md
+    - akios/specs/
+    - akios/tasks/            # todo/ in-progress/ review/ done/ handoffs/
+    - akios/archive/
+    - akios/.local/           # gitignored runtime journal
+    - ~/.claude/akios/preferences.md   # user-global, seeded once; survives plugin updates
+
+phases:
+  - id: brainstorm
+    command: /akios:brainstorm
+    skill: idea-to-spec
+    prereqs: [akios/Context.md, akios/Roadmap.md]
+    outputs: [akios/specs/*.md]
+    roadmap: designed
+
+  - id: plan
+    command: /akios:plan
+    skill: spec-to-tasks
+    prereqs: [akios/specs/*.md]
+    outputs: [akios/tasks/todo/*.md]
+    roadmap: planned
+
+  - id: deliver
+    command: /akios:deliver
+    skill: task-execution
+    prereqs: [akios/tasks/todo/*.md]
+    outputs: [akios/tasks/done/*.md]
+    roadmap: done
+
+# deep-brainstorm is a PRE-EXECUTION RUN-STYLE. It does whole-product discovery and cartography,
+# producing a complete spec family. Its output feeds the normal brainstorm→plan→deliver pipeline.
+# just-vibes is a RUN-STYLE over the phases above, not a phase. It drives them unattended,
+# picking the next fuel and delivering without the per-spec human gate (the quality gate stays).
+run_styles:
+  - id: deep-brainstorm
+    command: /akios:deep-brainstorm   # add an idea/focus as an argument to narrow the session
+    skill: deep-brainstorm
+    default: interactive whole-app discovery → spec family in one session
+    unattended: deepthink mode (called under just-vibes); no human input; all decisions recorded
+    prereqs: [akios/Context.md]       # soft gate — warn if missing, offer /akios:setup
+    outputs: [akios/specs/*.md, akios/rww-audit.md]   # one spec per domain; the audit is a
+                                                      # report ABOUT the specs, deliberately
+                                                      # outside specs/ so just-vibes never
+                                                      # reads it as fuel
+    roadmap: designed                 # applied to every spec this run produces
+    founderlens_integration: >
+      if no first-diamond spec exists, Discover phase may invoke founderlens-behavior;
+      if a founderlens spec already exists, Discover summarizes its decisions and offers
+      to skip to Cartograph.
+
+  - id: just-vibes
+    command: /akios:just-vibes      # add --force to loop instead of stopping after one unit
+    skill: just-vibes
+    default: one unit, then stop at the spec boundary
+    force: loop over all fuel until exhausted or interrupted
+    fuel_precedence:                # most-ready first — full detail in the just-vibes skill
+      - explicit idea (argument)
+      - akios/tasks/todo/*.md       # ready to deliver
+      - akios/specs/*.md @ designed # plan -> deliver (skip @ needs-revision unless --force)
+      - akios/specs/*.md with no akios/Roadmap.md entry  # treat as designed; plan -> deliver
+      - akios/Vision.md / akios/Roadmap.md item # brainstorm (unattended deepthink) -> plan -> deliver
+    waives: being asked (invocation = authorization to decide unattended)
+    keeps: quality gate (verify + code-review + bounded fix loop; park red, never mark it done)
+    git: none — akios never commits, branches, pushes, or merges, here or anywhere

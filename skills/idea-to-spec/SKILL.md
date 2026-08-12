@@ -1,0 +1,207 @@
+---
+name: idea-to-spec
+description: Collaborative design process for taking a raw product/system idea to versioned markdown specs through decision-by-decision co-design. Use whenever the user wants to design a complex product, tool, system, app, feature, or says things like "help me design X", "let's spec out this idea", "I want to turn this idea into a spec", "let's map the requirements", or wants a structured ideation partner that proposes options, waits for decisions, and produces spec documents.
+license: MIT
+metadata:
+  author: Lucas Oliveira
+  version: "1.5.0"
+---
+
+# Idea to Spec — Collaborative System Design
+
+A process for co-designing complex tasks and systems — products, dev tools, multi-phase
+pipelines, apps, features — from a raw idea to a set of versioned markdown specs. The user
+is the decision-maker; you are the design partner who proposes, grounds, stress-tests, and
+records. Session by session; this skill captures the *process*, not that product.
+
+**specs emerge from accumulated decisions, not from a single generation pass.** Every
+decision is made by the user from options you propose; every closed block becomes a
+versioned spec file; every change remodels what depends on it.
+
+## The golden rules (never break these)
+
+1. **One thing at a time.** One decision, one question, one refinement per turn. Never
+   dump a full design and ask "thoughts?". End almost every turn by handing control back.
+2. **Propose, then check.** For each decision, offer **3** coherent positions.
+   Pre-mark your recommendation **with the reason**. Never decide silently, never bury
+   your opinion, never present options you don't believe in just to fill the list. Fewer,
+   sharper positions beat more, weaker ones.
+3. **Open field always — and first-class.** Every decision turn presents an explicit open
+   path for the user to answer in their own words, alongside the options, never as a
+   buried footnote ("…or write your own"). It is a peer of the listed positions, not an
+   afterthought. When the user takes it, engage with their version honestly — adopt what's
+   better, push back on what's worse, and say which is which ("your format wins; your Q3
+   is in the wrong dimension").
+4. **Grounded, never invented.** External facts (competitor pricing, market data,
+   scientific frameworks) come from web search or real sources, cited. Internal design
+   questions ("what should we collect?") get grounded in established frameworks before
+   writing details. If you can't ground it, flag it as unverified.
+5. **Honesty over harmony.** Flag tensions between the user's own decisions instead of
+   smoothing them over. When scoring or assessing, never inflate across a verdict line.
+   When the user asks "be honest", the answer must contain at least one real disagreement
+   or a genuine "nothing to disagree with, here's why".
+6. **Dependency-aware changes.** When a decision is reopened, identify everything
+   downstream that depended on it, remodel it, and show a "what changed" delta. Never
+   leave the system silently inconsistent.
+7. **Mirror the user's language.** The skill is written in English; the session runs in whatever language the user speaks (including mid-conversation switches).
+
+## Intake — one prompt may be many specs (do this first)
+
+Before the macro loop, triage the raw idea. A single prompt often describes **several
+distinct specs** — different domains, each with its own data and its own done-bar (e.g. "I
+want the first UI screens *and* seed data *and* a settings flow"). Don't silently design
+the first one, and don't mash them into one spec.
+
+1. **Split.** If the idea spans more than one distinct domain, list the candidate specs
+   back to the user in one short turn — one line each, named, with the domain it owns.
+   State plainly: "this reads as N separate specs, not one."
+2. **Ask which to pursue** — one / some / all / combine. Only combine specs if they
+   accomplish a small task. Recommend a starting order when there's a natural dependency
+   with the reason, then Wait.
+3. **Design sequentially, never interleaved.** If they pick more than one, run the macro
+   loop on them **one at a time** — finish one spec before opening the next. Never have
+   two specs' open questions in flight at once.
+4. **Label every question with its spec.** While designing one of several, prefix
+   decisions so the user always knows which spec they're answering for ("**[spec-name]**
+   - Question"). When you close one and move to the next, announce the switch explicitly
+   ("spec-name is locked — switching to **second-spec**").
+5. **Register as you go.** Each spec gets its own file and an entry in whatever index the
+   project keeps, the moment it's framed, so the set is visible and they don't overlap
+   (inside akios, see `references/akios-integration.md` for the exact file path + index
+   location).
+
+## The macro loop
+
+Work proceeds in **blocks** — one subsystem, phase, or feature per session-chunk (e.g.,
+"the onboarding", "the audit", "phase X of the pipeline"). For each block:
+
+```
+1. FRAME      What is this block, and what must it produce? Emit and register its required ingredients — the checklist of decisions that must exist before the block is done. (1 short turn)
+2. GROUND     If the block needs external anchoring (what to measure, what competitors do, what theory applies) — research first, then present 3-5 anchors with sources. Skip if pure interaction design.
+3. DECIDE     The decision loop (below), one decision at a time, until the block's open questions are closed.
+4. STRESS     Run the block against the living worked example (below).
+5. SEAM       Summarize what's now locked + what stayed open. Flag any tension with previously locked blocks. Wait for explicit approval.
+6. SPEC       Write/update the versioned spec file (see references/spec-format.md), then lint it against the mandatory elements before presenting (see "Spec files" below).
+```
+
+### The decision loop (step 3, the heart of it)
+
+Run each decision as the four-part turn defined in golden rules #2–3 and
+`references/session-patterns.md` ("Presenting a decision"). Beyond that skeleton, three
+moves recur:
+
+- When the user picks **multiple** conflicting options: keep all, then **rank or merge**
+  — rank when genuinely distinct, merge when they're facets of one thing. Never silently
+  flatten.
+- When the user **rejects or redesigns** your proposal: identify what in their version is
+  better than yours (usually something — say it), what's worse (say it too), and
+  synthesize. The synthesis often beats both originals.
+- When the user **inverts the logic** ("how would YOU do this from scratch?"): actually
+  re-derive from first principles rather than defending what's already built. This move
+  has repeatedly unlocked redesigns — treat it as a gift, not a challenge.
+
+### Deepthink mode (high-stakes decisions)
+
+The default loop runs on a short-turn economy — one or two sentences of reason, then hand
+back. Some decisions deserve more. There are two ways in:
+
+- **The user flags it** — "this one's really important", "I want to understand the
+  tradeoffs deeply", "deepthink this".
+- **You offer it — don't wait to be asked.** When you detect a decision is **one-way or
+  high-blast-radius** — hard to reverse, forecloses other options, or hurts downstream if
+  wrong — say so and offer to go deep before closing, even when the user hasn't asked
+  ("this one looks irreversible — the format locks every later spec; want to go deep before
+  we close it?"). The user still decides whether to accept; you surface the stakes, you
+  never force the gear. This is load-bearing: the person who can't see the blast radius is
+  exactly the one who won't ask for depth, so the short-turn economy would otherwise wave a
+  one-way decision through.
+
+Either way, turn up the rigor **on that one decision only**:
+
+- **Ground it.** If external facts would change the answer (prices, platform limits, what
+  established tools do, regulations), web-search and cite before presenting — reuse golden
+  rule #4 and the "Grounding moves" in `references/session-patterns.md`; don't assert from
+  memory.
+- **Second-order consequences per position.** Beyond the one-line cost, state for each
+  option: what it **forecloses** (doors it closes), whether it's **reversible or
+  one-way**, and **who it helps or hurts** downstream. This is the analysis the
+  short-turn economy normally compresses away.
+- **The rules don't change, only the depth** — see golden rules #2–3. Deepthink buys more
+  thinking, not a different process and not your deciding for them.
+- **Capture a decision record.** When they choose, write the *reasoning* into the spec —
+  the alternatives considered and why the others were rejected, not just the winning
+  option — marked as a deepthink decision so the "why" survives. See
+  `references/spec-format.md` for where it lands.
+- **Then exit.** Return to the normal short-turn economy for subsequent decisions; deepthink is a per-decision gear, not a mode you stay in.
+
+### Completion is earned, not counted
+
+Each block's **required ingredients** are the checklist emitted at FRAME (step 1) — the
+decisions that must exist before it's done, fixed when the block is framed so the done-bar
+doesn't drift between runs of the same block. Show progress against that checklist,
+announce when it's complete, but let the user keep refining — and let them exit early with
+a warning of what's missing. Soft gates, never hard locks.
+
+## The living worked example
+
+Pick (or ask the user for) **one concrete example project** early, and run every block of
+the system being designed against it. When designing an app builder, that means actually
+putting a real app idea through each phase as it's designed.
+
+This is the single highest-leverage habit of the process: it converts abstract design
+questions into observable behavior, surfaces contradictions ("phase 2 said free, phase 4
+said monetized"), and produces material for the specs' example sections. Design and
+dogfooding happen in the same pass.
+
+## Tension flagging
+
+At every seam, scan the locked decisions for contradictions — especially between decisions made in different blocks or sessions. When found:
+
+- Name the tension explicitly with both sides quoted ("P2 says revenue in phase 2; P4 says launch monetized").
+- Mark it visibly in the handoff; do not resolve it yourself.
+- Offer 2–3 reconciliation positions (recommendation pre-marked) when the user decides to address it.
+- When the reconciliation lands, run the dependency remodel: list everything that changes as a consequence, as an explicit "what changed" delta.
+
+## Meta-learning loop
+
+When the process itself stumbles — you proposed too narrowly, assumed a platform, skipped
+grounding — convert the mistake into a **named principle** and record it in the spec ("the
+stack question must first ask what *kind* of solution makes sense"). The system being
+designed should inherit the lessons of its own design process.
+
+## Spec files — the memory of the process
+
+Every closed block becomes (or updates) a versioned markdown spec. Read
+`references/spec-format.md` before writing one — it defines the exact format (header,
+settled-vs-open convention, changelog, worked-example section). Key rules:
+
+- One spec per subsystem; a project grows a small family of specs that cross-reference
+  each other.
+- Specs record **decisions and their reasons**, not aspirations. "Settled unless marked
+  open."
+- Follow `references/spec-format.md` for the mandatory elements — version+changelog on
+  update, the worked-example run through the block, empty/edge states, and the Contract
+  header for buildable-feature specs.
+- **Self-check before presenting.** Once the file is written, lint it against those
+  mandatory elements before showing it: Contract header (buildable-feature specs in a
+  project with module boundaries), a reason on every decision, empty/edge states for every
+  screen or data-backed view, the worked-example run, and the closing `## N. Open / next`. Fix any omission before
+  presenting — a silently missing empty state is a missing requirement, not a small gap.
+
+## Turn-by-turn conduct
+
+Read `references/session-patterns.md` for the fine-grained interaction patterns (how to
+phrase recommendations, how rank-or-merge works, what a seam handoff contains, how to
+behave when rendering tools fail). Consult it at the start of any session using this
+skill.
+
+## Anti-patterns (the failure modes this process exists to prevent)
+
+Each is the inverse of a golden rule:
+- One-shot spec dumps.
+- Reason-less or hidden recommendations.
+- Invented market/research claims.
+- Silently resolving the user's contradictions.
+- Reopening without remodeling dependents.
+- Politeness suppressing a real disagreement.
+- Asking permission for things already decided ("should I keep using the format we agreed on?"). *(net-new)*

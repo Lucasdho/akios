@@ -1,0 +1,111 @@
+---
+name: handoff
+description: Compact the current conversation into a handoff document so another agent session can continue the work — or return results to the originating session. Use when pivoting to a different concern mid-session, when context is growing unwieldy, or when a sub-task should run in isolation and report back.
+argument-hint: "What will the next session focus on? (e.g. 'debug the sync bug', 'return: fixed the auth issue')"
+license: MIT
+metadata:
+  author: Lucas Oliveira
+  version: "1.0.0"
+---
+
+# Handoff — Cross-session Context Transfer
+
+Writes a handoff document so a fresh agent session can continue the work, or so a sub-session
+can report results back to the originating session. Designed for the bidirectional pattern:
+
+```
+Session 1 ──writes──▶ akios/tasks/handoffs/<topic>.md ──▶ Session 2
+Session 1 ◀──reads── akios/tasks/handoffs/<topic>-return.md ◀──writes── Session 2
+```
+
+**Invocation:** `/akios:handoff [what the next session will focus on]`
+
+If the argument starts with `return:`, treat this as a returning sub-session writing results
+back — write `akios/tasks/handoffs/<topic>-return.md` instead, structured as a results report.
+
+## What to include
+
+- **Current position in the pipeline.** Which phase (brainstorm / plan / deliver),
+  which spec, which task, which checkpoint.
+- **Decisions made this session.** Only the ones not already captured in specs, tasks, commits, or
+  auto-memory — reference the artifacts by path and auto-memory by name, don't duplicate content.
+- **Open questions.** Anything unresolved that the next session must answer before proceeding.
+- **Risks and tensions.** Flags worth carrying forward even if not yet acted on.
+- **Suggested skills.** Which akios skills the next session should invoke, and in what order.
+
+## What NOT to include
+
+- Content already in `akios/specs/`, `akios/tasks/`, `akios/archive/Archive.md` — reference by
+  path instead (`akios/specs/foo.md §3`) — or already in auto-memory, which the next session
+  loads on its own.
+- Code diffs or full file contents — reference by file path + line range.
+- Sensitive information (API keys, credentials, PII).
+- The current conversation transcript.
+
+## Output format
+
+Write to `akios/tasks/handoffs/<topic>.md` (or `<topic>-return.md` for a returning session).
+Create `akios/tasks/handoffs/` if it doesn't exist.
+
+**Chain-internal handoff (mandatory, not situational).** When a subagent chaining through a
+sequential task batch crosses its 120k-token lineage budget (`task-execution` "Batch chaining"),
+it writes
+`akios/tasks/handoffs/subagent-<spec-slug>-<link-number>.md` (e.g. `subagent-checkout-flow-2.md`
+for the second link in a chain working that spec's batch) — same format as below, naming which
+batch tasks are done vs. queued. Unlike the general `<topic>` handoff above, writing this one at
+the budget line is required every time, not left to judgment.
+
+```markdown
+# Handoff — <topic>
+
+> Session: <date + approximate time>
+> Phase: <brainstorm | plan | deliver>
+> Spec: <path or "none">
+> Task: <path or "none">
+
+## Context in one paragraph
+<What was being worked on and why — enough for a cold agent to orient in 30 seconds.>
+
+## Where we are
+- Last action: <what just happened>
+- Next action: <exactly what the next session should do first>
+- Checkpoint: <which barrier is next, if in deliver>
+
+## Decisions made this session (not yet in artifacts)
+- <decision>: <rationale>
+
+## Open questions
+- <question> — <why it matters>
+
+## Risks / tensions
+- <risk> — <what it blocks>
+
+## Suggested skills (in order)
+1. `/akios:<skill>` — <why>
+
+## References
+- <artifact path> — <what it contains relevant to this handoff>
+```
+
+## Return handoff format
+
+When a sub-session writes back (`return:` prefix), the document is a results report:
+
+```markdown
+# Handoff Return — <topic>
+
+> Originated from: akios/tasks/handoffs/<topic>.md
+> Completed: <date>
+
+## What was done
+<Summary of work completed — decisions made, files changed, outcomes.>
+
+## Artifacts produced
+- <path> — <what it is>
+
+## What's still open
+- <anything the originating session needs to decide or act on>
+
+## Recommended next step for Session 1
+<One concrete action to resume from where Session 1 left off.>
+```
