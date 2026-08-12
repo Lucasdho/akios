@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "Akios",
     "shortDescription": "Spec-driven, stack-agnostic workflow kit for Codex",
-    "longDescription": "Use Akios to brainstorm, plan, deliver, review, and maintain features through an agent-readable workflow, in any language or stack. Codex support currently exposes the shared skill family; Claude Code remains the full command and setup host.",
+    "longDescription": "Use Akios to brainstorm, plan, and deliver features through an agent-readable workflow, in any language or stack. Codex support currently exposes the shared skill family; Claude Code remains the full command and setup host.",
     "developerName": "Lucas Oliveira",
     "category": "Developer Tools",
     "capabilities": [
@@ -31,8 +31,8 @@
     "websiteURL": "https://github.com/Lucasdho/akios",
     "defaultPrompt": [
       "Use Akios to plan this feature.",
-      "Review this change with Akios.",
-      "Turn this idea into a spec."
+      "Turn this idea into a spec.",
+      "Deliver the Akios backlog."
     ],
     "brandColor": "#5B7FFF"
   }

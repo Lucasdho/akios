@@ -51,30 +51,6 @@ This project's architecture is described in `akios/Context.md` `## Architecture`
 vocabulary it uses for module boundaries and shared code. **Follow the project's own architecture;
 akios does not impose one.**
 
-## Operating posture (learning vs. delivery)
-`akios/Roadmap.md` carries a second flag beside `mode`: `posture: learning | delivery`
-(default `delivery`, written by `/akios:setup`, overridable for one session via a command flag —
-`/akios:deliver --learning` — or a spoken switch, without rewriting the Roadmap default).
-Posture changes **only** how akios communicates and captures — never what it builds; a learning-
-mode feature and a delivery-mode feature produce identical code.
-
-A closed, named **teaching surface** — everything else is identical between postures:
-
-| Behavior | Delivery (default) | Learning |
-|---|---|---|
-| Decision annotation | recorded to the artifact, no narration | inline one-liner: what, the principle, the tradeoff |
-| Principle citation | none | names the doctrine + the owning reference/spec |
-| Alternatives shown | in the artifact only | surfaced briefly at the decision point |
-| Capture eagerness (prefs/hurdles) | propose at natural pauses, 2nd-occurrence rule | propose more eagerly + explain why it's worth remembering |
-| End-of-unit digest | outcome report only | a short "what you learned" recap (3–5 principles) |
-| Pace / checkpoints | as planned | may add a soft pause after a teachable checkpoint (never a hard gate) |
-
-Every phase skill (`idea-to-spec`, `spec-to-tasks`, `task-execution`) reads `posture`
-the same way it already reads `mode` and toggles only this surface. Under `just-vibes`
-(no human present), learning posture writes a **"Lessons"** section to
-`akios/.local/just-vibes-journal.md` per unit instead of narrating live; delivery journals outcomes
-only.
-
 ## The priority chain (whose answer wins)
 For any code decision (pattern, naming, architecture), resolve **top-down — the first tier
 with a relevant answer wins, lower tiers only fill silence**:
@@ -99,7 +75,7 @@ commands and phase detection read it). `task-execution` owns the *deliver* phase
 the phases.
 
 Note: a spawned subagent starts cold — it does NOT inherit these gates. When you dispatch one
-for gated work, restate the relevant gate (and the task's `refs:`) in its prompt.
+for gated work, restate the relevant gate in its prompt.
 
 ## Sizing the work & subagent economy
 Match the machinery — and the model — to the size of the job. Two questions before you start or dispatch:
@@ -118,25 +94,20 @@ than guessing.
 Work **inline by default** — a subagent is cold (re-fed context, fresh tooling) and billed on top of
 your session, so it rarely pays for itself. Reach for one only when **both** hold:
 - **Context pressure** — the driving session is at **≥120k tokens (~60% of a 200k window)**, i.e. inline
-  work is starting to crowd the window (a distinct, earlier threshold from `task-execution`'s own
-  **110k** context-warn line — that one triggers a mandatory `/compact` before the next spec; this one
-  is the subagent-dispatch judgment call), **and**
+  work is starting to crowd the window, **and**
 - **The task is heavy and isolatable** — a large, self-contained chunk (a whole spec's tasks, a wide
   mechanical sweep) that genuinely benefits from running in its own window.
 
 Below that bar, just do it inline — offloading a light task, or one while you have ample context, spends
 money to save nothing. If subagents are unavailable, inline is the answer anyway.
 
-This kit uses three similarly-valued thresholds for three different things — say which one you mean:
+Three similarly-valued thresholds, three different meters — say which one you mean:
 
 | Name | Value | Measures | Where | Triggers |
 |---|---|---|---|---|
 | Inter-spec compact line | 110k / 135k | The **orchestrator's own** context, between specs | `task-execution/SKILL.md` "Context management" | warn at 110k → finish current task; urgent `/compact` at 135k |
 | Subagent-dispatch judgment | 120k | The **orchestrator's own** context, before deciding to dispatch at all | this section, above | at/above it, dispatching a heavy isolatable task becomes worth considering |
 | Subagent lineage budget | 120k | **A subagent's own context**, accumulated across the tasks it has chained through so far | `task-execution/SKILL.md` "Batch chaining" | at/above it, that link finishes its current task, hands off, and terminates — it does not start another task |
-
-The dispatch-judgment line and the lineage budget share a value by coincidence, not identity — one
-is checked against the orchestrator's window, the other against a subagent's own.
 
 **3. When you do dispatch: cheapest model that fits, and only the slice it needs.**
 - *Orchestration tier.* The driving session runs on **opus or sonnet** — sonnet is the budget option
@@ -148,9 +119,8 @@ is checked against the orchestrator's window, the other against a subagent's own
   needs — that's spending the orchestrator's tier on work a cheaper one ships correctly.
 - *Never clone your context into a subagent.* A subagent starts cold and is billed for **every token you
   hand it** — passing your whole window is the single most expensive mistake here. Send only the slice:
-  the task + its DoD, its `refs:` list, the project's test command, the matching
-  `akios/Context.md` gotcha, the precedent file path. If you're about to paste the conversation, stop —
-  summarize the slice instead.
+  the task + its DoD, the project's test command, the matching `akios/Context.md` gotcha, the
+  precedent file path. If you're about to paste the conversation, stop — summarize the slice instead.
 
 ## Skill gates
 These are a routing aid, **not a toll booth on every file**.
@@ -206,22 +176,20 @@ source dirs are described in `akios/Context.md` `## Architecture`.
 | Artifact | Location | Naming | Found / loaded via |
 |---|---|---|---|
 | Operating files | repo root (`CLAUDE.md`/`AGENTS.md`); `akios/` (`Context.md`) | `CLAUDE.md`, `AGENTS.md`, `akios/Context.md` | Claude Code auto-loads `CLAUDE.md`, which imports `AGENTS.md` (root) and `akios/Context.md` |
-| Phase contract | `akios/` | `workflow.yml` | commands + phase detection read it |
-| Spec state | `akios/` | `akios/Roadmap.md` | mode flag + posture flag + one line per spec |
+| Phase contract | repo root | `workflow.yml` | commands + phase detection read it |
+| Spec state | `akios/` | `akios/Roadmap.md` | mode flag + one line per spec |
 | Product vision | `akios/` | `akios/Vision.md` | north star + prioritized wishlist; top-tier `just-vibes` fuel |
 | Specs | `akios/specs/` | `<domain>.md`, one file per domain | `akios/Roadmap.md` `## Specs` table |
 | Tasks | `akios/tasks/<state>/` | `T<NNN>-<slug>.md`; state = folder (`todo/ in-progress/ review/ done/`) | moved between folders = state change |
 | Handoffs | `akios/tasks/handoffs/` | `<slug>.md` + `<slug>-return.md` | written and read by `handoff` |
 | Archived specs | `akios/archive/` | `<spec>.md` + `Archive.md` (summary index) | read `Archive.md` first; open full file on demand |
-| User preferences | `~/.claude/akios/preferences.md` (not in repo) | — | priority chain tier 3 |
+| User preferences | `~/.claude/akios/preferences.md` (not in repo) | — | priority chain tier 2 |
 | Durable decisions | native auto-memory (not in repo) | `MEMORY.md` | written automatically; survives compaction |
 | Run journal | `akios/.local/` | `just-vibes-journal.md` (append-only) | local runtime; **gitignored** — not shared |
 | Project source | per `akios/Context.md` `## Architecture` | project-specific | `akios/Context.md` |
 
-> **Not the same folder:** this table's `akios/` is a **per-project** folder created at repo root
-> by `/akios:setup`. It's unrelated to `~/.claude/akios/` (the "User preferences" row above) —
-> that one is a **user-global** home for preferences and packs, outside any single repo. Same
-> name, different scope; they never collide in practice, but don't conflate them.
+> **Not the same folder:** `akios/` is per-project, at the repo root. `~/.claude/akios/` is
+> user-global (preferences only), outside any repo.
 
 Adding a new artifact? Put it where the table says and name it the same way. If it's a spec,
 add a row to the `akios/Roadmap.md` `## Specs` table so the next session knows it exists.
@@ -246,7 +214,7 @@ Three phases: `brainstorm` (interactive design → `akios/specs/<feature>.md`) �
 `akios/tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, state coverage) → `deliver`
 (folder-state lifecycle, TDD-first, DoD audit at each checkpoint, `/verify` + `/code-review`, then
 hand the working tree back **uncommitted**). See `feature-pipeline` for the conduct;
-`workflow.yml` for the contract. No scaffold directory and no second spec format.
+`workflow.yml` for the contract.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
 **plan mode** (read-only; review the spec/backlog before a single edit lands). `deliver` writes
@@ -288,7 +256,7 @@ or you interrupt. It is the **explicit opt-out of being asked** — but the **qu
 verify + code-review + a bounded fix loop, and a spec that won't go green is **parked**, never
 marked done. It commits nothing either (see "akios never writes to git"): the run ends with changed
 files in the working tree, same as any other. Unattended brainstorm runs in a
-**deepthink** posture (research + decision records) since no one's there to decide live. The loop,
+**deepthink** mode (research + decision records) since no one's there to decide live. The loop,
 fuel precedence, and reporting live in the `just-vibes` skill — don't re-document them here.
 
 ## Project-specific gates

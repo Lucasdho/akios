@@ -1,6 +1,6 @@
 ---
 name: just-vibes
-description: Autonomous akios run. Drives the whole feature pipeline (brainstorm→plan→design→deliver→ship) end to end with no human in the loop — picks the next fuel (a submitted idea, the task backlog, designed-but-unbuilt specs, or akios/Vision.md/akios/Roadmap.md items), builds it, gates on quality, and ships it. Use when the user runs /akios:just-vibes (or --force), says "just vibe on it", "run autonomously", "drive the backlog yourself", "vai sozinho", or otherwise asks akios to make progress without supervising each step. Default stops after one unit at the spec boundary; --force loops until fuel is exhausted or interrupted.
+description: Autonomous akios run. Drives the whole feature pipeline (brainstorm→plan→deliver) end to end with no human in the loop — picks the next fuel (a submitted idea, the task backlog, designed-but-unbuilt specs, or akios/Vision.md/akios/Roadmap.md items), builds it, and gates on quality. Use when the user runs /akios:just-vibes (or --force), says "just vibe on it", "run autonomously", "drive the backlog yourself", "vai sozinho", or otherwise asks akios to make progress without supervising each step. Default stops after one unit at the spec boundary; --force loops until fuel is exhausted or interrupted.
 license: MIT
 metadata:
   author: Lucas Oliveira
@@ -10,8 +10,8 @@ metadata:
 # Just Vibes — Autonomous Run
 
 You are running akios **unattended**. The user has handed you the wheel: pick the next worthwhile
-thing, build it through the full pipeline, and ship it — without asking permission at each step.
-This skill **owns the loop and the shipping**; it does **not** re-document the phases. It drives the
+thing and build it through the full pipeline — without asking permission at each step.
+This skill **owns the loop**; it does **not** re-document the phases. It drives the
 existing phase skills: `idea-to-spec` (brainstorm), `spec-to-tasks` (plan), `task-execution`
 (deliver). Read each as you reach its phase.
 
@@ -28,8 +28,8 @@ These rules override everything in the sub-skills (`idea-to-spec`, `spec-to-task
    forever and the run stalls — that is the failure mode you are preventing.
 
 2. **NEVER wait for or hand back control.** The "one ingredient per turn, hand back and wait"
-   rhythm in `idea-to-spec` is the interactive posture. It is **fully replaced** by the
-   deepthink posture described below. Same for `spec-to-tasks`'s "one interactive confirm" —
+   rhythm in `idea-to-spec` is the interactive mode. It is **fully replaced** by the
+   deepthink mode described below. Same for `spec-to-tasks`'s "one interactive confirm" —
    skip it; write task files directly.
 
 3. **NEVER skip a phase.** If you need a spec and there isn't one → run brainstorm (deepthink).
@@ -59,13 +59,13 @@ These rules override everything in the sub-skills (`idea-to-spec`, `spec-to-task
   `task-execution`'s **two proofs** (build/test and spec-conformance; see its "The two proofs"
   section). **Never leave broken work marked done.** A red spec gets a bounded fix loop, then is
   parked.
-- **All interactive phases → deepthink.** Every decision in every phase (spec, plan, alignment)
+- **All interactive phases → deepthink.** Every decision in every phase (spec, plan, delivery)
   is made by you — chosen via deepthink, recorded with full rationale, written to disk. The
   human reviews *after* and can override any decision.
 
 ---
 
-## Deepthink posture (applies to every phase, every decision)
+## Deepthink (applies to every phase, every decision)
 
 Whenever you make a decision unattended:
 
@@ -76,7 +76,7 @@ Whenever you make a decision unattended:
 - **Choose the recommendation you'd have pre-marked.** Where genuinely 50/50, pick the reversible
   option.
 - **Record everything.** Write the chosen option, the rejected options, and the reasoning into the
-  output artifact (spec, task file, alignment doc). A silently-decided artifact is a failure.
+  output artifact (spec, task file). A silently-decided artifact is a failure.
 - **Flag, don't smooth.** Tensions and unverifiable assumptions go into the artifact as marked
   open risks, not quiet resolutions.
 
@@ -99,10 +99,6 @@ Whenever you make a decision unattended:
      Log each skipped spec in the journal with reason "audit: needs-revision".
 4. **`akios/specs/*.md` present but no `akios/Roadmap.md`** — treat each spec as `designed`, run plan → deliver.
 5. **`akios/Vision.md` / `akios/Roadmap.md` items with no spec** — needs full brainstorm → plan → deliver.
-
-> **`needs-revision` specs:** Roadmap status set by the deep-brainstorm R-W-W audit when a spec
-> scores below 41/100. Skipped in default mode — the spec needs revision before it's
-> deliver-ready. Pass `--force` to include them (at your own risk; audit findings apply).
 
 **Fuel detection procedure:**
 ```
@@ -142,7 +138,7 @@ Pick the highest-precedence fuel.
               - Follow task-execution's folder-state lifecycle.
               - Every gate that would normally grill the user runs in auto-decide mode
                 (every choice marked [auto], no questions asked, rationale recorded).
-              - TDD-first posture; audit every DoD at each checkpoint barrier.
+              - TDD-first; audit every DoD at each checkpoint barrier.
               - Touch git at no point: no branch, no commit, no push.
 
 3. GATE    /verify + /code-review (apply task-execution's "Code-review doctrine" checklist on
@@ -162,27 +158,10 @@ Pick the highest-precedence fuel.
              - key decisions made (with reasoning) per phase
              - gate result (green/red), and the park reason if parked
              - the files it touched, so the human can find the diff
-             - under posture: learning — also append a "Lessons" subsection (see below)
 6. NEXT    default → STOP + report.  --force → loop to step 1.
 ```
 
 ---
-
-## Posture under just-vibes (learning vs. delivery)
-
-No human is present to narrate to, so `posture: learning` (`akios/Roadmap.md`, default `delivery`)
-redirects the teaching to the journal instead of live narration:
-
-- **Learning:** every unit's journal entry (step 6) gains a **"Lessons"** subsection — the 3–5
-  principles the unit exercised, the decisions and their *why* (citing the owning reference/spec), and
-  any hurdle auto-recorded to auto-memory (see
-  `task-execution`'s "Hurdles ledger" section) or `preferences.md` this unit. This is the artifact
-  a returning human reads to learn what happened *and why* — the unattended analogue of live
-  narration.
-- **Delivery (default):** journal outcomes only, exactly as documented above — no Lessons
-  subsection.
-- Both postures keep every other unattended rule unchanged (deepthink decisions, no questions
-  asked, quality gate not relaxed) — posture only ever adds or omits the Lessons subsection.
 
 ## Reporting (every time you stop)
 

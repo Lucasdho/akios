@@ -45,21 +45,6 @@ versioned spec file; every change remodels what depends on it.
    leave the system silently inconsistent.
 7. **Mirror the user's language.** The skill is written in English; the session runs in whatever language the user speaks (including mid-conversation switches).
 
-## Posture (learning vs. delivery)
-
-A `posture` flag, if the surrounding project defines one (inside akios, see
-`references/akios-integration.md`), picks the narration style; standalone, default to
-delivery unless the user asks to hear the reasoning as you go. Either way the design itself
-never changes, only how much of the "why" gets said aloud:
-
-- **Delivery (default):** the decision loop runs exactly as documented above — recommendation,
-  reason, decide, move on. The spec already records the alternatives and reasoning; nothing extra
-  is spoken.
-- **Learning:** as each decision closes, add one line surfacing *why* the winning position
-  beats the others said aloud instead of left silent. No new step, no extra ceremony — the
-  teaching is the existing "Pre-mark the recommendation and give the reason" instruction,
-  simply voiced rather than only written.
-
 ## Intake — one prompt may be many specs (do this first)
 
 Before the macro loop, triage the raw idea. A single prompt often describes **several
@@ -84,11 +69,6 @@ the first one, and don't mash them into one spec.
    project keeps, the moment it's framed, so the set is visible and they don't overlap
    (inside akios, see `references/akios-integration.md` for the exact file path + index
    location).
-
-This is the design-time twin of the pipeline's *anti-drift* rule: anti-drift catches a new
-spec that surfaces **mid-flow**; intake catches the specs that were all in the **opening
-prompt**. Same discipline — one spec's questions at a time, each registered, none silently
-merged.
 
 ## The macro loop
 

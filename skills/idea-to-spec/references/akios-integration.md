@@ -4,13 +4,6 @@
 specifics. Read it only when this skill is running inside akios. Everything in `SKILL.md` and
 `spec-format.md` already states a sensible standalone fallback without it.
 
-## Posture flag
-
-Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override — a command
-flag or spoken switch — wins for this session without rewriting the Roadmap value). See
-`AGENTS.md` "Operating posture" for the full teaching-surface this flag controls across every
-phase.
-
 ## Spec registration
 
 Each spec gets its own `akios/specs/<name>.md` and a row in `akios/Roadmap.md`'s `## Specs`

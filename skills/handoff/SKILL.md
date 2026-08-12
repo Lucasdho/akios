@@ -25,7 +25,7 @@ back — write `akios/tasks/handoffs/<topic>-return.md` instead, structured as a
 
 ## What to include
 
-- **Current position in the pipeline.** Which phase (brainstorm / plan / design / deliver),
+- **Current position in the pipeline.** Which phase (brainstorm / plan / deliver),
   which spec, which task, which checkpoint.
 - **Decisions made this session.** Only the ones not already captured in specs, tasks, commits,
   or `MEMORY.md` — reference those by path, don't duplicate content.
@@ -47,8 +47,8 @@ Write to `akios/tasks/handoffs/<topic>.md` (or `<topic>-return.md` for a returni
 Create `akios/tasks/handoffs/` if it doesn't exist.
 
 **Chain-internal handoff (mandatory, not situational).** When a subagent chaining through a
-sequential task batch crosses its 120k-token lineage budget
-(`akios/specs/subagent-context-chaining.md` §4), it writes
+sequential task batch crosses its 120k-token lineage budget (`task-execution` "Batch chaining"),
+it writes
 `akios/tasks/handoffs/subagent-<spec-slug>-<link-number>.md` (e.g. `subagent-checkout-flow-2.md`
 for the second link in a chain working that spec's batch) — same format as below, naming which
 batch tasks are done vs. queued. Unlike the general `<topic>` handoff above, writing this one at
@@ -58,7 +58,7 @@ the budget line is required every time, not left to judgment.
 # Handoff — <topic>
 
 > Session: <date + approximate time>
-> Phase: <brainstorm | plan | design | deliver>
+> Phase: <brainstorm | plan | deliver>
 > Spec: <path or "none">
 > Task: <path or "none">
 

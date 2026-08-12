@@ -21,11 +21,7 @@ not a gate.
 run it against the spec: one pass, one human confirm, producing **task files under `akios/tasks/todo/`**
 (`T<NNN>-<slug>.md`) with `est_tokens` + `runner`, `[P]` markers by area, checkpoint grouping,
 definitions of done, and per-task UI-state coverage. Set the spec's status to `planned` in
-`akios/Roadmap.md`. No scaffold directory and no second spec format.
-
-**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
-`akios/Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
-the Roadmap default. See `spec-to-tasks`'s "Posture (learning vs. delivery)".
+`akios/Roadmap.md`.
 
 Spec path or text (pass as `$ARGUMENTS`): `$ARGUMENTS`
 

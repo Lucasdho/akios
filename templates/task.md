@@ -29,4 +29,4 @@ checkpoint: {{n}}            # [major] checkpoints run the project's full test b
      Delete this section for a task with no user-facing surface. -->
 
 ## Notes
-<!-- Packs to load by scope; gotchas; priority-chain references. -->
+<!-- Gotchas; the in-repo file this task should mirror; priority-chain references. -->

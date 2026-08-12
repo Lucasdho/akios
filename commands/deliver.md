@@ -21,22 +21,18 @@ has a separate one) before the first checkpoint — that single answer is what d
 **Run.** Load the `task-execution` skill (single source of truth — don't re-document the loop) and
 run it against the backlog in `akios/tasks/todo/`:
 
-- Branch per spec; move each task file `todo → in-progress → review → done`; consult the priority
-  chain before any pattern; write tests first (light bar for presentation code with no meaningful
-  unit test); audit every DoD at each checkpoint barrier.
+- Work in place — no branch, no worktree. Move each task file `todo → in-progress → review → done`;
+  consult the priority chain before any pattern; write tests first (light bar for presentation code
+  with no meaningful unit test); audit every DoD at each checkpoint barrier.
 - **Build/test commands come from `akios/Context.md` `## Commands`** — never guess an invocation.
 - **Runner routing** from each task: `≤20k → orchestrator` (inline), `>20k → subagent`. Subagents
-  are opt-in and start cold — their prompt MUST name the task's `refs:` list and the
-  project's test command. If the subagent layer is unavailable, degrade to inline.
+  are opt-in and start cold — their prompt MUST name the task, its DoD, and the project's test
+  command. If the subagent layer is unavailable, degrade to inline.
 - Manage context (warn 110k / urgent `/compact` 135k). **Mandatory `/compact` between every spec** — never start a new spec without compacting first.
 - On spec completion, archive (`archive/Archive.md` + move spec) and record durable decisions to `MEMORY.md`.
 - `/verify` and `/code-review` before claiming done.
 - **Never write to git.** No commits, no `git add`, no push, no merge — not at a checkpoint, not at
-  the end, and don't offer to. Only `/akios:just-vibes` commits. Finish by reporting what landed and
-  what the proofs said, leaving the diff in the working tree for the user to review and commit.
-
-**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
-`akios/Roadmap.md`'s `posture` for this session only — it does not rewrite the Roadmap value. Absent a
-flag, use the Roadmap default (`delivery` if unset). See `task-execution`'s "Operating posture".
+  the end, and don't offer to. Finish by reporting what landed and what the proofs said, leaving the
+  diff in the working tree for the user to review and commit.
 
 Backlog (pass as `$ARGUMENTS`): `$ARGUMENTS`  (defaults to `akios/tasks/todo/`)

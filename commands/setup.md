@@ -11,8 +11,8 @@ into their repo, so you do this with your own file tools. Work at the **git repo
 directory that isn't under version control, so never make `git init` a precondition.
 
 **This command only writes files.** It never commits, stages, or pushes anything it creates —
-that's the user's call (see `AGENTS.md` "Git is just-vibes-only"). Mention at the end that the new
-files are uncommitted, and stop there.
+that's the user's call (see `AGENTS.md` "akios never writes to git"). Mention at the end that the
+new files are uncommitted, and stop there.
 
 Templates live in the installed plugin at `${CLAUDE_PLUGIN_ROOT}/templates/`. Read them from
 there; do not invent their contents. `setup` is **bootstrap, not a phase** (see
@@ -31,7 +31,8 @@ completes (e.g. "✓ `AGENTS.md` written") — it's the long step that would oth
 ## 0. Detect state (idempotency gate — do this first)
 Don't re-onboard a repo that's already set up; re-running `/akios:setup` should be cheap.
 Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's recorded version
-(`<root>/.claude/.agentic-kit-version`, may be absent), then branch:
+(`<root>/.claude/.akios-version`, may be absent; fall back to the legacy
+`.claude/.agentic-kit-version` and rewrite it under the new name), then branch:
 
 - **No version file (or no `AGENTS.md`)** → fresh repo. Run the **full** flow (steps 1–5).
 - **Recorded == installed** → already initialized. **Skip the interview and copies.** Run only the
@@ -44,39 +45,18 @@ Read the installed version (`${CLAUDE_PLUGIN_ROOT}/VERSION`) and the repo's reco
   `${CLAUDE_PLUGIN_ROOT}/CHANGELOG.md` in two or three lines, flagging anything needing a manual touch.
   Detect the **mode** here too: if the user has feature work in mind, ask `new`/`one-shot`/`feature`.
 
-  **Leftovers from an older, heavier install.** Versions before the kit went stack-agnostic
-  installed shell hooks (`.claude/hooks/agentic-kit-inject.sh`, `skill-trace.sh`,
-  `post-checkpoint-verify.sh`, `akios-instance.sh`), a `.claude/scripts/` helper, and a
-  `.claude/rules/` gate file. Those are no longer part of the kit. **Ask, don't silently delete:**
-  list exactly which of them you found and offer to remove them plus their `settings.json` hook
-  entries. On "no", leave everything alone — a stale hook is inert, not broken. Never touch
-  anything in `.claude/` the user may have added themselves.
+  **Leftovers from a pre-1.0 install.** Older versions installed shell hooks
+  (`.claude/hooks/*.sh`), a `.claude/scripts/` helper, and a `.claude/rules/` gate file; none of
+  them are part of the kit now. **Ask, don't silently delete:** list what you found and offer to
+  remove it plus its `settings.json` hook entries. On "no", leave it — a stale hook is inert.
+  Never touch anything in `.claude/` the user added themselves.
 
-  **`workflow.yml` moved to the root.** Older installs kept the phase contract at
-  `akios/workflow.yml`. If you find one there, move it to the repo root — it is an always-copy
-  artifact, so just write the plugin's current copy to `workflow.yml` and delete the old one.
-  This one is safe to do without asking: the file is never edited per project.
-
-  **`akios/` folder migration (opt-in).** Detect a pre-consolidation repo: a recorded version
-  older than the consolidation, alongside root-level `specs/`, `tasks/`, `Context.md`, `Roadmap.md`,
-  `Vision.md` rather than an `akios/` folder. **Ask, don't silently move:**
-  "This repo predates the `akios/` consolidation — migrate now? (moves `specs/ tasks/ archive/
-  Context.md Roadmap.md Vision.md` into `akios/`, renames the
-  runtime journal `.akios/` to `akios/.local/`, updates `CLAUDE.md`'s import path. Everything
-  keeps working either way — this is cosmetic, not a functional requirement.) y/n"
-  - **On yes:** move file-by-file, verifying each move landed (source gone, destination present +
-    non-empty) before the next, retrying once on a confirmed miss, and stopping with an itemized
-    manifest on a second failure. Update `CLAUDE.md`'s `@Context.md` → `@akios/Context.md`
-    import as the **last** write in the sequence, only after every file move is confirmed — a
-    failed migration must never leave the import pointing at a `Context.md` that no longer
-    exists at the old path.
-  - **On no (or nothing stale):** leave the repo as-is — a pre-consolidation repo is not broken.
-    Don't ask again until the user explicitly requests it (`/akios:setup --consolidate`).
-  - **Name-collision check (before any write):** if the repo already has a pre-existing `akios/`
-    directory unrelated to this kit (no recognizable `Context.md`/`Roadmap.md`/`specs/`/`tasks/`
-    shape inside it), treat it the same as any other "file already exists and isn't ours" case
-    in step 3's materialize table — surface it to the user, ask how to proceed (e.g. a
-    different folder name, or abort the migration), and **never** silently write into or over it.
+  Two layout moves, safe to apply without asking (neither file is ever edited per project):
+  `akios/workflow.yml` → `workflow.yml` at the root; a root-level `specs/ tasks/ archive/
+  Context.md Roadmap.md Vision.md` → into `akios/`, with `.akios/` → `akios/.local/` and
+  `CLAUDE.md`'s `@Context.md` import repointed to `@akios/Context.md` **last**, only after every
+  move is confirmed. If a pre-existing `akios/` directory is unrelated to this kit, stop and ask
+  rather than writing into it.
 
 ## 1. Interview (short — map answers to the placeholders)
 
@@ -100,10 +80,6 @@ Three rules keep this open:
 Ask in one batched pass (skip what the scan in step 2 answers confidently; confirm rather than re-ask):
 - **Mode** — `new` (greenfield repo) / `one-shot` (single deliverable) / `feature` (adding to an
   existing project). Written to `akios/Roadmap.md`; `brainstorm` reads it instead of re-asking.
-- **Posture** — `learning` (narrate the *why* behind decisions as you build) / `delivery` (ship
-  quietly, default). Written to `akios/Roadmap.md`. Orthogonal to mode; overridable for a
-  single session via a command flag or a spoken switch without rewriting this default. See
-  `AGENTS.md` "Operating posture" for what the flag actually changes.
 - **What this repo is** — one line, in the user's words. An app, a library, a monorepo, infra, a
   docs site, a dataset, notes. This frames every answer below; don't skip it because it seems obvious.
 - **Stack** — language(s) / framework(s) / runtime / data store, as many as actually apply
@@ -159,23 +135,19 @@ attempted) rather than continuing or guessing at the repo's state.
 |---|---|---|
 | `AGENTS.md` | `templates/AGENTS.md` | skip if it already exists |
 | `akios/Context.md` | `templates/Context.md` | skip if it already exists |
-| `akios/Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` + `posture:` lines |
+| `akios/Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` line |
 | `akios/Vision.md` | `templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
 | `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
 | `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@akios/Context.md` imports is missing (Context first so AGENTS ends on top) |
-| `.claude/.agentic-kit-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
+| `.claude/.akios-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
 
-**Footprint — the three-way line.** Not everything this command writes is the same *kind* of thing:
-- **Root contracts** — `CLAUDE.md`, `AGENTS.md`, `.claude/`, `workflow.yml` — stay at repo root.
-  The first three because a *different* program (Claude Code, or any AGENTS.md-reading tool) looks
-  for them there, independent of akios. `workflow.yml` because it is the kit's **contract**, not
-  its state: it is copied verbatim from the plugin at every setup and never edited per project, so
-  it belongs beside `VERSION`, not inside the folder of things the project keeps changing.
+**Footprint — the three-way line.**
+- **Root contracts** — `CLAUDE.md`, `AGENTS.md`, `.claude/`, `workflow.yml` — stay at repo root,
+  because a different program looks for them there and because `workflow.yml` is a contract copied
+  verbatim from the plugin, not per-project state.
 - **akios housekeeping** — `Context.md`, `Roadmap.md`, `Vision.md`, `specs/`, `tasks/`,
-  `archive/`, the runtime journal — moves into one folder, **`akios/`**.
-  This is per-project state, written and rewritten as work progresses.
-- **User's own source** — whatever the project's own architecture defines — stays where it is.
-  It's the deliverable the toolchain must find in a normal layout, not akios's paperwork.
+  `archive/`, the runtime journal — goes in **`akios/`**.
+- **User's own source** — stays exactly where the project's architecture puts it.
 
 **Create the `akios/` folder tree** (empty, with a `.gitkeep` if your tooling needs it):
 ```
@@ -196,10 +168,8 @@ Root, after this step, holds only: `CLAUDE.md`, `AGENTS.md`, `.claude/` (untouch
 whatever the user's own project already has (their source, `README.md`, etc. — akios never
 generated these).
 
-(`akios/.local/` is created at runtime for the local journal and stays **unconditionally**
-gitignored — no yes/no prompt: there's no legitimate case for tracking a per-machine journal, so a
-forced default beats asking a question with only one sane answer. The rest of `akios/` is **never**
-offered as gitignorable — specs and tasks are work product a team reads and reviews.)
+(`akios/.local/` is the runtime journal and is **unconditionally** gitignored — no prompt. The rest
+of `akios/` is **never** offered as gitignorable: specs and tasks are work product a team reads.)
 
 **Seed user preferences (user-global, once):** if `~/.claude/akios/preferences.md` does **not**
 exist, create `~/.claude/akios/` and copy `templates/preferences.seed.md` there as
@@ -223,14 +193,15 @@ rather than re-derived or assumed complete.
 
 Otherwise, confirm: the `akios/` context files (incl. `akios/Vision.md`) + `workflow.yml` +
 the folder tree exist; `CLAUDE.md` imports both `@AGENTS.md` and `@akios/Context.md`;
-`akios/Roadmap.md` has a `mode:` **and** a `posture:` value;
+`akios/Roadmap.md` has a `mode:` value;
 `akios/Context.md` `## Commands` carries a real, runnable test command (not a placeholder);
 `~/.claude/akios/preferences.md` exists; **no `{{...}}` placeholder remains** in
 `akios/Context.md` / `AGENTS.md` / `CLAUDE.md` / `akios/Roadmap.md` / `akios/Vision.md`.
 Report any miss.
 
 ## 6. Dependencies
-The kit has **no required external plugins** — everything the spine routes to (`idea-to-spec`,
-`spec-to-tasks`, `task-execution`, `oss-first`, `feature-pipeline`, `just-vibes`) ships with akios.
+The kit has **no required external plugins** — every skill it routes to (`feature-pipeline`,
+`idea-to-spec`, `deep-brainstorm`, `founderlens-behavior`, `spec-to-tasks`, `task-execution`,
+`just-vibes`, `oss-first`, `handoff`) ships with akios.
 
 Finish with: the repo is onboarded; next step is `/akios:brainstorm "<your feature idea>"`.

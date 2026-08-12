@@ -6,7 +6,7 @@ disable-model-invocation: true
 # /akios:just-vibes — Autonomous run (workflow.yml: just-vibes run-style)
 
 **Works without `/akios:setup`.** Never block on missing kit files. Create `akios/` and its
-subfolders as the run needs them. A missing `posture` defaults to `delivery`. If no test command is
+subfolders as the run needs them. If no test command is
 recorded and you can't infer one confidently from the repo's own config files, degrade the
 build/test proof to the DoD audit rather than guessing an invocation or stalling.
 

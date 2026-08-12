@@ -12,9 +12,6 @@ metadata:
   version: "5.0.0"
 ---
 
-> **Scope: akios-exclusive.** This skill is the akios workflow orchestrator — it reads
-> `workflow.yml` and routes through akios phases. It is not intended to operate standalone.
-
 # Feature Pipeline — Idea to Working Code
 
 The entry point for "I want to build X." It does **not** define the phases — **`workflow.yml`
@@ -23,9 +20,6 @@ prereqs, outputs). This skill is the *conduct*: it reads `workflow.yml`, figures
 are, and walks you through the phases in order, handing off the right artifact between them.
 
 **Spine (from `workflow.yml`):** `brainstorm → plan → deliver`
-
-Each phase's command, skill, prereqs, and outputs live in **`workflow.yml`** — this skill
-reads them at runtime.
 
 > Bootstrap first: if the repo isn't initialized (`AGENTS.md` + `workflow.yml` + the folder
 > tree), run `/akios:setup` — it is **not** a phase (see `workflow.yml` `bootstrap`).
@@ -42,8 +36,8 @@ reads them at runtime.
 1. **Phase 1 (brainstorm) is always interactive.** Never automate or skip it — the user must be present.
 2. **Hand-offs follow `workflow.yml` outputs:** spec path → `spec-to-tasks`; `akios/tasks/todo/` → `task-execution`.
 3. **Subagents start cold and are opt-in.** When `task-execution` dispatches one, its prompt must
-   include the task's `refs:` list. Execution must never *depend* on subagents — an
-   environment can deny them the project's build tool.
+   carry the slice it needs (task + DoD + the project's test command). Execution must never
+   *depend* on subagents — an environment can deny them the project's build tool.
 4. **Never write to git** — no commit, no branch, no push, in any phase. Deliver ends with changed
    files in the working tree and a report; the user owns their history.
 5. **Stay in the current phase.** The anti-drift discipline — WHAT is not HOW, and route a
@@ -53,7 +47,6 @@ reads them at runtime.
    `## Commands`; the pipeline itself is language-agnostic.
 
 ## What belongs in a subagent prompt (when one is dispatched)
-- [ ] The task's `refs:` list (tagged on the task in `akios/tasks/todo/`)
 - [ ] The specific task id + its DoD
 - [ ] The relevant spec file(s)
 - [ ] The project's build/test command from `akios/Context.md`

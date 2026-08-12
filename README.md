@@ -1,39 +1,36 @@
-# AKIOS — Agentic Kit
+# AKIOS
 
-A stack-agnostic agent workflow kit: brainstorm, plan, deliver, and keep the work grounded in
-specs instead of improvising session by session. It works the same in a TypeScript service, a
-Python pipeline, a Go CLI, or a Rust library — because it carries **process, not framework
-knowledge**.
+A stack-agnostic agent workflow kit for Claude Code: brainstorm, plan, deliver — work grounded in
+specs instead of improvised session by session. It carries **process, not framework knowledge**,
+so it behaves the same in a TypeScript service, a Python pipeline, a Rust library, or a repo with
+no code in it at all.
 
-Akios is a full Claude Code plugin and a Codex-ready plugin. Claude Code gets the complete
-`/akios:*` command surface and setup flow; Codex support exposes the shared skill family through
-`.codex-plugin/plugin.json` while command/setup parity is still in progress.
+Two things follow from that, and they're the whole design:
 
-## What it does
+- **It never assumes your stack.** `/akios:setup` asks once, writes the answers to
+  `akios/Context.md`, and every phase reads its real install/test/build commands from there. It
+  never guesses an invocation.
+- **It never writes to git.** No commits, no branches, no pushes — in any mode, autonomous runs
+  included. Every run ends the same way: changed files in your working tree and a report of what
+  changed. Your history stays yours.
 
-- **Brainstorm** (`/akios:brainstorm`) — turn a rough idea into an approved spec, decision by decision
-- **Deep brainstorm** (`/akios:deep-brainstorm`) — map a whole product into a complete spec family in one session
-- **Plan** (`/akios:plan`) — break the spec into a task backlog with estimates, checkpoints, and DoDs
-- **Deliver** (`/akios:deliver`) — implement, test, and code-review each task; leave the diff for you to commit
-- **Autonomous run** (`/akios:just-vibes`) — drive the whole pipeline unattended; the quality gate stays on
+## Commands
 
-The kit ships a skill family (see the `skills/` directory for the current set) and a phase
-contract (`workflow.yml`). Nothing else: no hooks, no shell scripts, no build step.
+| Command | What it does |
+|---|---|
+| `/akios:setup` | Onboard a repo — interview → scan → fill templates |
+| `/akios:brainstorm "<idea>"` | Idea → approved spec in `akios/specs/` |
+| `/akios:deep-brainstorm [focus]` | Map a whole subject → a complete spec family in one session |
+| `/akios:plan <spec>` | Spec → task backlog in `akios/tasks/todo/` |
+| `/akios:deliver` | Implement tasks; hand the working tree back uncommitted |
+| `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
+| `/akios:handoff` | Write a handoff doc for another agent session, or return results |
 
-## How it stays stack-agnostic
-
-The kit knows nothing about your language until `/akios:setup` asks. Everything it learns lands
-in one file — `akios/Context.md` — which records your stack, your architecture, your module
-boundaries, and, critically, your real install/test/build commands. Every phase reads its
-invocations from there rather than guessing one.
-
-The priority chain makes that explicit: **project decisions → your preferences → the model's
-general knowledge**. That last tier is the floor, and it only answers when the two above it are
-silent — what your repo already does outranks any general best practice.
+All commands are typed-only (`disable-model-invocation`) — they never auto-fire. Every one works
+**without** `/akios:setup`: it creates what it needs, asks only what it depends on, and offers
+setup at the end rather than as a gate.
 
 ## Install
-
-### Claude Code
 
 Inside Claude Code:
 
@@ -48,44 +45,45 @@ Then, inside the repo you want to set up:
 /akios:setup
 ```
 
-`setup` interviews you, scans the repo, fills in templates, and creates the `akios/` folder tree
-(`akios/specs/`, `akios/tasks/`, `akios/archive/`). No external dependencies required.
+It interviews you, scans the repo, fills the templates, and creates `akios/` (`specs/`, `tasks/`,
+`archive/`). No external dependencies, no hooks, no shell scripts, no build step.
 
-### Codex
+The one answer that matters most is your project's **commands** — how to install, run, test, and
+build it. Get those right and everything downstream works. An honest `none` is a correct answer;
+a fabricated command is the worst possible entry.
 
-Codex can install Akios as a plugin through the `.codex-plugin/plugin.json` manifest and use the
-shared skills in `skills/`. This release does not claim full command parity yet: `/akios:setup`
-and the rest of the slash-command flow are still Claude-first because they depend on `CLAUDE.md`,
-`.claude/`, and `~/.claude`.
+Codex installs the same skill family through `.codex-plugin/plugin.json`, without the command
+layer — that stays Claude-only, since it depends on `CLAUDE.md`, `.claude/`, and `~/.claude`.
 
-## Commands
+## The spine
 
-| Command | What it does |
-|---|---|
-| `/akios:setup` | Onboard a repo — interview → scan → fill templates |
-| `/akios:brainstorm "<idea>"` | Idea → approved spec in `akios/specs/` |
-| `/akios:deep-brainstorm [focus]` | Map the whole product → a complete spec family in one session |
-| `/akios:plan <spec>` | Spec → task backlog in `akios/tasks/todo/` |
-| `/akios:deliver` | Implement tasks; hand the working tree back uncommitted |
-| `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
-| `/akios:handoff` | Write a handoff doc for another agent session, or return results |
+`brainstorm → plan → deliver`, defined in `workflow.yml` and driven by the skills in `skills/`.
 
-All commands are typed-only (`disable-model-invocation`) — they never auto-fire.
+You describe what you want in plain words; `brainstorm` turns it into a spec one decision at a
+time, with you present. `plan` breaks the spec into a sized task backlog in one pass. `deliver`
+implements it task by task — tests first, a DoD audit at every checkpoint, `/verify` and
+`/code-review` before anything is called done — and leaves the diff for you.
 
-Codex note: treat the commands above as the Claude Code interface for now. In Codex, use the
-installed Akios skills directly until the setup layer is ported to Codex-native paths.
+`/akios:deep-brainstorm` zooms out first: it maps an entire subject and produces a whole family of
+specs at once. It is deliberately not software-only — the same session maps a game, a book, a
+course, a business, or a research question, using the vocabulary that subject actually has.
+
+`/akios:just-vibes` runs the spine unattended. It is the explicit opt-out of being asked, not of
+being correct: the quality gate stays, and a unit that won't go green is **parked**, never marked
+done.
+
+## The priority chain
+
+For any decision: **project decisions → your preferences → the model's general knowledge.** That
+last tier is the floor, used only when the two above are silent — what your repo already does
+outranks any general best practice. Existing code counts as a project decision even when nobody
+wrote it down.
 
 ## Who it's for
 
-Any repo where work benefits from specs, a task backlog, and a repeatable idea-to-ship loop —
-in any language. The gates are process gates, not language gates.
-
-## Learn more
-
-- **[START-HERE.md](START-HERE.md)** — first-time setup walkthrough + build your first feature
-- **[CHANGELOG.md](CHANGELOG.md)** — what's new in each version
-- **[CREDITS.md](CREDITS.md)** — attribution
+Any repo where work benefits from specs, a task backlog, and a repeatable idea-to-done loop — in
+any language, or none. The gates are process gates, not language gates.
 
 ---
 
-MIT License · [Lucasdho](https://github.com/Lucasdho)
+[CHANGELOG](CHANGELOG.md) · [CREDITS](CREDITS.md) · MIT License · [Lucasdho](https://github.com/Lucasdho)

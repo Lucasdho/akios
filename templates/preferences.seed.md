@@ -15,8 +15,8 @@
 > silently; you confirm every line. Entries are deduplicated and append-only.
 >
 > **Priority chain** (where these preferences sit): see AGENTS.md —
-> `project decision → curated references → preferences (this file) → the agent's general knowledge`.
-> Concrete sample code you upload outranks a stated preference here.
+> `project decision → preferences (this file) → the agent's general knowledge`.
+> What the repo already does outranks a stated preference here.
 
 ## Preferences
 <!-- One transferable preference per bullet. Empty on first install — the priority

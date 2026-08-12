@@ -56,7 +56,7 @@ for each task (by checkpoint, respecting [P]/area):
   move  akios/tasks/todo/<T>.md → akios/tasks/in-progress/
   consult the PRIORITY CHAIN (below) before choosing any pattern
   recall known hurdles for this domain from auto-memory (below) before repeating a solved mistake
-  TDD  → failing test → implement → green        (see TDD posture)
+  TDD  → failing test → implement → green        (see TDD)
   move  → akios/tasks/review/
   /verify (when runnable) + /code-review (see "Code-review doctrine")
   [Divergence audit] compare planned (Description + DoD + Files) vs. done (actual diff/decisions)
@@ -97,8 +97,7 @@ a hurdle needs.
   that worked. Name the file for the symptom so recall matches on it.
 - **How it grows (observe → confirm → record).** A hurdle is captured when (a) the divergence audit
   below taught something reusable, or (b) the **same failure is hit a 2nd time** — the same
-  2nd-occurrence rule that governs `preferences.md`. Attended → **propose** it at a pause (delivery
-  posture) or more eagerly with rationale (learning posture, see "Operating posture").
+  2nd-occurrence rule that governs `preferences.md`. Attended → **propose** it at a pause.
   `just-vibes` → record it and journal the rationale. Check for an existing memory covering the
   same symptom and update it rather than writing a second one.
 - **Nothing recorded yet** is the normal state of a fresh repo, and never an error.
@@ -116,27 +115,7 @@ First tier with a relevant answer wins; lower tiers only fill silence:
 The repo outranks a stated preference: an established architecture is not rewritten because of a
 general taste, and a preference is not applied over a decision this project already made.
 
-## Operating posture (learning vs. delivery)
-Read `akios/Roadmap.md`'s `posture` flag (default `delivery`; a session override — e.g.
-`/akios:deliver --learning` — wins for this session only and does not rewrite the Roadmap
-value). It never changes what gets built, only what gets narrated:
-
-- **Delivery (default):** proceed exactly as documented above — resolve the priority chain, apply
-  the pattern, move on. No inline narration beyond what's already recorded on the task/spec.
-- **Learning:** each time the priority chain resolves to a non-obvious tier (a project decision
-  overriding your general knowledge) or a project doctrine gets applied, add a one-line note:
-  *what* was chosen, the *principle* behind it, and the tradeoff — citing the owning spec.
-  At the **end of each unit** (checkpoint or spec), add a short **"what you learned"** digest: the
-  3–5 principles this unit exercised. If nothing teachable happened (a routine mechanical task),
-  say so plainly rather than manufacture a lesson.
-- **Under `just-vibes`:** no one is present to narrate to — learning posture instead appends the
-  same digest as a **"Lessons"** section to `akios/.local/just-vibes-journal.md` per unit (see
-  `just-vibes`'s own posture note). Delivery journals outcomes only, as today.
-
-Learning posture is also where a hurdle/preference capture gets **proposed more eagerly**, with
-its rationale attached — see "Feedback logging" below.
-
-## TDD posture (tests-first where meaningful)
+## TDD (tests-first where meaningful)
 - **Logic / data / concurrency** → write the failing test first with the project's own test runner
   (`akios/Context.md` `## Commands`), then implement to green, then refactor.
 - **Presentation code with no meaningful unit test** → don't force a brittle test. The bar is the
@@ -170,10 +149,6 @@ bounded fix loop and just-vibes' "park red, never deliver broken."
 | Build/test proof | it builds and tests pass | run `akios/Context.md`'s recorded `Test:` (and `Build:`) command. In a repo with no build tool at all (docs/plugin), this degrades to the **DoD audit**: the file exists, its content matches the spec, config parses, and a grep finds no orphaned references | every code task |
 | Spec-conformance proof | it did what the task said + followed the loaded doctrine | the divergence audit above + `/code-review` | every task |
 
-`/verify` + `/code-review` already realize most of this; naming the proofs as a set makes
-"did I ship it right" a checklist instead of a vague worry, and shows *which* axis is red when
-something's off.
-
 ## Barrier = audit
 At each `↳ barrier`: verify **every** task's DoD is met (not "code exists" — DoD met), **and** run
 whatever boundary/lint check `akios/Context.md` records for this project. A failing DoD or lint
@@ -186,9 +161,6 @@ blocks the next checkpoint.
 While executing, watch for preference signals — an explicit statement ("prefiro X") or a repeated
 correction (the 2nd time the user undoes the same kind of change). At a natural pause, **propose**
 appending it to `~/.claude/akios/preferences.md` (dedup, append-only). Never write silently.
-**Delivery** proposes at natural pauses per the 2nd-occurrence rule, as above. **Learning** posture
-proposes more eagerly and explains *why the signal is worth remembering* — same dedup, append-only
-discipline, just surfaced sooner and with the reasoning attached.
 
 ## Context management — MANDATORY compact between specs
 
@@ -213,7 +185,7 @@ Never start a new spec without compacting first, regardless of token count.
 When a spec's last checkpoint is green and all its tasks are `done`:
 1. Append a **summary block** to `archive/Archive.md` — decisions, files touched, outcome.
 2. Move the full spec to `archive/<spec>.md`.
-3. Clear that spec's `akios/tasks/done/` files (captured in the summary + git).
+3. Clear that spec's `akios/tasks/done/` files (captured in the summary).
 4. Record the **durable decisions** into native `MEMORY.md` (the spec-level what/where stays in
    `Archive.md`; recall-worthy decisions go to `MEMORY.md` — no duplication).
 5. **Hurdles digest.** Any hurdle captured during this spec (see "Hurdles" above) is already in
@@ -268,4 +240,3 @@ commits nothing.
 - Writing to `preferences.md` silently, or recording project-specific facts there (those go to `MEMORY.md`).
 - Mirroring spec state outside `akios/Roadmap.md` (e.g. duplicating the `## Specs` table into `CLAUDE.md`) — one source, no duplicates.
 - Cloning your full context into a subagent, or dispatching a model more capable than the subtask needs.
-- Working on `main`/`master`.

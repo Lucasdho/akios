@@ -10,12 +10,7 @@ metadata:
 # Spec to Tasks — one pass, spec → akios/tasks/todo/
 
 Turns an approved spec into the execution backlog for `task-execution`: **one task file per task
-under `akios/tasks/todo/`**. One skill, one pass, one human confirm — no multi-phase ceremony and no
-scaffold directory or second spec format to bootstrap; this skill neither creates nor needs one.
-
-**Why it exists:** `idea-to-spec` already resolves ambiguity decision-by-decision upstream, and
-the kit's gates (`AGENTS.md` house rules, `/code-review`) enforce quality downstream.
-This skill does the one thing that was missing: decompose the spec into runnable, sized tasks.
+under `akios/tasks/todo/`**. One skill, one pass, one human confirm.
 
 **Language-agnostic.** Areas, folders, and domain tags come from what `akios/Context.md` records
 about *this* project's architecture. Never assume a stack, a folder convention, or a test runner.
@@ -99,21 +94,12 @@ checkpoint: 1               # [major] checkpoints run the test battery
 State is the **containing folder**; `task-execution` moves the file `todo → in-progress → review
 → done`. Checkpoint order and `[major]` markers are carried on each task's `checkpoint` field.
 
-## Posture (learning vs. delivery)
-Read `akios/Roadmap.md`'s `posture` flag the same way every phase does (see `AGENTS.md`
-"Operating posture" for the flag mechanic). The
-phase-specific delta: in **learning** mode the step-10 confirm also states *why* the graph came
-out this way — why these checkpoint boundaries, why a task is `[P]` (or isn't), why its `## Files`
-name the precedents they do. **Delivery** (default) shows the graph without that commentary. Never
-changes the decomposition — same tasks, checkpoints, and tags in both postures.
-
 ## Hand-off
 `akios/tasks/todo/` is the sole input to `task-execution` (`/akios:deliver`). Stop after writing the
 files + updating `akios/Roadmap.md`; tell the user the backlog is ready and that `/akios:deliver` ships it.
 
 ## Anti-patterns
 Each is the inverse of a step above:
-- Creating a scaffold directory or any other second formal spec format.
 - Re-clarifying what the spec already settled.
 - Assuming a folder layout, language, or test runner that `akios/Context.md` doesn't record.
 - A task missing `est_tokens`/`runner`, a DoD, or (user-facing/data task) empty/loading/error coverage.

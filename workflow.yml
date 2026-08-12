@@ -1,8 +1,7 @@
 # akios — phase contract (single source of truth)
 #
-# Lives at the REPO ROOT, in the plugin and in every consumer repo alike. `akios/` holds
-# per-project state (Context, Roadmap, Vision, specs, tasks); this file is the contract those
-# states move through, so it sits alongside VERSION rather than inside the state folder.
+# Lives at the REPO ROOT, in the plugin and in every consumer repo alike — `akios/` is per-project
+# state, this file is the contract that state moves through.
 #
 # Commands are thin wrappers that read this file. Phase detection and prereq gating are
 # computed from it:
@@ -23,16 +22,6 @@ version: 2
 
 # setup writes the active mode into akios/Roadmap.md; brainstorm reads it.
 modes: [new, one-shot, feature]
-
-# setup also writes the posture flag into akios/Roadmap.md (default: delivery). Orthogonal to mode
-# — every phase skill reads it and toggles ONLY the teaching surface (never what
-# gets built). Overridable per session (a command flag or spoken switch) without rewriting the
-# Roadmap default.
-#   delivery -> decisions recorded to the artifact, not narrated live.
-#   learning -> inline principle citations + alternatives + eager capture proposals + an
-#               end-of-unit digest; under just-vibes the digest lands in the journal's Lessons
-#               section instead of being spoken.
-posture: [learning, delivery]
 
 # setup is bootstrap, NOT a phase (no spec/task prerequisite).
 bootstrap:
@@ -79,7 +68,7 @@ run_styles:
     command: /akios:deep-brainstorm   # add an idea/focus as an argument to narrow the session
     skill: deep-brainstorm
     default: interactive whole-app discovery → spec family in one session
-    unattended: deepthink posture (called under just-vibes); no human input; all decisions recorded
+    unattended: deepthink mode (called under just-vibes); no human input; all decisions recorded
     produces: akios/specs/*.md (one per domain) + akios/Roadmap.md rows at status designed
     prereqs: [akios/Context.md]       # soft gate — warn if missing, offer /akios:setup
     outputs: [akios/specs/*.md]

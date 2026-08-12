@@ -24,13 +24,9 @@ This phase is interactive; the user must be present. On approval, set the spec's
 `designed` in `akios/Roadmap.md`.
 
 **Stay in flow.** Design only — write no code or data files here, even on a direct "just build
-X" mid-session. If a build/data need surfaces, apply the pipeline's *anti-drift* reflex: name it,
+X" mid-session. If a build/data need surfaces, apply `AGENTS.md`'s *Staying in flow* reflex: name it,
 decide whether it's this spec or its own, register a new spec in `akios/Roadmap.md` if distinct, and
 route it through the full pipeline — don't execute it inline.
-
-**Posture override (optional).** A `--learning` or `--delivery` flag in `$ARGUMENTS` overrides
-`akios/Roadmap.md`'s `posture` for this session only (doesn't rewrite the Roadmap value); absent, use
-the Roadmap default. See `idea-to-spec`'s "Posture (learning vs. delivery)".
 
 Feature idea (pass as the spec input): `$ARGUMENTS`
 
