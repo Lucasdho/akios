@@ -30,12 +30,15 @@ bootstrap:
     - CLAUDE.md
     - AGENTS.md
     - workflow.yml            # this file, copied to the consumer repo root
+    - .claude/.akios-version  # installed version marker; drives the idempotency gate
     - akios/Context.md
     - akios/Roadmap.md
     - akios/Vision.md
     - akios/specs/
-    - akios/tasks/            # todo/ in-progress/ review/ done/
+    - akios/tasks/            # todo/ in-progress/ review/ done/ handoffs/
     - akios/archive/
+    - akios/.local/           # gitignored runtime journal
+    - ~/.claude/akios/preferences.md   # user-global, seeded once; survives plugin updates
 
 phases:
   - id: brainstorm

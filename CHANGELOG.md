@@ -185,6 +185,36 @@ and a phantom spec citation in `.gitignore`, `knowledge-ingest`/`skill-author` i
 and `workflow.yml`'s stale `akios/` row in the artifact map. The version marker is renamed
 `.claude/.agentic-kit-version` → `.claude/.akios-version`, with the old name read as a fallback.
 
+A second audit pass before release caught what the first sweep left:
+
+- **`/verify` was never a real command.** It was cited in ten places as half the quality gate, and
+  `CREDITS.md` claimed it shipped with the Claude Code CLI. It doesn't. Every site now names the
+  proof that actually exists — `task-execution`'s **two proofs**: the project's own recorded
+  `Test:` / `Build:` command from `akios/Context.md` (degrading to the DoD audit where there's no
+  runner), plus `/code-review`. Without this, `/akios:just-vibes` could mark a spec `done` on a
+  code review alone.
+- **Three paths sent the agent to the wrong place.** `archive/` resolved outside `akios/` in six
+  places; `/akios:setup`'s materialize table read its templates from a relative `templates/`
+  (which resolves in the *consumer's* repo, not the plugin) in six rows; and `deep-brainstorm`
+  wrote its R-W-W report to `akios/specs/rww-audit.md`, where `just-vibes`' fuel detection would
+  pick it up and try to *build* it. The report moved to `akios/rww-audit.md`, and fuel detection
+  now skips discovery documents (`founderlens-*.md`) and reports-about-specs explicitly.
+- **Spec status had two owners.** `deep-brainstorm` wrote `Status:` and `Priority tier:` into each
+  spec file while `templates/spec.md` and `AGENTS.md` both declared `akios/Roadmap.md` the single
+  source. The Roadmap's `## Specs` table gains a **`Tier`** column, and the spec file carries
+  neither.
+- **`templates/spec.md` now carries what the skills lint for**: the conditional `## Contract` block
+  (exports/consumes, for projects with module boundaries) and the `## States` section (happy ·
+  empty · loading · error). `idea-to-spec`'s "Contract & Foundation header" lost its dead half —
+  `Foundation/` went out with ALVA.
+- **`/akios:handoff`** was the one command missing `disable-model-invocation`, contradicting the
+  README. The README also over-promised: commands never auto-fire, but the *skills* are
+  model-invocable by design, and it now says so.
+- **`workflow.yml`'s `bootstrap.creates`** was missing `.claude/.akios-version`, `akios/.local/`,
+  and the user-global preferences seed — all three written by setup and checked by its own
+  self-check. `akios/tasks/handoffs/` joined the folder tree it was already in the artifact map.
+- `.idea/` is gitignored and untracked.
+
 ### Removed — stale docs and the v0.x backlog
 - `docs/` (the architecture snapshot and the plugin audit map) — both described the iOS kit and
   duplicated `README.md` + `agentic-kit`.

@@ -24,7 +24,8 @@ It will:
   at status `designed` → `akios/Vision.md` / `akios/Roadmap.md` items with no spec.
 - **Build** — run only the phases the unit needs (unattended **deepthink** brainstorm if there's no
   spec → plan → deliver).
-- **Quality gate:** `/verify` + `/code-review`; green → mark the spec `done` in `akios/Roadmap.md`.
+- **Quality gate:** the two proofs — build/test (`akios/Context.md` `Test:`, or the DoD audit where
+  there's no runner) + `/code-review`; green → mark the spec `done` in `akios/Roadmap.md`.
   Red → bounded **fix loop**; still red → **park** it (left in place with its logs, marked `blocked`).
 - **Journal** each cycle to `akios/.local/just-vibes-journal.md`.
 

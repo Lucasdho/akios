@@ -26,7 +26,10 @@ Two things follow from that, and they're the whole design:
 | `/akios:just-vibes [idea]` | Full pipeline, unattended; `--force` to loop |
 | `/akios:handoff` | Write a handoff doc for another agent session, or return results |
 
-All commands are typed-only (`disable-model-invocation`) — they never auto-fire. Every one works
+All commands are typed-only (`disable-model-invocation`) — a `/akios:*` command never auto-fires.
+The **skills** underneath are a separate layer and are model-invocable by design: describe a
+feature you want built and `feature-pipeline` may route you into the spine on its own. If you'd
+rather that never happen, disable the skills you don't want auto-triggering. Every command works
 **without** `/akios:setup`: it creates what it needs, asks only what it depends on, and offers
 setup at the end rather than as a gate.
 
@@ -61,8 +64,8 @@ layer — that stays Claude-only, since it depends on `CLAUDE.md`, `.claude/`, a
 
 You describe what you want in plain words; `brainstorm` turns it into a spec one decision at a
 time, with you present. `plan` breaks the spec into a sized task backlog in one pass. `deliver`
-implements it task by task — tests first, a DoD audit at every checkpoint, `/verify` and
-`/code-review` before anything is called done — and leaves the diff for you.
+implements it task by task — tests first, a DoD audit at every checkpoint, and your project's own
+test command plus `/code-review` before anything is called done — and leaves the diff for you.
 
 `/akios:deep-brainstorm` zooms out first: it maps an entire subject and produces a whole family of
 specs at once. It is deliberately not software-only — the same session maps a game, a book, a

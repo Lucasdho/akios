@@ -35,7 +35,7 @@ back — write `akios/tasks/handoffs/<topic>-return.md` instead, structured as a
 
 ## What NOT to include
 
-- Content already in `akios/specs/`, `akios/tasks/`, `archive/Archive.md`, or `MEMORY.md` — reference by
+- Content already in `akios/specs/`, `akios/tasks/`, `akios/archive/Archive.md`, or `MEMORY.md` — reference by
   path instead (`akios/specs/foo.md §3`).
 - Code diffs or full file contents — reference by file path + line range.
 - Sensitive information (API keys, credentials, PII).

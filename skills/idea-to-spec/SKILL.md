@@ -180,12 +180,12 @@ settled-vs-open convention, changelog, worked-example section). Key rules:
 - Specs record **decisions and their reasons**, not aspirations. "Settled unless marked
   open."
 - Follow `references/spec-format.md` for the mandatory elements — version+changelog on
-  update, the worked-example run through the block, empty/edge states, and the Contract &
-  Foundation header for buildable-feature specs.
+  update, the worked-example run through the block, empty/edge states, and the Contract
+  header for buildable-feature specs.
 - **Self-check before presenting.** Once the file is written, lint it against those
-  mandatory elements before showing it: Contract & Foundation header (buildable-feature
-  specs), a reason on every decision, empty/edge states for every screen or data-backed
-  view, the worked-example run, and the closing `## N. Open / next`. Fix any omission before
+  mandatory elements before showing it: Contract header (buildable-feature specs in a
+  project with module boundaries), a reason on every decision, empty/edge states for every
+  screen or data-backed view, the worked-example run, and the closing `## N. Open / next`. Fix any omission before
   presenting — a silently missing empty state is a missing requirement, not a small gap.
 
 ## Turn-by-turn conduct

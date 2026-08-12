@@ -12,8 +12,14 @@ mode: {{new | one-shot | feature}}
 <!-- status: designed → planned → in-progress → done, plus two demotion side-states —
      `needs-revision` (deep-brainstorm's audit flagged the spec weak) and `blocked`
      (task-execution's fix loop gave up). Monotonic; a done spec is never demoted:
-     needs-revision < designed < planned < in-progress < blocked < done. -->
+     needs-revision < designed < planned < in-progress < blocked < done.
 
-| Spec | Domain | Status | Notes |
-|---|---|---|---|
-| (none yet) | | | |
+     tier: core (doesn't work without it) | enhance (good rather than adequate) | future
+     (named so it isn't forgotten, not worth doing yet). Set by /akios:deep-brainstorm
+     Phase 3; blank is fine for a spec that arrived via /akios:brainstorm.
+
+     Both live here and ONLY here — a spec file never carries its own status or tier. -->
+
+| Spec | Domain | Tier | Status | Notes |
+|---|---|---|---|---|
+| (none yet) | | | | |

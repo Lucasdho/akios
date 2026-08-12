@@ -1,5 +1,5 @@
 ---
-description: Implement and ship from the task backlog (pipeline Phase 3, task-execution + verify + code-review).
+description: Implement and ship from the task backlog (pipeline Phase 3, task-execution + the two proofs).
 disable-model-invocation: true
 ---
 
@@ -29,8 +29,9 @@ run it against the backlog in `akios/tasks/todo/`:
   are opt-in and start cold — their prompt MUST name the task, its DoD, and the project's test
   command. If the subagent layer is unavailable, degrade to inline.
 - Manage context (warn 110k / urgent `/compact` 135k). **Mandatory `/compact` between every spec** — never start a new spec without compacting first.
-- On spec completion, archive (`archive/Archive.md` + move spec) and record durable decisions to `MEMORY.md`.
-- `/verify` and `/code-review` before claiming done.
+- On spec completion, archive (`akios/archive/Archive.md` + move spec) and record durable decisions to `MEMORY.md`.
+- Both proofs green before claiming done: the project's recorded `Test:` command (or the DoD audit
+  where there's no runner) **and** `/code-review`. See `task-execution` "The two proofs".
 - **Never write to git.** No commits, no `git add`, no push, no merge — not at a checkpoint, not at
   the end, and don't offer to. Finish by reporting what landed and what the proofs said, leaving the
   diff in the working tree for the user to review and commit.

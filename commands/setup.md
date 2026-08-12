@@ -133,12 +133,12 @@ attempted) rather than continuing or guessing at the repo's state.
 
 | File | Source | Rule |
 |---|---|---|
-| `AGENTS.md` | `templates/AGENTS.md` | skip if it already exists |
-| `akios/Context.md` | `templates/Context.md` | skip if it already exists |
-| `akios/Roadmap.md` | `templates/Roadmap.md` | skip if it exists; fill the `mode:` line |
-| `akios/Vision.md` | `templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
+| `AGENTS.md` | `${CLAUDE_PLUGIN_ROOT}/templates/AGENTS.md` | skip if it already exists |
+| `akios/Context.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Context.md` | skip if it already exists |
+| `akios/Roadmap.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Roadmap.md` | skip if it exists; fill the `mode:` line |
+| `akios/Vision.md` | `${CLAUDE_PLUGIN_ROOT}/templates/Vision.md` | skip if it exists; fill the north-star + first wishlist items (just-vibes fuel) |
 | `workflow.yml` | `${CLAUDE_PLUGIN_ROOT}/workflow.yml` | always copy (the phase contract) |
-| `CLAUDE.md` | `templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@akios/Context.md` imports is missing (Context first so AGENTS ends on top) |
+| `CLAUDE.md` | `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.md` | if missing, create; if present, prepend whichever of `@AGENTS.md` / `@akios/Context.md` imports is missing (Context first so AGENTS ends on top) |
 | `.claude/.akios-version` | contents of `${CLAUDE_PLUGIN_ROOT}/VERSION` | always write |
 
 **Footprint — the three-way line.**
@@ -160,7 +160,8 @@ akios/
 │   ├── todo/
 │   ├── in-progress/
 │   ├── review/
-│   └── done/
+│   ├── done/
+│   └── handoffs/                # written/read by the `handoff` skill
 ├── archive/
 └── .local/                      # gitignored — runtime journal
 ```
@@ -172,7 +173,7 @@ generated these).
 of `akios/` is **never** offered as gitignorable: specs and tasks are work product a team reads.)
 
 **Seed user preferences (user-global, once):** if `~/.claude/akios/preferences.md` does **not**
-exist, create `~/.claude/akios/` and copy `templates/preferences.seed.md` there as
+exist, create `~/.claude/akios/` and copy `${CLAUDE_PLUGIN_ROOT}/templates/preferences.seed.md` there as
 `preferences.md`. If it already exists, leave it untouched (it survives plugin updates).
 
 Append `akios/.local/` to the repo's `.gitignore`.

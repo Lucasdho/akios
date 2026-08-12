@@ -28,4 +28,6 @@ Daniel Devesa Derksen-Staats, [arjitj2](https://github.com/arjitj2/swiftui-desig
 git history at tag `v0.9.1`; none of it ships today.
 
 ## Built into Claude Code (not bundled)
-`/code-review`, `/verify`, and `fewer-permission-prompts` ship with the Claude Code CLI.
+`/code-review` and `fewer-permission-prompts` ship with the Claude Code CLI. The kit's other proof
+is not a command at all — it's the project's own test/build invocation, read from
+`akios/Context.md` `## Commands`.

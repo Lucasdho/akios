@@ -58,7 +58,7 @@ for each task (by checkpoint, respecting [P]/area):
   recall known hurdles for this domain from auto-memory (below) before repeating a solved mistake
   TDD  → failing test → implement → green        (see TDD)
   move  → akios/tasks/review/
-  /verify (when runnable) + /code-review (see "Code-review doctrine")
+  run the TWO PROOFS (below): build/test proof + /code-review (see "Code-review doctrine")
   [Divergence audit] compare planned (Description + DoD + Files) vs. done (actual diff/decisions)
   move  → akios/tasks/done/        (only when the TWO PROOFS (below) are green; failure loops to in-progress)
 ↳ at each checkpoint barrier: audit EVERY task's DoD
@@ -183,15 +183,15 @@ Never start a new spec without compacting first, regardless of token count.
 
 ## Archive on spec completion
 When a spec's last checkpoint is green and all its tasks are `done`:
-1. Append a **summary block** to `archive/Archive.md` — decisions, files touched, outcome.
-2. Move the full spec to `archive/<spec>.md`.
+1. Append a **summary block** to `akios/archive/Archive.md` — decisions, files touched, outcome.
+2. Move the full spec to `akios/archive/<spec>.md`.
 3. Clear that spec's `akios/tasks/done/` files (captured in the summary).
 4. Record the **durable decisions** into native `MEMORY.md` (the spec-level what/where stays in
    `Archive.md`; recall-worthy decisions go to `MEMORY.md` — no duplication).
 5. **Hurdles digest.** Any hurdle captured during this spec (see "Hurdles" above) is already in
    auto-memory — confirm it's recorded rather than writing it a second time.
 
-Future sessions read `archive/Archive.md` first and open a full archived file only on demand.
+Future sessions read `akios/archive/Archive.md` first and open a full archived file only on demand.
 
 ## Code-review doctrine (applied at the gate)
 Before running `/code-review` — at a task's review step and again at `Finish` below — apply this
@@ -212,8 +212,9 @@ Findings are **graduated**: block on correctness + boundary violations, warn on 
 
 ## Finish — hand back
 When the last checkpoint is green:
-- Run `/verify` and `/code-review` (with the doctrine above applied); report failures
-  honestly with output — don't claim done on a red.
+- Run **both proofs** one last time over the whole spec: the build/test proof (`akios/Context.md`'s
+  recorded `Test:` / `Build:` command, or the DoD audit where there's no runner) and `/code-review`
+  with the doctrine above applied. Report failures honestly with output — don't claim done on a red.
 - **Stop.** The work sits in the working tree. Report what landed, which tasks are done, and what
   the proofs said. **Do not commit, push, merge, or offer to** — the user reviews the diff and
   takes it from there. If they explicitly ask you to commit, that's a direct instruction and you

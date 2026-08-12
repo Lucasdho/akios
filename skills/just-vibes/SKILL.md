@@ -55,10 +55,11 @@ These rules override everything in the sub-skills (`idea-to-spec`, `spec-to-task
   unattended run produces exactly what an attended one does: changed files in the working tree.
   The human reviews the diff and decides what to do with it. "Unattended" removes the *questions*,
   not the human's ownership of their history.
-- **Quality gate → kept, hard.** `/verify` + `/code-review` still run — together they realize
-  `task-execution`'s **two proofs** (build/test and spec-conformance; see its "The two proofs"
-  section). **Never leave broken work marked done.** A red spec gets a bounded fix loop, then is
-  parked.
+- **Quality gate → kept, hard.** `task-execution`'s **two proofs** still run in full — the
+  build/test proof (`akios/Context.md`'s recorded `Test:` / `Build:` command, degrading to the DoD
+  audit in a repo with no runner) and the spec-conformance proof (`/code-review` + the divergence
+  audit). See its "The two proofs" section for the mechanism; don't substitute a lighter check.
+  **Never leave broken work marked done.** A red spec gets a bounded fix loop, then is parked.
 - **All interactive phases → deepthink.** Every decision in every phase (spec, plan, delivery)
   is made by you — chosen via deepthink, recorded with full rationale, written to disk. The
   human reviews *after* and can override any decision.
@@ -106,6 +107,10 @@ Whenever you make a decision unattended:
 2. Read akios/Roadmap.md if present → find specs at status `designed`
    └ SKIP any spec at status `needs-revision` unless --force was passed
 3. List akios/specs/*.md            → any spec without a akios/tasks/todo/ entry = plan fuel
+   └ NOT every file under specs/ is buildable fuel. Skip discovery documents —
+     founderlens-*.md (a first-diamond run, not a feature) — and anything that is a
+     report about the specs rather than a spec. When a file has no buildable scope,
+     it is not fuel; say so in the journal and move on.
 4. Read akios/Vision.md / akios/Roadmap.md for backlog items without specs → brainstorm fuel
 5. Nothing found              → report "no fuel" and stop
 ```
@@ -122,7 +127,7 @@ Pick the highest-precedence fuel.
            CRITICAL: run skills directly; every interactive gate is waived (see UNATTENDED RULES).
 
            a. NO SPEC → brainstorm (idea-to-spec, DEEPTHINK MODE):
-              - Read MEMORY.md + archive/Archive.md for previously delivered high-quality specs;
+              - Read MEMORY.md + akios/archive/Archive.md for previously delivered high-quality specs;
                 mirror their patterns and decisions — consistency with proven work beats novelty.
               - Make every decision yourself via deepthink (no waiting, no handing back).
               - Record chosen + rejected options + reasoning in the spec.
@@ -141,9 +146,9 @@ Pick the highest-precedence fuel.
               - TDD-first; audit every DoD at each checkpoint barrier.
               - Touch git at no point: no branch, no commit, no push.
 
-3. GATE    /verify + /code-review (apply task-execution's "Code-review doctrine" checklist on
-           top of the built-in review, same as its own gate) — the two
-           proofs (build/test, spec-conformance)
+3. GATE    task-execution's TWO PROOFS: the build/test proof (akios/Context.md `Test:`/`Build:`,
+           or the DoD audit where there's no runner) + /code-review with its "Code-review
+           doctrine" checklist applied on top of the built-in review, same as its own gate
              green → RECORD (step 4)
              red   → FIX LOOP: diagnose + fix, re-verify. Bound: stop after two consecutive
                      cycles with no measurable progress (same failures). Then PARK.
@@ -171,6 +176,12 @@ working tree** — say so once, plainly, so the human knows the diff is theirs t
 - **Parked:** units left red + the blocker + where the failing work sits.
 - **Open risks:** decisions flagged as unverifiable or tensions left unresolved, per unit.
 - **Next:** what fuel remains, and the one-line command to continue (`/akios:just-vibes --force`).
+
+**Say the cost of `--force` out loud when you report.** akios commits nothing, so a `--force` run
+that crossed several specs leaves them all in one undifferentiated working tree with no checkpoint
+between them — if one unit turns out wrong, there's nothing to roll back *to*. That's the accepted
+price of the human owning their own history, not a defect; but the human should hear it. Recommend
+they review and commit unit by unit, in the order the report lists, before resuming.
 
 ---
 

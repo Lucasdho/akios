@@ -43,7 +43,8 @@ Three rules keep it open:
 
 - Reads: `akios/Context.md`, `akios/Vision.md` (if present), `akios/Roadmap.md`, `MEMORY.md`,
   existing `akios/specs/*.md`. Nothing else without checking first.
-- Writes: `akios/specs/*.md` (one per identified domain), updates `akios/Roadmap.md`.
+- Writes: `akios/specs/*.md` (one per identified domain), `akios/rww-audit.md` (the Phase 5
+  report — deliberately outside `specs/`), updates `akios/Roadmap.md`.
 - Does NOT: do the work itself — no code, no prose, no task files. Those belong downstream.
 
 Each spec it produces flows through the normal `plan → deliver` pipeline as any
@@ -189,8 +190,10 @@ Once grouping is confirmed, write all specs **in one pass** — never one at a t
 between. Each follows `idea-to-spec`'s `references/spec-format.md` (scaffolded from
 `templates/spec.md`), filling in:
 
-- **Status:** `designed`
-- **Priority tier:** `core` / `enhance` / `future` (from Phase 3)
+> **Status and tier do not go in the spec file.** Both live only in `akios/Roadmap.md`'s `## Specs`
+> table (`Tier` and `Status` columns) — see "After writing" below. A spec that carries its own
+> status is a second source of truth that drifts.
+
 - **What it covers:** 3–5 bullets naming the items in scope.
 - **What it does NOT cover:** explicit out-of-scope items — this is what stops drift later.
 - **Key decisions:** the Phase 1–3 decisions that directly constrain this spec.
@@ -204,8 +207,8 @@ Leave implementation notes blank — those belong to `spec-to-tasks`.
 
 ### After writing
 
-Update `akios/Roadmap.md`: one row per spec, status `designed`, with its priority tier. Preserve
-existing rows; never reorder them.
+Update `akios/Roadmap.md`: one row per spec — `Status` `designed`, `Tier` set to the Phase 3 tier.
+Preserve existing rows; never reorder them.
 
 ---
 
@@ -227,7 +230,9 @@ already chosen, not validating an idea from scratch.
 on Real. A scope-unbounded domain scores low on Worth It. Name the specific weakness and pair it
 with a one-line remediation hint.
 
-Write (or overwrite) `akios/specs/rww-audit.md`:
+Write (or overwrite) `akios/rww-audit.md`. **Not inside `akios/specs/`** — it's a report about the
+specs, not a spec, and anything sitting in `specs/` is treated as buildable fuel by
+`/akios:just-vibes`:
 
 ```markdown
 # R-W-W Spec Audit

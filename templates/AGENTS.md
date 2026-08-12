@@ -157,7 +157,7 @@ reusing the existing pattern as a spec, not from cutting the safety rails.
 | Delivering the backlog | `task-execution` (`/akios:deliver`) | to ship |
 | Running unattended (drive the whole pipeline yourself) | `just-vibes` (`/akios:just-vibes` · `--force` to loop) | hands-off |
 | Compacting a session into a handoff | `handoff` (`/akios:handoff`) | before pivoting or splitting work |
-| Claiming "done" | `/verify` + `/code-review` | before finishing |
+| Claiming "done" | the **two proofs** — build/test (`akios/Context.md` `Test:`) + `/code-review` | before finishing |
 
 ### Deepthink (user-triggered)
 Proportionality runs the other way too: when the user flags a decision as high-stakes and wants
@@ -197,12 +197,13 @@ add a row to the `akios/Roadmap.md` `## Specs` table so the next session knows i
 ## Specs & Roadmap (idea-to-spec)
 - Store versioned specs in `akios/specs/` — one file per domain.
 - `akios/Roadmap.md` is the orchestration doc: the **mode flag** (`new`/`one-shot`/`feature`, written
-  by `/akios:setup`) plus **one line per spec** (spec → domain → status
+  by `/akios:setup`) plus **one line per spec** (spec → domain → tier `core/enhance/future` → status
   `designed/planned/in-progress/done`). Phase detection is per-spec — different specs can be in
   different phases.
 - **Single source of truth.** Spec state lives **only** in `akios/Roadmap.md` — never mirror the `## Specs`
-  table into `CLAUDE.md` or anywhere else. One file updates; nothing else can drift out of sync.
-  `CLAUDE.md` imports the operating files; it does not track spec state.
+  table into `CLAUDE.md` or anywhere else, and never write a status or tier line into the spec file
+  itself. One file updates; nothing else can drift out of sync. `CLAUDE.md` imports the operating
+  files; it does not track spec state.
 - Before designing something new, read `akios/Roadmap.md` first.
 
 ## Full feature workflow (the spine)
@@ -212,9 +213,9 @@ Defined in `workflow.yml`; entry point is **`feature-pipeline`**. At a glance:
 
 Three phases: `brainstorm` (interactive design → `akios/specs/<feature>.md`) → `plan` (one pass →
 `akios/tasks/todo/*.md` with `[P]` markers, est_tokens/runner, DoDs, state coverage) → `deliver`
-(folder-state lifecycle, TDD-first, DoD audit at each checkpoint, `/verify` + `/code-review`, then
-hand the working tree back **uncommitted**). See `feature-pipeline` for the conduct;
-`workflow.yml` for the contract.
+(folder-state lifecycle, TDD-first, DoD audit at each checkpoint, then the two proofs — the
+project's own `Test:` command plus `/code-review` — then hand the working tree back
+**uncommitted**). See `feature-pipeline` for the conduct; `workflow.yml` for the contract.
 
 **Match the permission mode to the phase.** `brainstorm` + `plan` are design work — run them in
 **plan mode** (read-only; review the spec/backlog before a single edit lands). `deliver` writes
